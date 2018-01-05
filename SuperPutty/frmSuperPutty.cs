@@ -92,6 +92,7 @@ namespace SuperPutty
 
             InitializeComponent();
 
+            this.DockPanel = dockPanel1;
             // force toolbar locations...designer likes to flip them around
             this.tsConnect.Location = new System.Drawing.Point(0, 24);
             this.tsCommands.Location = new System.Drawing.Point(0, 49);
