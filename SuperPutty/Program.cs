@@ -138,9 +138,9 @@ namespace SuperPutty
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
             StringBuilder sb = new StringBuilder();
-            if (e.Exception.Message.Contains("Could not load file or assembly 'System.Core, Version=3.5.0.0"))
+            if (e.Exception.Message.Contains("Could not load file or assembly 'System.Core, Version=4.5.0.0"))
             {
-                sb.Append("SuperPutty requires the Microsoft .NET Framework version 3.5, or greater, in order to run.\n\nPlease contact your System Administrator for more information.");
+                sb.Append("SuperPutty requires the Microsoft .NET Framework version 4.5, or greater, in order to run.\n\nPlease contact your System Administrator for more information.");
             }
             else
             {
