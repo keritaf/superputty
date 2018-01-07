@@ -31,21 +31,6 @@ namespace SuperPutty
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
-            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin1 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient1 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient2 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient3 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient4 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient5 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient6 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient7 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSuperPutty));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,6 +52,7 @@ namespace SuperPutty
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sessionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sessionDetailToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.layoutsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
@@ -125,7 +111,6 @@ namespace SuperPutty
             this.notifyicon = new System.Windows.Forms.NotifyIcon(this.components);
             this.notifyIconContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exitSuperPuTTYToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sessionDetailToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -138,7 +123,7 @@ namespace SuperPutty
             // 
             // menuStrip1
             // 
-            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.viewToolStripMenuItem,
@@ -146,7 +131,7 @@ namespace SuperPutty
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1008, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1344, 28);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.MenuDeactivate += new System.EventHandler(this.menuStrip1_MenuDeactivate);
@@ -168,7 +153,7 @@ namespace SuperPutty
             this.toolStripSeparator3,
             this.toolStripMenuItem2});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
             this.fileToolStripMenuItem.Text = "&File";
             // 
             // importSettingsToolStripMenuItem
@@ -178,104 +163,104 @@ namespace SuperPutty
             this.fromPuTTYSettingsToolStripMenuItem,
             this.fromPuTTYCMExportToolStripMenuItem});
             this.importSettingsToolStripMenuItem.Name = "importSettingsToolStripMenuItem";
-            this.importSettingsToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.importSettingsToolStripMenuItem.Size = new System.Drawing.Size(248, 26);
             this.importSettingsToolStripMenuItem.Text = "&Import Sessions";
             // 
             // fromFileToolStripMenuItem
             // 
             this.fromFileToolStripMenuItem.Name = "fromFileToolStripMenuItem";
-            this.fromFileToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.fromFileToolStripMenuItem.Size = new System.Drawing.Size(235, 26);
             this.fromFileToolStripMenuItem.Text = "From &File";
             this.fromFileToolStripMenuItem.Click += new System.EventHandler(this.fromFileToolStripMenuItem_Click);
             // 
             // fromPuTTYSettingsToolStripMenuItem
             // 
             this.fromPuTTYSettingsToolStripMenuItem.Name = "fromPuTTYSettingsToolStripMenuItem";
-            this.fromPuTTYSettingsToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.fromPuTTYSettingsToolStripMenuItem.Size = new System.Drawing.Size(235, 26);
             this.fromPuTTYSettingsToolStripMenuItem.Text = "From PuTTY &Settings";
             this.fromPuTTYSettingsToolStripMenuItem.Click += new System.EventHandler(this.fromPuTTYSettingsToolStripMenuItem_Click);
             // 
             // fromPuTTYCMExportToolStripMenuItem
             // 
             this.fromPuTTYCMExportToolStripMenuItem.Name = "fromPuTTYCMExportToolStripMenuItem";
-            this.fromPuTTYCMExportToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.fromPuTTYCMExportToolStripMenuItem.Size = new System.Drawing.Size(235, 26);
             this.fromPuTTYCMExportToolStripMenuItem.Text = "From PuTTY &CM Export";
             this.fromPuTTYCMExportToolStripMenuItem.Click += new System.EventHandler(this.fromPuTTYCMExportToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(203, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(248, 26);
             this.toolStripMenuItem1.Text = "&Export Sessions";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // toolStripMenuItem7
             // 
             this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(200, 6);
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(245, 6);
             // 
             // openSessionToolStripMenuItem
             // 
             this.openSessionToolStripMenuItem.Name = "openSessionToolStripMenuItem";
-            this.openSessionToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.openSessionToolStripMenuItem.Size = new System.Drawing.Size(248, 26);
             this.openSessionToolStripMenuItem.Text = "&Open Session";
             this.openSessionToolStripMenuItem.Click += new System.EventHandler(this.openSessionToolStripMenuItem_Click);
             // 
             // switchSessionToolStripMenuItem
             // 
             this.switchSessionToolStripMenuItem.Name = "switchSessionToolStripMenuItem";
-            this.switchSessionToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.switchSessionToolStripMenuItem.Size = new System.Drawing.Size(248, 26);
             this.switchSessionToolStripMenuItem.Text = "S&witch Session";
             this.switchSessionToolStripMenuItem.Click += new System.EventHandler(this.switchSessionToolStripMenuItem_Click);
             // 
             // toolStripMenuItem10
             // 
             this.toolStripMenuItem10.Name = "toolStripMenuItem10";
-            this.toolStripMenuItem10.Size = new System.Drawing.Size(200, 6);
+            this.toolStripMenuItem10.Size = new System.Drawing.Size(245, 6);
             // 
             // editSessionsInNotepadToolStripMenuItem
             // 
             this.editSessionsInNotepadToolStripMenuItem.Name = "editSessionsInNotepadToolStripMenuItem";
-            this.editSessionsInNotepadToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.editSessionsInNotepadToolStripMenuItem.Size = new System.Drawing.Size(248, 26);
             this.editSessionsInNotepadToolStripMenuItem.Text = "E&dit Sessions in Notepad";
             this.editSessionsInNotepadToolStripMenuItem.Click += new System.EventHandler(this.editSessionsInNotepadToolStripMenuItem_Click);
             // 
             // reloadSessionsToolStripMenuItem
             // 
             this.reloadSessionsToolStripMenuItem.Name = "reloadSessionsToolStripMenuItem";
-            this.reloadSessionsToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.reloadSessionsToolStripMenuItem.Size = new System.Drawing.Size(248, 26);
             this.reloadSessionsToolStripMenuItem.Text = "&Reload Sessions";
             this.reloadSessionsToolStripMenuItem.Click += new System.EventHandler(this.reloadSessionsToolStripMenuItem_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(200, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(245, 6);
             // 
             // saveLayoutToolStripMenuItem
             // 
             this.saveLayoutToolStripMenuItem.Name = "saveLayoutToolStripMenuItem";
             this.saveLayoutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveLayoutToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.saveLayoutToolStripMenuItem.Size = new System.Drawing.Size(248, 26);
             this.saveLayoutToolStripMenuItem.Text = "&Save Layout";
             this.saveLayoutToolStripMenuItem.Click += new System.EventHandler(this.saveLayoutToolStripMenuItem_Click);
             // 
             // saveLayoutAsToolStripMenuItem
             // 
             this.saveLayoutAsToolStripMenuItem.Name = "saveLayoutAsToolStripMenuItem";
-            this.saveLayoutAsToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.saveLayoutAsToolStripMenuItem.Size = new System.Drawing.Size(248, 26);
             this.saveLayoutAsToolStripMenuItem.Text = "Save Layout &As";
             this.saveLayoutAsToolStripMenuItem.Click += new System.EventHandler(this.saveLayoutAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(200, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(245, 6);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(203, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(248, 26);
             this.toolStripMenuItem2.Text = "E&xit";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
@@ -295,34 +280,42 @@ namespace SuperPutty
             this.toolStripMenuItem9,
             this.fullScreenToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.viewToolStripMenuItem.Text = "&View";
             // 
             // sessionsToolStripMenuItem
             // 
             this.sessionsToolStripMenuItem.Name = "sessionsToolStripMenuItem";
-            this.sessionsToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.sessionsToolStripMenuItem.Size = new System.Drawing.Size(182, 26);
             this.sessionsToolStripMenuItem.Text = "&Sessions";
             this.sessionsToolStripMenuItem.Click += new System.EventHandler(this.sessionsToolStripMenuItem_Click);
+            // 
+            // sessionDetailToolStripMenuItem
+            // 
+            this.sessionDetailToolStripMenuItem.Name = "sessionDetailToolStripMenuItem";
+            this.sessionDetailToolStripMenuItem.ShortcutKeyDisplayString = "";
+            this.sessionDetailToolStripMenuItem.Size = new System.Drawing.Size(182, 26);
+            this.sessionDetailToolStripMenuItem.Text = "Session &Detail";
+            this.sessionDetailToolStripMenuItem.Click += new System.EventHandler(this.sessionDetailMenuItem_Click);
             // 
             // layoutsToolStripMenuItem
             // 
             this.layoutsToolStripMenuItem.Name = "layoutsToolStripMenuItem";
-            this.layoutsToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.layoutsToolStripMenuItem.Size = new System.Drawing.Size(182, 26);
             this.layoutsToolStripMenuItem.Text = "&Layouts";
             this.layoutsToolStripMenuItem.Click += new System.EventHandler(this.layoutsToolStripMenuItem_Click);
             // 
             // logViewerToolStripMenuItem
             // 
             this.logViewerToolStripMenuItem.Name = "logViewerToolStripMenuItem";
-            this.logViewerToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.logViewerToolStripMenuItem.Size = new System.Drawing.Size(182, 26);
             this.logViewerToolStripMenuItem.Text = "L&og Viewer";
             this.logViewerToolStripMenuItem.Click += new System.EventHandler(this.logViewerToolStripMenuItem_Click);
             // 
             // toolStripMenuItem8
             // 
             this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(150, 6);
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(179, 6);
             // 
             // toolbarsToolStripMenuItem
             // 
@@ -330,7 +323,7 @@ namespace SuperPutty
             this.quickConnectionToolStripMenuItem,
             this.sendCommandsToolStripMenuItem});
             this.toolbarsToolStripMenuItem.Name = "toolbarsToolStripMenuItem";
-            this.toolbarsToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.toolbarsToolStripMenuItem.Size = new System.Drawing.Size(182, 26);
             this.toolbarsToolStripMenuItem.Text = "&Toolbars";
             // 
             // quickConnectionToolStripMenuItem
@@ -338,7 +331,7 @@ namespace SuperPutty
             this.quickConnectionToolStripMenuItem.Checked = global::SuperPutty.Properties.Settings.Default.ShowToolBarConnections;
             this.quickConnectionToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.quickConnectionToolStripMenuItem.Name = "quickConnectionToolStripMenuItem";
-            this.quickConnectionToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.quickConnectionToolStripMenuItem.Size = new System.Drawing.Size(200, 26);
             this.quickConnectionToolStripMenuItem.Text = "&Quick Connection";
             this.quickConnectionToolStripMenuItem.Click += new System.EventHandler(this.toggleCheckedState);
             // 
@@ -347,21 +340,21 @@ namespace SuperPutty
             this.sendCommandsToolStripMenuItem.Checked = global::SuperPutty.Properties.Settings.Default.ShowToolBarCommands;
             this.sendCommandsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.sendCommandsToolStripMenuItem.Name = "sendCommandsToolStripMenuItem";
-            this.sendCommandsToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.sendCommandsToolStripMenuItem.Size = new System.Drawing.Size(200, 26);
             this.sendCommandsToolStripMenuItem.Text = "&Send Commands";
             this.sendCommandsToolStripMenuItem.Click += new System.EventHandler(this.toggleCheckedState);
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(150, 6);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(179, 6);
             // 
             // showStatusBarToolStripMenuItem
             // 
             this.showStatusBarToolStripMenuItem.Checked = global::SuperPutty.Properties.Settings.Default.ShowStatusBar;
             this.showStatusBarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showStatusBarToolStripMenuItem.Name = "showStatusBarToolStripMenuItem";
-            this.showStatusBarToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.showStatusBarToolStripMenuItem.Size = new System.Drawing.Size(182, 26);
             this.showStatusBarToolStripMenuItem.Text = "St&atus Bar";
             this.showStatusBarToolStripMenuItem.Click += new System.EventHandler(this.toggleCheckedState);
             // 
@@ -371,26 +364,26 @@ namespace SuperPutty
             this.showMenuBarToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showMenuBarToolStripMenuItem.Name = "showMenuBarToolStripMenuItem";
             this.showMenuBarToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
-            this.showMenuBarToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.showMenuBarToolStripMenuItem.Size = new System.Drawing.Size(182, 26);
             this.showMenuBarToolStripMenuItem.Text = "&Menu Bar";
             this.showMenuBarToolStripMenuItem.Click += new System.EventHandler(this.toggleCheckedState);
             // 
             // alwaysOnTopToolStripMenuItem
             // 
             this.alwaysOnTopToolStripMenuItem.Name = "alwaysOnTopToolStripMenuItem";
-            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(182, 26);
             this.alwaysOnTopToolStripMenuItem.Text = "&Always On Top";
             this.alwaysOnTopToolStripMenuItem.Click += new System.EventHandler(this.toggleCheckedState);
             // 
             // toolStripMenuItem9
             // 
             this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            this.toolStripMenuItem9.Size = new System.Drawing.Size(150, 6);
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(179, 6);
             // 
             // fullScreenToolStripMenuItem
             // 
             this.fullScreenToolStripMenuItem.Name = "fullScreenToolStripMenuItem";
-            this.fullScreenToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.fullScreenToolStripMenuItem.Size = new System.Drawing.Size(182, 26);
             this.fullScreenToolStripMenuItem.Text = "&Full Screen";
             this.fullScreenToolStripMenuItem.Click += new System.EventHandler(this.fullScreenToolStripMenuItem_Click);
             // 
@@ -403,40 +396,40 @@ namespace SuperPutty
             this.toolStripMenuItem4,
             this.optionsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(56, 24);
             this.toolsToolStripMenuItem.Text = "&Tools";
             // 
             // puTTYConfigurationToolStripMenuItem
             // 
             this.puTTYConfigurationToolStripMenuItem.Name = "puTTYConfigurationToolStripMenuItem";
-            this.puTTYConfigurationToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
+            this.puTTYConfigurationToolStripMenuItem.Size = new System.Drawing.Size(331, 26);
             this.puTTYConfigurationToolStripMenuItem.Text = "&PuTTY Configuration";
             this.puTTYConfigurationToolStripMenuItem.Click += new System.EventHandler(this.puTTYConfigurationToolStripMenuItem_Click);
             // 
             // toolStripMenuItem11
             // 
             this.toolStripMenuItem11.Name = "toolStripMenuItem11";
-            this.toolStripMenuItem11.Size = new System.Drawing.Size(266, 6);
+            this.toolStripMenuItem11.Size = new System.Drawing.Size(328, 6);
             // 
             // toggleCommandMaskToolStripMenuItem
             // 
             this.toggleCommandMaskToolStripMenuItem.Name = "toggleCommandMaskToolStripMenuItem";
             this.toggleCommandMaskToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.D8)));
-            this.toggleCommandMaskToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
+            this.toggleCommandMaskToolStripMenuItem.Size = new System.Drawing.Size(331, 26);
             this.toggleCommandMaskToolStripMenuItem.Text = "Toggle &Command Mask";
             this.toggleCommandMaskToolStripMenuItem.Click += new System.EventHandler(this.toggleCommandMaskToolStripMenuItem_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(266, 6);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(328, 6);
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F2;
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(331, 26);
             this.optionsToolStripMenuItem.Text = "&Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
@@ -449,13 +442,13 @@ namespace SuperPutty
             this.toolStripMenuItem5,
             this.aboutSuperPuTTYToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.helpToolStripMenuItem.Text = "&Help";
             // 
             // documentationToolStripMenuItem
             // 
             this.documentationToolStripMenuItem.Name = "documentationToolStripMenuItem";
-            this.documentationToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.documentationToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
             this.documentationToolStripMenuItem.Text = "&Documentation";
             this.documentationToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem1_Click);
             // 
@@ -465,39 +458,39 @@ namespace SuperPutty
             this.logWindowLocationsToolStripMenuItem,
             this.cleanUpStrayProcessesToolStripMenuItem});
             this.diagnosticsToolStripMenuItem.Name = "diagnosticsToolStripMenuItem";
-            this.diagnosticsToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.diagnosticsToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
             this.diagnosticsToolStripMenuItem.Text = "D&iagnostics";
             // 
             // logWindowLocationsToolStripMenuItem
             // 
             this.logWindowLocationsToolStripMenuItem.Name = "logWindowLocationsToolStripMenuItem";
-            this.logWindowLocationsToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.logWindowLocationsToolStripMenuItem.Size = new System.Drawing.Size(248, 26);
             this.logWindowLocationsToolStripMenuItem.Text = "&Log Window Locations";
             this.logWindowLocationsToolStripMenuItem.Click += new System.EventHandler(this.logWindowLocationsToolStripMenuItem_Click);
             // 
             // cleanUpStrayProcessesToolStripMenuItem
             // 
             this.cleanUpStrayProcessesToolStripMenuItem.Name = "cleanUpStrayProcessesToolStripMenuItem";
-            this.cleanUpStrayProcessesToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.cleanUpStrayProcessesToolStripMenuItem.Size = new System.Drawing.Size(248, 26);
             this.cleanUpStrayProcessesToolStripMenuItem.Text = "&Clean Up Stray Processes";
             this.cleanUpStrayProcessesToolStripMenuItem.Click += new System.EventHandler(this.cleanUpStrayProcessesToolStripMenuItem_Click);
             // 
             // checkForUpdatesToolStripMenuItem
             // 
             this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
             this.checkForUpdatesToolStripMenuItem.Text = "Check for Updates";
             this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(172, 6);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(204, 6);
             // 
             // aboutSuperPuTTYToolStripMenuItem
             // 
             this.aboutSuperPuTTYToolStripMenuItem.Name = "aboutSuperPuTTYToolStripMenuItem";
-            this.aboutSuperPuTTYToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
+            this.aboutSuperPuTTYToolStripMenuItem.Size = new System.Drawing.Size(207, 26);
             this.aboutSuperPuTTYToolStripMenuItem.Text = "&About SuperPuTTY";
             this.aboutSuperPuTTYToolStripMenuItem.Click += new System.EventHandler(this.aboutSuperPuttyToolStripMenuItem_Click);
             // 
@@ -510,55 +503,9 @@ namespace SuperPutty
             this.dockPanel1.DockRightPortion = 200D;
             this.dockPanel1.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
             this.dockPanel1.Location = new System.Drawing.Point(0, 0);
+            this.dockPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dockPanel1.Name = "dockPanel1";
-            this.dockPanel1.Size = new System.Drawing.Size(1008, 614);
-            dockPanelGradient1.EndColor = System.Drawing.Color.Black;
-            dockPanelGradient1.StartColor = System.Drawing.Color.Black;
-            autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
-            tabGradient1.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient1.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient1.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            autoHideStripSkin1.TabGradient = tabGradient1;
-            autoHideStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            dockPanelSkin1.AutoHideStripSkin = autoHideStripSkin1;
-            tabGradient2.EndColor = System.Drawing.SystemColors.ControlLightLight;
-            tabGradient2.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient2.StartColor = System.Drawing.Color.LightSteelBlue;
-            tabGradient2.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient1.ActiveTabGradient = tabGradient2;
-            dockPanelGradient2.EndColor = System.Drawing.SystemColors.Control;
-            dockPanelGradient2.StartColor = System.Drawing.SystemColors.Control;
-            dockPaneStripGradient1.DockStripGradient = dockPanelGradient2;
-            tabGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
-            tabGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
-            tabGradient3.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient1.InactiveTabGradient = tabGradient3;
-            dockPaneStripSkin1.DocumentGradient = dockPaneStripGradient1;
-            dockPaneStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            tabGradient4.EndColor = System.Drawing.SystemColors.ActiveCaption;
-            tabGradient4.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient4.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
-            tabGradient4.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dockPaneStripToolWindowGradient1.ActiveCaptionGradient = tabGradient4;
-            tabGradient5.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient5.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient5.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripToolWindowGradient1.ActiveTabGradient = tabGradient5;
-            dockPanelGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
-            dockPaneStripToolWindowGradient1.DockStripGradient = dockPanelGradient3;
-            tabGradient6.EndColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            tabGradient6.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient6.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            tabGradient6.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripToolWindowGradient1.InactiveCaptionGradient = tabGradient6;
-            tabGradient7.EndColor = System.Drawing.Color.Transparent;
-            tabGradient7.StartColor = System.Drawing.Color.Transparent;
-            tabGradient7.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            dockPaneStripToolWindowGradient1.InactiveTabGradient = tabGradient7;
-            dockPaneStripSkin1.ToolWindowGradient = dockPaneStripToolWindowGradient1;
-            dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
-            //this.dockPanel1.Skin = dockPanelSkin1;
+            this.dockPanel1.Size = new System.Drawing.Size(1344, 766);
             this.dockPanel1.TabIndex = 3;
             this.dockPanel1.ActiveDocumentChanged += new System.EventHandler(this.dockPanel1_ActiveDocumentChanged);
             // 
@@ -569,13 +516,15 @@ namespace SuperPutty
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.dockPanel1);
             this.toolStripContainer1.ContentPanel.Controls.Add(this.statusStrip1);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1008, 636);
+            this.toolStripContainer1.ContentPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1344, 791);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.LeftToolStripPanelVisible = false;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
+            this.toolStripContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.toolStripContainer1.Name = "toolStripContainer1";
             this.toolStripContainer1.RightToolStripPanelVisible = false;
-            this.toolStripContainer1.Size = new System.Drawing.Size(1008, 710);
+            this.toolStripContainer1.Size = new System.Drawing.Size(1344, 874);
             this.toolStripContainer1.TabIndex = 5;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
@@ -588,20 +537,22 @@ namespace SuperPutty
             // 
             // statusStrip1
             // 
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabelMessage,
             this.toolStripStatusLabelVersion,
             this.toolStripStatusLabelLayout});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 614);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 766);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1008, 22);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(1344, 25);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip";
             // 
             // toolStripStatusLabelMessage
             // 
             this.toolStripStatusLabelMessage.Name = "toolStripStatusLabelMessage";
-            this.toolStripStatusLabelMessage.Size = new System.Drawing.Size(841, 17);
+            this.toolStripStatusLabelMessage.Size = new System.Drawing.Size(1134, 20);
             this.toolStripStatusLabelMessage.Spring = true;
             this.toolStripStatusLabelMessage.Text = "<Status Message>";
             this.toolStripStatusLabelMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -610,18 +561,19 @@ namespace SuperPutty
             // 
             this.toolStripStatusLabelVersion.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.toolStripStatusLabelVersion.Name = "toolStripStatusLabelVersion";
-            this.toolStripStatusLabelVersion.Size = new System.Drawing.Size(61, 17);
+            this.toolStripStatusLabelVersion.Size = new System.Drawing.Size(77, 20);
             this.toolStripStatusLabelVersion.Text = "<Version>";
             // 
             // toolStripStatusLabelLayout
             // 
             this.toolStripStatusLabelLayout.Name = "toolStripStatusLabelLayout";
-            this.toolStripStatusLabelLayout.Size = new System.Drawing.Size(91, 17);
+            this.toolStripStatusLabelLayout.Size = new System.Drawing.Size(113, 20);
             this.toolStripStatusLabelLayout.Text = "<LayoutName>";
             // 
             // tsCommands
             // 
             this.tsCommands.Dock = System.Windows.Forms.DockStyle.None;
+            this.tsCommands.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.tsCommands.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tbTextSendCommands,
             this.tsSendCommandCombo,
@@ -631,9 +583,9 @@ namespace SuperPutty
             this.toolStripSeparatorSendCommands,
             this.tbBtnSelectDocs});
             this.tsCommands.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.tsCommands.Location = new System.Drawing.Point(0, 24);
+            this.tsCommands.Location = new System.Drawing.Point(0, 56);
             this.tsCommands.Name = "tsCommands";
-            this.tsCommands.Size = new System.Drawing.Size(1008, 25);
+            this.tsCommands.Size = new System.Drawing.Size(1344, 27);
             this.tsCommands.Stretch = true;
             this.tsCommands.TabIndex = 6;
             // 
@@ -641,14 +593,14 @@ namespace SuperPutty
             // 
             this.tbTextSendCommands.Image = global::SuperPutty.Properties.Resources.application_xp_terminal;
             this.tbTextSendCommands.Name = "tbTextSendCommands";
-            this.tbTextSendCommands.Size = new System.Drawing.Size(85, 22);
+            this.tbTextSendCommands.Size = new System.Drawing.Size(104, 24);
             this.tbTextSendCommands.Text = "Commands";
             // 
             // tsSendCommandCombo
             // 
             this.tsSendCommandCombo.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tsSendCommandCombo.Name = "tsSendCommandCombo";
-            this.tsSendCommandCombo.Size = new System.Drawing.Size(400, 25);
+            this.tsSendCommandCombo.Size = new System.Drawing.Size(400, 27);
             this.tsSendCommandCombo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tsSendCommandCombo_KeyDown);
             // 
             // tbBtnSendCommand
@@ -657,7 +609,7 @@ namespace SuperPutty
             this.tbBtnSendCommand.Image = global::SuperPutty.Properties.Resources.accept;
             this.tbBtnSendCommand.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbBtnSendCommand.Name = "tbBtnSendCommand";
-            this.tbBtnSendCommand.Size = new System.Drawing.Size(23, 22);
+            this.tbBtnSendCommand.Size = new System.Drawing.Size(24, 24);
             this.tbBtnSendCommand.Text = "Send Command";
             this.tbBtnSendCommand.Click += new System.EventHandler(this.tbBtnSendCommand_Click);
             // 
@@ -668,7 +620,7 @@ namespace SuperPutty
             this.tbBtnMaskText.Image = global::SuperPutty.Properties.Resources.asterisk_gray;
             this.tbBtnMaskText.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbBtnMaskText.Name = "tbBtnMaskText";
-            this.tbBtnMaskText.Size = new System.Drawing.Size(23, 22);
+            this.tbBtnMaskText.Size = new System.Drawing.Size(24, 24);
             this.tbBtnMaskText.Text = "Mask Text";
             this.tbBtnMaskText.ToolTipText = "Mask text when typing";
             this.tbBtnMaskText.Click += new System.EventHandler(this.tbBtnMaskText_Click);
@@ -679,7 +631,7 @@ namespace SuperPutty
             this.toolStripButtonRunScript.Image = global::SuperPutty.Properties.Resources.script_code;
             this.toolStripButtonRunScript.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonRunScript.Name = "toolStripButtonRunScript";
-            this.toolStripButtonRunScript.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRunScript.Size = new System.Drawing.Size(24, 24);
             this.toolStripButtonRunScript.Text = "toolStripButtonScript";
             this.toolStripButtonRunScript.ToolTipText = "Run Script";
             this.toolStripButtonRunScript.Click += new System.EventHandler(this.toolStripButtonRunScript_Click);
@@ -687,7 +639,7 @@ namespace SuperPutty
             // toolStripSeparatorSendCommands
             // 
             this.toolStripSeparatorSendCommands.Name = "toolStripSeparatorSendCommands";
-            this.toolStripSeparatorSendCommands.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparatorSendCommands.Size = new System.Drawing.Size(6, 27);
             // 
             // tbBtnSelectDocs
             // 
@@ -695,13 +647,14 @@ namespace SuperPutty
             this.tbBtnSelectDocs.Image = global::SuperPutty.Properties.Resources.application_edit;
             this.tbBtnSelectDocs.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbBtnSelectDocs.Name = "tbBtnSelectDocs";
-            this.tbBtnSelectDocs.Size = new System.Drawing.Size(23, 22);
+            this.tbBtnSelectDocs.Size = new System.Drawing.Size(24, 24);
             this.tbBtnSelectDocs.Text = "Select Documents";
             this.tbBtnSelectDocs.Click += new System.EventHandler(this.tsBtnSelectDocs_Click);
             // 
             // tsConnect
             // 
             this.tsConnect.Dock = System.Windows.Forms.DockStyle.None;
+            this.tsConnect.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.tsConnect.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
             this.tbComboProtocol,
@@ -716,9 +669,9 @@ namespace SuperPutty
             this.tbBtnConnect,
             this.toolStripButtonClearFields});
             this.tsConnect.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.tsConnect.Location = new System.Drawing.Point(0, 49);
+            this.tsConnect.Location = new System.Drawing.Point(0, 28);
             this.tsConnect.Name = "tsConnect";
-            this.tsConnect.Size = new System.Drawing.Size(1008, 25);
+            this.tsConnect.Size = new System.Drawing.Size(1344, 28);
             this.tsConnect.Stretch = true;
             this.tsConnect.TabIndex = 5;
             this.tsConnect.Text = "Connect";
@@ -727,7 +680,7 @@ namespace SuperPutty
             // 
             this.toolStripLabel1.Image = global::SuperPutty.Properties.Resources.computer;
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(68, 22);
+            this.toolStripLabel1.Size = new System.Drawing.Size(85, 25);
             this.toolStripLabel1.Text = "Protocol";
             // 
             // tbComboProtocol
@@ -736,49 +689,49 @@ namespace SuperPutty
             this.tbComboProtocol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tbComboProtocol.DropDownWidth = 75;
             this.tbComboProtocol.Name = "tbComboProtocol";
-            this.tbComboProtocol.Size = new System.Drawing.Size(70, 23);
+            this.tbComboProtocol.Size = new System.Drawing.Size(70, 28);
             this.tbComboProtocol.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbItemConnect_KeyPress);
             // 
             // toolStripLabel2
             // 
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(32, 22);
+            this.toolStripLabel2.Size = new System.Drawing.Size(40, 25);
             this.toolStripLabel2.Text = "Host";
             // 
             // tbTxtBoxHost
             // 
             this.tbTxtBoxHost.Name = "tbTxtBoxHost";
-            this.tbTxtBoxHost.Size = new System.Drawing.Size(180, 25);
+            this.tbTxtBoxHost.Size = new System.Drawing.Size(180, 28);
             this.tbTxtBoxHost.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbItemConnect_KeyPress);
             // 
             // toolStripLabel3
             // 
             this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(37, 22);
+            this.toolStripLabel3.Size = new System.Drawing.Size(46, 25);
             this.toolStripLabel3.Text = "Login";
             // 
             // tbTxtBoxLogin
             // 
             this.tbTxtBoxLogin.Name = "tbTxtBoxLogin";
-            this.tbTxtBoxLogin.Size = new System.Drawing.Size(100, 25);
+            this.tbTxtBoxLogin.Size = new System.Drawing.Size(100, 28);
             this.tbTxtBoxLogin.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbItemConnect_KeyPress);
             // 
             // toolStripLabel4
             // 
             this.toolStripLabel4.Name = "toolStripLabel4";
-            this.toolStripLabel4.Size = new System.Drawing.Size(57, 22);
+            this.toolStripLabel4.Size = new System.Drawing.Size(70, 25);
             this.toolStripLabel4.Text = "Password";
             // 
             // tbTxtBoxPassword
             // 
             this.tbTxtBoxPassword.Name = "tbTxtBoxPassword";
-            this.tbTxtBoxPassword.Size = new System.Drawing.Size(100, 25);
+            this.tbTxtBoxPassword.Size = new System.Drawing.Size(100, 28);
             this.tbTxtBoxPassword.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbItemConnect_KeyPress);
             // 
             // toolStripLabel5
             // 
             this.toolStripLabel5.Name = "toolStripLabel5";
-            this.toolStripLabel5.Size = new System.Drawing.Size(46, 22);
+            this.toolStripLabel5.Size = new System.Drawing.Size(58, 25);
             this.toolStripLabel5.Text = "Session";
             // 
             // tbComboSession
@@ -787,7 +740,7 @@ namespace SuperPutty
             this.tbComboSession.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tbComboSession.DropDownWidth = 250;
             this.tbComboSession.Name = "tbComboSession";
-            this.tbComboSession.Size = new System.Drawing.Size(110, 25);
+            this.tbComboSession.Size = new System.Drawing.Size(110, 28);
             this.tbComboSession.Sorted = true;
             this.tbComboSession.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbItemConnect_KeyPress);
             // 
@@ -797,7 +750,7 @@ namespace SuperPutty
             this.tbBtnConnect.Image = global::SuperPutty.Properties.Resources.accept;
             this.tbBtnConnect.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbBtnConnect.Name = "tbBtnConnect";
-            this.tbBtnConnect.Size = new System.Drawing.Size(23, 22);
+            this.tbBtnConnect.Size = new System.Drawing.Size(24, 25);
             this.tbBtnConnect.Text = "Connect";
             this.tbBtnConnect.Click += new System.EventHandler(this.tbBtnConnect_Click);
             // 
@@ -807,7 +760,7 @@ namespace SuperPutty
             this.toolStripButtonClearFields.Image = global::SuperPutty.Properties.Resources.cross_black;
             this.toolStripButtonClearFields.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonClearFields.Name = "toolStripButtonClearFields";
-            this.toolStripButtonClearFields.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonClearFields.Size = new System.Drawing.Size(24, 25);
             this.toolStripButtonClearFields.Text = "Clear Fields";
             this.toolStripButtonClearFields.Click += new System.EventHandler(this.toolStripButtonClearFields_Click);
             // 
@@ -829,35 +782,29 @@ namespace SuperPutty
             // 
             // notifyIconContextMenuStrip
             // 
+            this.notifyIconContextMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.notifyIconContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exitSuperPuTTYToolStripMenuItem});
             this.notifyIconContextMenuStrip.Name = "notifyIconContextMenuStrip";
-            this.notifyIconContextMenuStrip.Size = new System.Drawing.Size(161, 26);
+            this.notifyIconContextMenuStrip.Size = new System.Drawing.Size(185, 28);
             // 
             // exitSuperPuTTYToolStripMenuItem
             // 
             this.exitSuperPuTTYToolStripMenuItem.Name = "exitSuperPuTTYToolStripMenuItem";
-            this.exitSuperPuTTYToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.exitSuperPuTTYToolStripMenuItem.Size = new System.Drawing.Size(184, 24);
             this.exitSuperPuTTYToolStripMenuItem.Text = "Exit SuperPuTTY";
             this.exitSuperPuTTYToolStripMenuItem.Click += new System.EventHandler(this.exitSuperPuTTYToolStripMenuItem_Click);
             // 
-            // sessionDetailToolStripMenuItem
-            // 
-            this.sessionDetailToolStripMenuItem.Name = "sessionDetailToolStripMenuItem";
-            this.sessionDetailToolStripMenuItem.ShortcutKeyDisplayString = "";
-            this.sessionDetailToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
-            this.sessionDetailToolStripMenuItem.Text = "Session &Detail";
-            this.sessionDetailToolStripMenuItem.Click += new System.EventHandler(this.sessionDetailMenuItem_Click);
-            // 
             // frmSuperPutty
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ClientSize = new System.Drawing.Size(1008, 710);
+            this.ClientSize = new System.Drawing.Size(1344, 874);
             this.Controls.Add(this.toolStripContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "frmSuperPutty";
             this.Text = "SuperPuTTY";
             this.Activated += new System.EventHandler(this.frmSuperPutty_Activated);
