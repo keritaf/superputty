@@ -15,6 +15,12 @@ namespace SuperPutty
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
+            tbFocusHelperHost.Dispose();
+            tbFocusHelperUserName.Dispose();
+            tbFocusHelperPassword.Dispose();
+            focusHelper.Dispose();
+            tabSwitcher.Dispose();
+
             if (disposing && (components != null))
             {
                 components.Dispose();

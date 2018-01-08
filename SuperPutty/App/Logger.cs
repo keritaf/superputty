@@ -30,19 +30,16 @@ namespace SuperPutty
         
         public static void Log(string logLine)
         {
-            if (OnLog != null)
-                OnLog(logLine);
+            OnLog?.Invoke(logLine);
         }
         public static void Log(Exception e)
         {
-            if (OnLog != null)
-                OnLog(e.Message);
+            OnLog?.Invoke(e.Message);
         }
 
         public static void Log(string format, params object[] arg)
         {
-            if (OnLog != null)
-                OnLog(String.Format(format, arg));
+            OnLog?.Invoke(String.Format(format, arg));
         }
     }
 }

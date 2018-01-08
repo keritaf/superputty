@@ -128,10 +128,7 @@ namespace SuperPutty.Scp
             this.PercentComplete = percentageComplete;
             this.TransferStatus = status;
             this.TransferStatusMsg = message;
-            if (this.Update != null)
-            {
-                this.Update(this, EventArgs.Empty);
-            }
+            this.Update?.Invoke(this, EventArgs.Empty);
         }
 
         public static bool CanRestart(Status status)

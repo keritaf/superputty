@@ -451,7 +451,7 @@ namespace SuperPutty
             foreach (ToolWindow content in this.tabSwitcher.Documents)
             {
                 ctlPuttyPanel panel = content as ctlPuttyPanel;
-                if (content != null)
+                if (panel != null)
                 {
                     SessionData sd = panel.Session;
                     data.ItemData.AddItemDataRow(
@@ -1157,8 +1157,9 @@ namespace SuperPutty
         private int TrySendCommandsFromToolbar(CommandData command, bool saveHistory)
         {
             int sent = 0;
+            if (command == null || string.IsNullOrEmpty(command.Command)) return 0;
 
-            if(this.DockPanel.Contents.Count > 0)
+            if (this.DockPanel.Contents.Count > 0)
             {
                 foreach (IDockContent doc in VisualOrderTabSwitchStrategy.GetDocuments(this.DockPanel))
                 {
@@ -1579,7 +1580,7 @@ namespace SuperPutty
             foreach (IDockContent c in this.DockPanel.Documents)
             {
                 ctlPuttyPanel panel = c as ctlPuttyPanel;
-                if (c != null)
+                if (panel != null)
                 {
                     NativeMethods.RECT rect = new NativeMethods.RECT();
                     NativeMethods.GetWindowRect(panel.AppPanel.AppWindowHandle, ref rect);
@@ -1634,7 +1635,7 @@ namespace SuperPutty
                             }
                             catch (Exception ex)
                             {
-                                Log.ErrorFormat("Error killing proc: {0} ({1})", procToKill.ProcessName, procToKill.Id, ex);
+                                Log.ErrorFormat("Error killing proc: {0} ({1}) {2}", procToKill.ProcessName, procToKill.Id, ex);
                                 error++;
                             }
                         }

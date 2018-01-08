@@ -141,10 +141,7 @@ namespace SuperPutty
             String msg = args.Length > 0 ? String.Format(status, args) : status;
             Log.DebugFormat("STATUS: {0}", msg);
 
-            if (StatusEvent != null)
-            {
-                StatusEvent(msg);
-            }
+            StatusEvent?.Invoke(msg);
         }
 
         #region Layouts
@@ -250,10 +247,7 @@ namespace SuperPutty
             {
                 IsLayoutChanging = true;
 
-                if (LayoutChanging != null)
-                {
-                    LayoutChanging(typeof(SuperPuTTY), args);
-                }
+                LayoutChanging?.Invoke(typeof(SuperPuTTY), args);
 
             }
             finally
@@ -519,7 +513,7 @@ namespace SuperPutty
         public static void OpenScpSession(SessionData session)
         {
             Log.InfoFormat("Opening scp session, id={0}", session == null ? "" : session.SessionId);
-            if (!IsScpEnabled)
+            if (!IsScpEnabled && session != null)
             {
                 SuperPuTTY.ReportStatus("Could not open session, pscp not found: {0} [SCP]", session.SessionId);
             }
@@ -641,7 +635,7 @@ namespace SuperPutty
             try
             {
                 List<SessionData> sessions = SessionData.LoadSessionsFromRegistry();
-                if (sessions != null && sessions.Count > 0)
+                if (sessions.Count > 0)
                 {
                     foreach (SessionData session in sessions)
                     {

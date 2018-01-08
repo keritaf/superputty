@@ -30,8 +30,7 @@ namespace SuperPutty.Utils
 
         void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
-            if (this.SystemSwitch != null)
-                this.SystemSwitch(this, new GlobalWindowEventArgs(hwnd, eventType));
+            this.SystemSwitch?.Invoke(this, new GlobalWindowEventArgs(hwnd, eventType));
         }
 
         ~GlobalWindowEvents()

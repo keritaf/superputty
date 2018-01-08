@@ -208,10 +208,7 @@ namespace SuperPutty.Scp
 
         protected void OnAuthRequest(AuthEventArgs evt)
         {
-            if (this.AuthRequest != null)
-            {
-                this.AuthRequest(this, evt);
-            }
+            this.AuthRequest?.Invoke(this, evt);
         }
 
         IBrowserModel Model { get; set; }

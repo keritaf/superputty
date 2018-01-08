@@ -277,10 +277,7 @@ namespace SuperPutty
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (this.SelectionChanged != null)
-            {
-                this.SelectionChanged(this.SelectedSession);
-            }
+            this.SelectionChanged?.Invoke(this.SelectedSession);
         }
 
         /// <summary>
@@ -394,7 +391,11 @@ namespace SuperPutty
             else
                 IsDupeNode = ParentNode.Nodes.ContainsKey(NewName);
 
-            if (IsDupeNode)
+            if (string.IsNullOrEmpty(NewName) || NewName.Trim() == String.Empty)
+            {
+                Error = "Empty name";
+            }
+            else if(IsDupeNode)
             {
                 Error = "Session with same name exists";
             }
@@ -402,10 +403,7 @@ namespace SuperPutty
             {
                 Error = "Invalid character ( " + SessionIdDelim + " ) in name";
             }
-            else if (string.IsNullOrEmpty(NewName) || NewName.Trim() == String.Empty)
-            {
-                Error = "Empty name";
-            }
+
             return string.IsNullOrEmpty(Error);
         }
 
@@ -501,7 +499,10 @@ namespace SuperPutty
                     ItemNameValidator = delegate(string txt, out string error)
                     {
                         error = String.Empty;
-                        if (node.Nodes.ContainsKey(txt))
+                        if (string.IsNullOrEmpty(txt) || txt.Trim() == String.Empty)
+                        {
+                            error = "Empty folder name";
+                        } else if (node.Nodes.ContainsKey(txt))
                         {
                             error = "Node with same name exists";
                         }
@@ -509,11 +510,7 @@ namespace SuperPutty
                         {
                             error = "Invalid character ( " + SessionIdDelim + " ) in name";
                         }
-                        else if (string.IsNullOrEmpty(txt) || txt.Trim() == String.Empty)
-                        {
-                            error = "Empty folder name";
-                        }
-
+                        
                         return string.IsNullOrEmpty(error);
                     }
                 };

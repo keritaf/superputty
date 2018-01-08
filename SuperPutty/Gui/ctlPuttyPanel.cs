@@ -432,7 +432,7 @@ namespace SuperPutty
                 }
                 catch (Exception ex)
                 {
-                    Log.ErrorFormat("Error sending command menu command to embedded putty", ex);
+                    Log.ErrorFormat("Error sending command menu command to embedded putty: {0}", ex);
                 }
             });
         }

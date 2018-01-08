@@ -415,8 +415,7 @@ namespace SuperPutty
         {
             string args = "-ls "; // default arguments
             args += !String.IsNullOrEmpty(session.PuttySession) ? "-load \"" + session.PuttySession + "\" " : "";
-            args += !String.IsNullOrEmpty(session.Password) && session.Password.Length > 0 
-                ? "-pw " + (includePassword ? session.Password : "XXXXX") + " " 
+            args += !String.IsNullOrEmpty(session.Password) ? "-pw " + (includePassword ? session.Password : "XXXXX") + " " 
                 : "";
             args += "-P " + session.Port + " ";
             args += !String.IsNullOrEmpty(session.Username) ? session.Username + "@" : "";
@@ -458,9 +457,7 @@ namespace SuperPutty
                         ? "-load \"" + m_Session.PuttySession + "\" "
                         : "";
                     //args += "-l " + Session.Username + " ";
-                    args += !String.IsNullOrEmpty(m_Session.Password) && m_Session.Password.Length > 0
-                        ? "-pw " + m_Session.Password + " "
-                        : "";
+                    args += !String.IsNullOrEmpty(m_Session.Password) ? "-pw " + m_Session.Password + " " : "";
                     args += "-P " + m_Session.Port + " ";
                     args += "\"" + files[0] + "\" ";
                     args += !String.IsNullOrEmpty(m_Session.Username) ? m_Session.Username + "@" : "";

@@ -72,10 +72,7 @@ namespace SuperPutty.Utils
             this.Instance = this.Initializer == null ? Activator.CreateInstance<T>() : this.Initializer(this);
 
             this.Instance.FormClosed += new FormClosedEventHandler(Instance_FormClosed);
-            if (InstanceChanged != null)
-            {
-                InstanceChanged(this.Instance);
-            }
+            InstanceChanged?.Invoke(this.Instance);
             return Instance;
         }
 

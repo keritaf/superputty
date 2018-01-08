@@ -281,10 +281,7 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
 
         void OnInnerApplicationFocused()
         {
-            if (this.InnerApplicationFocused != null)
-            {
-                this.InnerApplicationFocused(this, EventArgs.Empty);
-            }
+            this.InnerApplicationFocused?.Invoke(this, EventArgs.Empty);
         }
 
         /*************************** End Hack to watch for windows focus change events ***************************************/
