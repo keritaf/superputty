@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using SuperPutty.Gui;
 
 namespace SuperPutty.Data
 {
@@ -10,8 +11,8 @@ namespace SuperPutty.Data
 
         public LayoutData(string filePath)
         {
-            this.FilePath = filePath;
-            this.Name = Path.GetFileNameWithoutExtension(filePath);
+            FilePath = filePath;
+            Name = Path.GetFileNameWithoutExtension(filePath);
         }
 
         public string Name { get; set; }
@@ -19,11 +20,11 @@ namespace SuperPutty.Data
 
         public bool IsReadOnly { get; set; }
 
-        public bool IsDefault { get { return this.Name == SuperPuTTY.Settings.DefaultLayoutName; } }
+        public bool IsDefault => Name == SuperPuTTY.Settings.DefaultLayoutName;
 
         public override string ToString()
         {
-            return IsDefault ? String.Format("{0} (default)", this.Name) : this.Name;
+            return IsDefault ? String.Format(LocalizedText.LayoutData_default, Name) : Name;
         }
     }
 

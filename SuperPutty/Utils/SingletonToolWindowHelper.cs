@@ -18,87 +18,81 @@ namespace SuperPutty.Utils
 
         public SingletonToolWindowHelper(string name, DockPanel dockPanel, Object InitializerResource, WindowInitializer initializer)
         {
-            this.Name = name;
-            this.DockPanel = dockPanel;
-            this.Initializer = initializer;
+            Name = name;
+            DockPanel = dockPanel;
+            Initializer = initializer;
             this.InitializerResource = InitializerResource;
         }
 
         public void ShowWindow(DockState dockState)
         {
-            if (this.Instance == null)
+            if (Instance == null)
             {
                 Initialize();
-                this.Instance.Show(DockPanel, dockState);
-                SuperPuTTY.ReportStatus("Showing " + this.Name);
+                Instance.Show(DockPanel, dockState);
+                SuperPuTTY.ReportStatus("Showing " + Name);
             }
             else
             {
-                this.Instance.Show(DockPanel);
-                SuperPuTTY.ReportStatus("Bringing {0} to Front", this.Name);
+                Instance.Show(DockPanel);
+                SuperPuTTY.ReportStatus("Bringing {0} to Front", Name);
             }
         }
 
         public void ShowWindow(DockPane pane, DockAlignment dockAlign, double proportion)
         {
-            if (this.Instance == null)
+            if (Instance == null)
             {
                 Initialize();
-                this.Instance.Show(pane, dockAlign, proportion);
-                SuperPuTTY.ReportStatus("Showing " + this.Name);
+                Instance.Show(pane, dockAlign, proportion);
+                SuperPuTTY.ReportStatus("Showing " + Name);
             }
             else
             {
-                this.Instance.Show(DockPanel);
-                SuperPuTTY.ReportStatus("Bringing {0} to Front", this.Name);
+                Instance.Show(DockPanel);
+                SuperPuTTY.ReportStatus("Bringing {0} to Front", Name);
             }
         }
 
         public void ShowWindow(DockPane pane, IDockContent PreviousContent)
         {
-            if (this.Instance == null)
+            if (Instance == null)
             {
                 Initialize();
             }
             
             Instance.Show(pane, PreviousContent);
-            SuperPuTTY.ReportStatus("Showing " + this.Name);
+            SuperPuTTY.ReportStatus("Showing " + Name);
         }
 
-        public bool IsVisibleAsToolWindow { get { return this.Instance != null && this.Instance.DockHandler.Pane != null && !this.Instance.DockHandler.Pane.IsAutoHide; } }
+        public bool IsVisibleAsToolWindow => Instance?.DockHandler.Pane != null && !Instance.DockHandler.Pane.IsAutoHide;
 
         public T Initialize()
         {
-            this.Instance = this.Initializer == null ? Activator.CreateInstance<T>() : this.Initializer(this);
+            Instance = Initializer == null ? Activator.CreateInstance<T>() : Initializer(this);
 
-            this.Instance.FormClosed += new FormClosedEventHandler(Instance_FormClosed);
-            InstanceChanged?.Invoke(this.Instance);
+            Instance.FormClosed += new FormClosedEventHandler(Instance_FormClosed);
+            InstanceChanged?.Invoke(Instance);
             return Instance;
         }
 
         void Instance_FormClosed(object sender, FormClosedEventArgs e)
         {
-            this.Instance = null;
-            SuperPuTTY.ReportStatus("Closed {0}", this.Name);
+            Instance = null;
+            SuperPuTTY.ReportStatus("Closed {0}", Name);
         }
 
         public void Hide()
         {
-            if (this.Instance != null)
-            {
-                this.Instance.Hide();
-            }
+            Instance?.Hide();
         }
 
         public void Restore()
         {
-            if (this.Instance != null)
-            {
-                this.Instance.Show(this.DockPanel);
-            }
+            Instance?.Show(DockPanel);
         }
 
-        public bool IsVisible { get { return this.Instance != null && this.Instance.Visible; } }
+        public bool IsVisible => Instance != null && Instance.Visible;
 
 
         public string Name { get; private set; }

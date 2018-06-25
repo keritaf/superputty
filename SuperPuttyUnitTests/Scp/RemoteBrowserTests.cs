@@ -20,9 +20,8 @@ namespace SuperPuttyUnitTests.Scp
         {
             // May 15 12:32, Mar  3 03:37, Nov 18 18:19, May 27  2012
             PscpClient.ScpLineParser parser = new PscpClient.ScpLineParser();
-            DateTime dt;
 
-            Assert.True(parser.TryParseTimestamp("May 15 2012", out dt));
+            Assert.True(parser.TryParseTimestamp("May 15 2012", out var dt));
             Assert.AreEqual(2012, dt.Year);
             Assert.AreEqual(5, dt.Month);
             Assert.AreEqual(15, dt.Day);
@@ -43,9 +42,8 @@ namespace SuperPuttyUnitTests.Scp
         public void ParserTimestampTimeMode()
         {
             PscpClient.ScpLineParser parser = new PscpClient.ScpLineParser();
-            DateTime dt;
 
-            Assert.True(parser.TryParseTimestamp("May 15 12:32", out dt));
+            Assert.True(parser.TryParseTimestamp("May 15 12:32", out var dt));
             Assert.AreEqual(DateTime.Now.Year, dt.Year);
             Assert.AreEqual(5, dt.Month);
             Assert.AreEqual(15, dt.Day);
@@ -77,8 +75,7 @@ namespace SuperPuttyUnitTests.Scp
         [TestView]
         public void TestGUI()
         {
-            Form form = new Form();
-            form.Size = new Size(600, 800);
+            Form form = new Form {Size = new Size(600, 800)};
 
             SessionData session = new SessionData
             {
@@ -96,8 +93,7 @@ namespace SuperPuttyUnitTests.Scp
 
             BrowserView view = new BrowserView(
                 presenter,
-                RemoteBrowserModel.NewDirectory("/home/" + ScpConfig.UserName));
-            view.Dock = DockStyle.Fill;
+                RemoteBrowserModel.NewDirectory("/home/" + ScpConfig.UserName)) {Dock = DockStyle.Fill};
 
             form.Controls.Add(view);
             form.ShowDialog();

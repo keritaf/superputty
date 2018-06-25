@@ -34,21 +34,21 @@ namespace SuperPutty.Scp
         {
             InitializeComponent();
 
-            this.Comparer = new BrowserFileInfoComparer();
-            this.listViewFiles.ListViewItemSorter = this.Comparer;
+            Comparer = new BrowserFileInfoComparer();
+            listViewFiles.ListViewItemSorter = Comparer;
         }
 
         public void Initialize(IBrowserPresenter presenter, BrowserFileInfo startingDir)
         {
-            if (this.initialized) return;
+            if (initialized) return;
 
-            this.Presenter = presenter;
-            this.Presenter.AuthRequest += Presenter_AuthRequest;
-            this.Bind(this.Presenter.ViewModel);
+            Presenter = presenter;
+            Presenter.AuthRequest += Presenter_AuthRequest;
+            Bind(Presenter.ViewModel);
 
-            this.Presenter.LoadDirectory(startingDir);
-            this.ConfirmTransfer = true;
-            this.initialized = true;
+            Presenter.LoadDirectory(startingDir);
+            ConfirmTransfer = true;
+            initialized = true;
         }
 
         void Presenter_AuthRequest(object sender, AuthEventArgs e)
@@ -66,7 +66,7 @@ namespace SuperPutty.Scp
                 else
                 {
                     Log.InfoFormat("Login canceled.  Closing parent form");
-                    this.ParentForm.Close();
+                    ParentForm.Close();
                 }
             }
         }
@@ -75,13 +75,13 @@ namespace SuperPutty.Scp
         void Bind(IBrowserViewModel model)
         {
             // Bind the controls
-            this.bindingSource.DataSource = model;
+            bindingSource.DataSource = model;
 
             // can't bind toolbar
-            this.toolStripLabelName.Text = this.Presenter.ViewModel.Name;
+            toolStripLabelName.Text = Presenter.ViewModel.Name;
 
             // Ugh, ListView not bindable, do it manually
-            this.PopulateListView(model.Files);
+            PopulateListView(model.Files);
             model.Files.ListChanged += Files_ListChanged;
             model.PropertyChanged += (s, e) => EnableDisableControls(model.BrowserState);
         }
@@ -89,20 +89,20 @@ namespace SuperPutty.Scp
         void EnableDisableControls(BrowserState state)
         {
             bool enabled = state == BrowserState.Ready;
-            this.tsBtnRefresh.Enabled = enabled;
-            this.listViewFiles.Enabled = enabled;
+            tsBtnRefresh.Enabled = enabled;
+            listViewFiles.Enabled = enabled;
         }
 
         void PopulateListView(BindingList<BrowserFileInfo> files)
         {
-            this.listViewFiles.BeginUpdate();
-            this.listViewFiles.Items.Clear();
-            this.listViewFiles.ListViewItemSorter = null;
+            listViewFiles.BeginUpdate();
+            listViewFiles.Items.Clear();
+            listViewFiles.ListViewItemSorter = null;
 
             foreach (BrowserFileInfo file in files)
             {
                 string sizeKB = file.Type == FileType.File ? (file.Size / 1024).ToString("#,##0 KB") : String.Empty;
-                ListViewItem addedItem = this.listViewFiles.Items.Add(file.Name, file.Name);
+                ListViewItem addedItem = listViewFiles.Items.Add(file.Name, file.Name);
                 addedItem.Tag = file;
                 addedItem.ImageIndex = file.Type == FileType.ParentDirectory 
                     ? 2 
@@ -115,7 +115,7 @@ namespace SuperPutty.Scp
             }
 
             listViewFiles.EndUpdate();
-            this.listViewFiles.ListViewItemSorter = this.Comparer;
+            listViewFiles.ListViewItemSorter = Comparer;
         }
 
         void Files_ListChanged(object sender, ListChangedEventArgs e)
@@ -133,16 +133,16 @@ namespace SuperPutty.Scp
         private void listViewFiles_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             // Get BrowserFileInfo propertyName
-            ColumnHeader header = this.listViewFiles.Columns[e.Column];
+            ColumnHeader header = listViewFiles.Columns[e.Column];
 
             // Do Sort
-            this.listViewFiles.Sorting = listViewFiles.Sorting == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
-            this.Comparer.Column = e.Column;
-            this.Comparer.SortOrder = listViewFiles.Sorting;
+            listViewFiles.Sorting = listViewFiles.Sorting == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+            Comparer.Column = e.Column;
+            Comparer.SortOrder = listViewFiles.Sorting;
 
-            Log.InfoFormat("Sorting ListView: field={0}, dir={1}", header.Text, this.Comparer.SortOrder);
-            this.listViewFiles.Sort();
-            this.listViewFiles.SetSortIcon(e.Column, listViewFiles.Sorting);
+            Log.InfoFormat("Sorting ListView: field={0}, dir={1}", header.Text, Comparer.SortOrder);
+            listViewFiles.Sort();
+            listViewFiles.SetSortIcon(e.Column, listViewFiles.Sorting);
         }
 
         public class BrowserFileInfoComparer : IComparer
@@ -158,7 +158,7 @@ namespace SuperPutty.Scp
                 BrowserFileInfo b = (BrowserFileInfo)lviY.Tag;
 
                 // direction
-                int dir = this.SortOrder == SortOrder.Descending ? -1 : 1;
+                int dir = SortOrder == SortOrder.Descending ? -1 : 1;
 
                 // identity
                 if (a == b) return 0;
@@ -168,7 +168,7 @@ namespace SuperPutty.Scp
                 if (type != 0) { return type; }
 
                 // resolve based on field
-                switch (this.Column)
+                switch (Column)
                 {
                     case 1: return dir * Comparer<long>.Default.Compare(a.Size, b.Size);
                     case 2: return dir * Comparer<DateTime>.Default.Compare(a.LastModTime, b.LastModTime);
@@ -188,36 +188,36 @@ namespace SuperPutty.Scp
         private void detailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CheckViewModeItem((ToolStripMenuItem)sender);
-            this.listViewFiles.View = View.Details;
+            listViewFiles.View = View.Details;
         }
 
         private void smallIconsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CheckViewModeItem((ToolStripMenuItem)sender);
-            this.listViewFiles.View = View.SmallIcon;
+            listViewFiles.View = View.SmallIcon;
         }
 
         private void largeIconsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CheckViewModeItem((ToolStripMenuItem)sender);
-            this.listViewFiles.View = View.LargeIcon;
+            listViewFiles.View = View.LargeIcon;
         }
 
         private void tileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CheckViewModeItem((ToolStripMenuItem)sender);
-            this.listViewFiles.View = View.Tile;
+            listViewFiles.View = View.Tile;
         }
 
         private void listToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CheckViewModeItem((ToolStripMenuItem)sender);
-            this.listViewFiles.View = View.List;
+            listViewFiles.View = View.List;
         }
 
         void CheckViewModeItem(ToolStripMenuItem itemToSelect)
         {
-            foreach (ToolStripMenuItem item in this.toolStripSplitButtonView.DropDownItems)
+            foreach (ToolStripMenuItem item in toolStripSplitButtonView.DropDownItems)
             {
                 item.Checked = false;
             }
@@ -238,15 +238,15 @@ namespace SuperPutty.Scp
             bool copyAllowed = (e.AllowedEffect & DragDropEffects.Copy) == DragDropEffects.Copy;
             bool isFile = e.Data.GetDataPresent(DataFormats.FileDrop, false);
             bool isBrowserFile = e.Data.GetDataPresent(typeof(BrowserFileInfo[]));
-            this.dragDropIsValid = copyAllowed && ( isFile || isBrowserFile);
+            dragDropIsValid = copyAllowed && ( isFile || isBrowserFile);
 
             // update effect
             e.Effect = dragDropIsValid ? DragDropEffects.Copy : DragDropEffects.None;
 
             // parse out payload
-            if (this.dragDropIsValid)
+            if (dragDropIsValid)
             {
-                this.dragDropFileTransfer = new FileTransferRequest { Session = this.Presenter.Session };
+                dragDropFileTransfer = new FileTransferRequest { Session = Presenter.Session };
 
                 // Get source files (payload)
                 if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -258,14 +258,14 @@ namespace SuperPutty.Scp
                         BrowserFileInfo item = Directory.Exists(fileName)
                             ? new BrowserFileInfo(new DirectoryInfo(fileName))
                             : new BrowserFileInfo(new FileInfo(fileName));
-                        this.dragDropFileTransfer.SourceFiles.Add(item);
+                        dragDropFileTransfer.SourceFiles.Add(item);
                     }
                 }
                 else if (e.Data.GetDataPresent(typeof(BrowserFileInfo[])))
                 {
                     // from another browser
                     BrowserFileInfo[] files = (BrowserFileInfo[])e.Data.GetData(typeof(BrowserFileInfo[]));
-                    this.dragDropFileTransfer.SourceFiles.AddRange(files);
+                    dragDropFileTransfer.SourceFiles.AddRange(files);
                 }
             }
 
@@ -294,8 +294,8 @@ namespace SuperPutty.Scp
             Point p = listView.PointToClient(new Point(e.X, e.Y));
             ListViewHitTestInfo hti = listView.HitTest(p.X, p.Y);
 
-            BrowserFileInfo target = hti.Item != null ? (BrowserFileInfo) hti.Item.Tag : this.Presenter.CurrentPath;
-            this.dragDropFileTransfer.TargetFile = target;
+            BrowserFileInfo target = hti.Item != null ? (BrowserFileInfo) hti.Item.Tag : Presenter.CurrentPath;
+            dragDropFileTransfer.TargetFile = target;
 
             // Clear selection and select item under mouse if folder
             listView.SelectedItems.Clear();
@@ -313,9 +313,9 @@ namespace SuperPutty.Scp
             // - Local BrowserFileInfo to Local (not allowed)
             // - Remote BrowserFileInfo to Remote (not allowed)
             e.Effect = DragDropEffects.Copy;
-            foreach (BrowserFileInfo source in this.dragDropFileTransfer.SourceFiles)
+            foreach (BrowserFileInfo source in dragDropFileTransfer.SourceFiles)
             {
-                if (!this.Presenter.CanTransferFile(source, target))
+                if (!Presenter.CanTransferFile(source, target))
                 {
                     e.Effect = DragDropEffects.None;
                     break;
@@ -325,33 +325,33 @@ namespace SuperPutty.Scp
 
         private void listViewFiles_DragDrop(object sender, DragEventArgs e)
         {
-            Log.InfoFormat("DragDrop: valid={0}, effect={1}", this.dragDropIsValid, e.Effect);
+            Log.InfoFormat("DragDrop: valid={0}, effect={1}", dragDropIsValid, e.Effect);
 
             // Ask for confirmation
-            if (this.ConfirmTransfer)
+            if (ConfirmTransfer)
             {
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("Source Files:");
-                foreach (BrowserFileInfo source in this.dragDropFileTransfer.SourceFiles)
+                foreach (BrowserFileInfo source in dragDropFileTransfer.SourceFiles)
                 {
                     sb.AppendLine(source.Path);
                 }
                 sb.AppendLine();
                 sb.AppendLine("Target:");
-                sb.AppendLine(this.dragDropFileTransfer.TargetFile.Path);
+                sb.AppendLine(dragDropFileTransfer.TargetFile.Path);
                 sb.AppendLine();
 
                 DialogResult res = MessageBox.Show(this, sb.ToString(), "Transfer Files?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (res == DialogResult.No)
                 {
-                    Log.InfoFormat("FileTransfer canceled: {0}", this.dragDropFileTransfer);
+                    Log.InfoFormat("FileTransfer canceled: {0}", dragDropFileTransfer);
                     ResetDragDrop();
                     return;
                 }
             }
 
             // Request file transfers   
-            this.Presenter.TransferFiles(this.dragDropFileTransfer);
+            Presenter.TransferFiles(dragDropFileTransfer);
             ResetDragDrop();
         }
 
@@ -376,27 +376,27 @@ namespace SuperPutty.Scp
 
         private void ResetDragDrop()
         {
-            this.dragDropLastX = -1;
-            this.dragDropLastY = -1;
-            this.dragDropIsValid = false;
-            this.dragDropFileTransfer = null;
+            dragDropLastX = -1;
+            dragDropLastY = -1;
+            dragDropIsValid = false;
+            dragDropFileTransfer = null;
         }
 
         #endregion
 
         private void tsBtnRefresh_Click(object sender, EventArgs e)
         {
-            this.Presenter.Refresh();
+            Presenter.Refresh();
         }
 
         private void listViewFiles_DoubleClick(object sender, EventArgs e)
         {
-            if (this.listViewFiles.SelectedItems.Count != 0)
+            if (listViewFiles.SelectedItems.Count != 0)
             {
-                BrowserFileInfo bfi = (BrowserFileInfo) this.listViewFiles.SelectedItems[0].Tag;
+                BrowserFileInfo bfi = (BrowserFileInfo) listViewFiles.SelectedItems[0].Tag;
                 if (bfi.Type == FileType.Directory || bfi.Type == FileType.ParentDirectory)
                 {
-                    this.Presenter.LoadDirectory(bfi);
+                    Presenter.LoadDirectory(bfi);
                 }
             }
         }

@@ -47,30 +47,30 @@ namespace SuperPutty
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(frmSuperPutty));
 
-        private static string XmlEditor = ConfigurationManager.AppSettings["SuperPuTTY.XmlEditor"];
+        private static string XmlEditor => ConfigurationManager.AppSettings["SuperPuTTY.XmlEditor"];
 
-        internal DockPanel DockPanel { get; private set; }
+        internal DockPanel DockPanel { get; }
 
         public ToolWindowDocument CurrentPanel { get; set; }
 
-        private SingletonToolWindowHelper<SessionTreeview> sessions;
-        private SingletonToolWindowHelper<LayoutsList> layouts;
-        private SingletonToolWindowHelper<Log4netLogViewer> logViewer;
-        private SingletonToolWindowHelper<SessionDetail> sessionDetail;
+        private readonly SingletonToolWindowHelper<SessionTreeview> sessions;
+        private readonly SingletonToolWindowHelper<LayoutsList> layouts;
+        private readonly SingletonToolWindowHelper<Log4netLogViewer> logViewer;
+        private readonly SingletonToolWindowHelper<SessionDetail> sessionDetail;
 
-        private TextBoxFocusHelper tbFocusHelperHost;
-        private TextBoxFocusHelper tbFocusHelperUserName;
-        private TextBoxFocusHelper tbFocusHelperPassword;
-        private frmDocumentSelector sendCommandsDocumentSelector;
+        private readonly TextBoxFocusHelper tbFocusHelperHost;
+        private readonly TextBoxFocusHelper tbFocusHelperUserName;
+        private readonly TextBoxFocusHelper tbFocusHelperPassword;
+        private readonly frmDocumentSelector sendCommandsDocumentSelector;
 
-        private NativeMethods.LowLevelKMProc llkp;
+        private readonly NativeMethods.LowLevelKMProc llkp;
         //private NativeMethods.LowLevelKMProc llmp;
         private static IntPtr kbHookID = IntPtr.Zero;
-        private static IntPtr mHookID = IntPtr.Zero;
+        private static readonly IntPtr mHookID = IntPtr.Zero;
         private bool forceClose;
         private FormWindowState lastNonMinimizedWindowState = FormWindowState.Normal;
         private Rectangle lastNormalDesktopBounds;
-        private ChildWindowFocusHelper focusHelper;
+        private readonly ChildWindowFocusHelper focusHelper;
         bool isControlDown = false;
         bool isShiftDown = false;
         bool isAltDown = false;
@@ -79,10 +79,10 @@ namespace SuperPutty
         private readonly TabSwitcher tabSwitcher;
         private readonly ViewState fullscreenViewState;
 
-        private Dictionary<Keys, SuperPuttyAction> shortcuts = new Dictionary<Keys, SuperPuttyAction>();
+        private readonly Dictionary<Keys, SuperPuttyAction> shortcuts = new Dictionary<Keys, SuperPuttyAction>();
 
         /// <summary>A collection containing send command history</summary>
-        private SortableBindingList<HistoryEntry> tsCommandHistory = new SortableBindingList<HistoryEntry>();
+        private readonly SortableBindingList<HistoryEntry> tsCommandHistory = new SortableBindingList<HistoryEntry>();
 
         /// <summary>The main SuperPuTTY application form</summary>
         public frmSuperPutty()
@@ -93,34 +93,33 @@ namespace SuperPutty
 
             InitializeComponent();
 
-            this.DockPanel = dockPanel1;
+            DockPanel = dockPanel1;
             // force toolbar locations...designer likes to flip them around
-            this.tsConnect.Location = new System.Drawing.Point(0, menuStrip1.Height);
-            this.tsCommands.Location = new System.Drawing.Point(0, tsConnect.Height);
+            tsConnect.Location = new Point(0, menuStrip1.Height);
+            tsCommands.Location = new Point(0, tsConnect.Height);
 
-            if (this.DesignMode) return;
+            if (DesignMode) return;
 
             // setup connection bar
-            this.tbTxtBoxPassword.TextBox.PasswordChar = '*';
-            this.RefreshConnectionToolbarData();
+            tbTxtBoxPassword.TextBox.PasswordChar = '*';
+            RefreshConnectionToolbarData();
 
             // version in status bar
-            this.toolStripStatusLabelVersion.Text = SuperPuTTY.Version;
+            toolStripStatusLabelVersion.Text = SuperPuTTY.Version;
 
             // tool windows
-            this.sessions = new SingletonToolWindowHelper<SessionTreeview>("Sessions", this.DockPanel, null, x => new SessionTreeview(x.DockPanel));
-            this.layouts = new SingletonToolWindowHelper<LayoutsList>("Layouts", this.DockPanel);
-            this.logViewer = new SingletonToolWindowHelper<Log4netLogViewer>("Log Viewer", this.DockPanel);
-            this.sessionDetail = new SingletonToolWindowHelper<SessionDetail>("Session Detail", this.DockPanel, this.sessions,
-                                                                              x => {
-                                                                                  return new SessionDetail(x.InitializerResource as SingletonToolWindowHelper<SessionTreeview>);
-                                                                              });
+            sessions = new SingletonToolWindowHelper<SessionTreeview>("Sessions", DockPanel, null, x => new SessionTreeview(x.DockPanel));
+            layouts = new SingletonToolWindowHelper<LayoutsList>("Layouts", DockPanel);
+            logViewer = new SingletonToolWindowHelper<Log4netLogViewer>("Log Viewer", DockPanel);
+            sessionDetail = new SingletonToolWindowHelper<SessionDetail>(
+                "Session Detail", DockPanel, sessions,
+                x => new SessionDetail(x.InitializerResource as SingletonToolWindowHelper<SessionTreeview>));
 
             // for toolbar
-            this.tbFocusHelperHost = new TextBoxFocusHelper(this.tbTxtBoxHost.TextBox);
-            this.tbFocusHelperUserName = new TextBoxFocusHelper(this.tbTxtBoxLogin.TextBox);
-            this.tbFocusHelperPassword = new TextBoxFocusHelper(this.tbTxtBoxPassword.TextBox);
-            this.sendCommandsDocumentSelector = new frmDocumentSelector(this.DockPanel) {Owner = this};
+            tbFocusHelperHost = new TextBoxFocusHelper(tbTxtBoxHost.TextBox);
+            tbFocusHelperUserName = new TextBoxFocusHelper(tbTxtBoxLogin.TextBox);
+            tbFocusHelperPassword = new TextBoxFocusHelper(tbTxtBoxPassword.TextBox);
+            sendCommandsDocumentSelector = new frmDocumentSelector(DockPanel) {Owner = this};
 
             // Send Command toolbar history
             PropertyDescriptor pd = TypeDescriptor.GetProperties(typeof(HistoryEntry))["TimeStamp"];
@@ -139,7 +138,7 @@ namespace SuperPutty
             tsCommandHistory.ListChanged += TsCommandHistory_ListChanged;
            
             // Hook into status
-            SuperPuTTY.StatusEvent += new Action<string>(delegate(String msg) { this.toolStripStatusLabelMessage.Text = msg; });
+            SuperPuTTY.StatusEvent += new Action<string>(delegate(String msg) { toolStripStatusLabelMessage.Text = msg; });
             SuperPuTTY.ReportStatus("Ready");
 
 
@@ -162,8 +161,8 @@ namespace SuperPutty
             //llmp = MHookCallback;
             //mHookID = SetMHook(llmp);
 
-            this.focusHelper = new ChildWindowFocusHelper(this);
-            this.focusHelper.Start();
+            focusHelper = new ChildWindowFocusHelper(this);
+            focusHelper.Start();
 
             // Restore window location and size
             if (SuperPuTTY.Settings.RestoreWindowLocation)
@@ -171,20 +170,20 @@ namespace SuperPutty
                 FormUtils.RestoreFormPositionAndState(this, SuperPuTTY.Settings.WindowPosition, SuperPuTTY.Settings.WindowState);
             }
 
-            this.ResizeEnd += new EventHandler(frmSuperPutty_ResizeEnd);
+            ResizeEnd += new EventHandler(frmSuperPutty_ResizeEnd);
 
             // tab switching
-            this.tabSwitcher = new TabSwitcher(this.DockPanel);
+            tabSwitcher = new TabSwitcher(DockPanel);
 
             // full screen
-            this.fullscreenViewState = new ViewState(this);
+            fullscreenViewState = new ViewState(this);
 
             // Apply Settings
-            this.ApplySettings();
-            this.ApplySettingsToToolbars();
+            ApplySettings();
+            ApplySettingsToToolbars();
 
-            this.DockPanel.ContentAdded += DockPanel_ContentAdded;
-            this.DockPanel.ContentRemoved += DockPanel_ContentRemoved;
+            DockPanel.ContentAdded += DockPanel_ContentAdded;
+            DockPanel.ContentRemoved += DockPanel_ContentRemoved;
         }
 
         private void TsCommandHistory_ListChanged(object sender, ListChangedEventArgs e)
@@ -216,8 +215,7 @@ namespace SuperPutty
 
         void DockPanel_ContentAdded(object sender, DockContentEventArgs e)
         {
-            CtlPuttyPanel p = e.Content as CtlPuttyPanel;
-            if (p != null)
+            if (e.Content is CtlPuttyPanel p)
             {
                 p.TextChanged += puttyPanel_TextChanged;
             }
@@ -225,8 +223,7 @@ namespace SuperPutty
 
         void DockPanel_ContentRemoved(object sender, DockContentEventArgs e)
         {
-            CtlPuttyPanel p = e.Content as CtlPuttyPanel;
-            if (p != null)
+            if (e.Content is CtlPuttyPanel p)
             {
                 p.TextChanged -= puttyPanel_TextChanged;
             }
@@ -235,7 +232,7 @@ namespace SuperPutty
         void puttyPanel_TextChanged(object sender, EventArgs e)
         {
             CtlPuttyPanel p = (CtlPuttyPanel)sender;
-            if (p == this.DockPanel.ActiveDocument)
+            if (p == DockPanel.ActiveDocument)
             {
                 UpdateWindowText(p.Text);
             }
@@ -243,12 +240,12 @@ namespace SuperPutty
 
         void UpdateWindowText(string text)
         {
-            this.Text = string.Format("SuperPuTTY - {0}", text);
+            Text = string.Format("SuperPuTTY - {0}", text);
         }
 
         private void frmSuperPutty_Load(object sender, EventArgs e)
         {
-            this.BeginInvoke(new Action(this.LoadLayout));            
+            BeginInvoke(new Action(LoadLayout));            
         }
         
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -260,8 +257,8 @@ namespace SuperPutty
             // save window size and location if not maximized or minimized
             if (SuperPuTTY.Settings.RestoreWindowLocation)// && this.WindowState != FormWindowState.Minimized)
             {
-                SuperPuTTY.Settings.WindowPosition = this.lastNormalDesktopBounds;
-                SuperPuTTY.Settings.WindowState = this.WindowState == FormWindowState.Minimized ? this.WindowState = this.lastNonMinimizedWindowState : this.WindowState;
+                SuperPuTTY.Settings.WindowPosition = lastNormalDesktopBounds;
+                SuperPuTTY.Settings.WindowState = WindowState == FormWindowState.Minimized ? WindowState = lastNonMinimizedWindowState : WindowState;
                 SuperPuTTY.Settings.Save();
             }
 
@@ -277,7 +274,7 @@ namespace SuperPutty
                 SuperPuTTY.Settings.Save();
             }
 
-            this.focusHelper.Dispose();
+            focusHelper.Dispose();
 
             base.OnFormClosed(e);
         }
@@ -310,28 +307,26 @@ namespace SuperPutty
 
         public void FocusActiveDocument(string caller)
         {
-            if (this.DockPanel.ActiveDocument == null)
+            if (DockPanel.ActiveDocument == null)
             {
-                this.Text = "SuperPuTTY";
+                Text = "SuperPuTTY";
             }
             else
             {
-                ToolWindowDocument window = this.DockPanel.ActiveDocument as ToolWindowDocument;
-                if (window != null)
+                if (DockPanel.ActiveDocument is ToolWindowDocument window)
                 {
                     // If we aren't using Ctrl-Tab to move between panels,
                     // i.e. we got here because the operator clicked on the
                     // panel directly, then record it as the current panel.
-                    if (!this.tabSwitcher.IsSwitchingTabs)
+                    if (!tabSwitcher.IsSwitchingTabs)
                     {
-                        this.tabSwitcher.CurrentDocument = window;
+                        tabSwitcher.CurrentDocument = window;
                     }
 
-                    CtlPuttyPanel p = window as CtlPuttyPanel;
-                    if (p != null)
+                    if (window is CtlPuttyPanel p)
                     {
                         p.SetFocusToChildApplication(caller);
-                        this.UpdateWindowText(p.Text);
+                        UpdateWindowText(p.Text);
                     }
                 }
             }
@@ -339,13 +334,13 @@ namespace SuperPutty
 
         private void frmSuperPutty_Activated(object sender, EventArgs e)
         {
-            Log.DebugFormat("[{0}] Activated", this.Handle);
+            Log.DebugFormat("[{0}] Activated", Handle);
             //dockPanel1_ActiveDocumentChanged(null, null);
         }
 
         public void SetActiveDocument(ToolWindow toolWindow)
         {
-            if (this.DockPanel.ActiveDocument != toolWindow)
+            if (DockPanel.ActiveDocument != toolWindow)
             {
                 toolWindow.Show();
             }
@@ -449,10 +444,9 @@ namespace SuperPutty
                 CaseSensitive = SuperPuTTY.Settings.QuickSelectorCaseSensitiveSearch
             };
 
-            foreach (ToolWindow content in this.tabSwitcher.Documents)
+            foreach (ToolWindow content in tabSwitcher.Documents)
             {
-                CtlPuttyPanel panel = content as CtlPuttyPanel;
-                if (panel != null)
+                if (content is CtlPuttyPanel panel)
                 {
                     SessionData sd = panel.Session;
                     data.ItemData.AddItemDataRow(
@@ -490,7 +484,7 @@ namespace SuperPutty
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
         #endregion
 
@@ -503,11 +497,11 @@ namespace SuperPutty
             mi.Checked = !mi.Checked;
 
             // save
-            SuperPuTTY.Settings.ShowStatusBar = this.showStatusBarToolStripMenuItem.Checked;
-            SuperPuTTY.Settings.ShowToolBarConnections = this.quickConnectionToolStripMenuItem.Checked;
-            SuperPuTTY.Settings.ShowToolBarCommands = this.sendCommandsToolStripMenuItem.Checked;
-            SuperPuTTY.Settings.AlwaysOnTop = this.alwaysOnTopToolStripMenuItem.Checked;
-            SuperPuTTY.Settings.ShowMenuBar = this.showMenuBarToolStripMenuItem.Checked;
+            SuperPuTTY.Settings.ShowStatusBar = showStatusBarToolStripMenuItem.Checked;
+            SuperPuTTY.Settings.ShowToolBarConnections = quickConnectionToolStripMenuItem.Checked;
+            SuperPuTTY.Settings.ShowToolBarCommands = sendCommandsToolStripMenuItem.Checked;
+            SuperPuTTY.Settings.AlwaysOnTop = alwaysOnTopToolStripMenuItem.Checked;
+            SuperPuTTY.Settings.ShowMenuBar = showMenuBarToolStripMenuItem.Checked;
 
             SuperPuTTY.Settings.Save();
 
@@ -517,70 +511,70 @@ namespace SuperPutty
 
         void ApplySettingsToToolbars()
         {
-            this.statusStrip1.Visible = SuperPuTTY.Settings.ShowStatusBar;
-            this.showStatusBarToolStripMenuItem.Checked = SuperPuTTY.Settings.ShowStatusBar;
+            statusStrip1.Visible = SuperPuTTY.Settings.ShowStatusBar;
+            showStatusBarToolStripMenuItem.Checked = SuperPuTTY.Settings.ShowStatusBar;
 
-            this.tsConnect.Visible = SuperPuTTY.Settings.ShowToolBarConnections;
-            this.quickConnectionToolStripMenuItem.Checked = SuperPuTTY.Settings.ShowToolBarConnections;
+            tsConnect.Visible = SuperPuTTY.Settings.ShowToolBarConnections;
+            quickConnectionToolStripMenuItem.Checked = SuperPuTTY.Settings.ShowToolBarConnections;
 
-            this.tsCommands.Visible = SuperPuTTY.Settings.ShowToolBarCommands;
-            this.sendCommandsToolStripMenuItem.Checked = SuperPuTTY.Settings.ShowToolBarCommands;
+            tsCommands.Visible = SuperPuTTY.Settings.ShowToolBarCommands;
+            sendCommandsToolStripMenuItem.Checked = SuperPuTTY.Settings.ShowToolBarCommands;
 
-            this.TopMost = SuperPuTTY.Settings.AlwaysOnTop;
-            this.alwaysOnTopToolStripMenuItem.Checked = SuperPuTTY.Settings.AlwaysOnTop;
+            TopMost = SuperPuTTY.Settings.AlwaysOnTop;
+            alwaysOnTopToolStripMenuItem.Checked = SuperPuTTY.Settings.AlwaysOnTop;
 
-            this.menuStrip1.Visible = SuperPuTTY.Settings.ShowMenuBar;
-            this.showMenuBarToolStripMenuItem.Checked = SuperPuTTY.Settings.ShowMenuBar;
+            menuStrip1.Visible = SuperPuTTY.Settings.ShowMenuBar;
+            showMenuBarToolStripMenuItem.Checked = SuperPuTTY.Settings.ShowMenuBar;
         }
 
         private void sessionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.layouts.IsVisibleAsToolWindow || this.sessionDetail.IsVisibleAsToolWindow)
+            if (layouts.IsVisibleAsToolWindow || sessionDetail.IsVisibleAsToolWindow)
             {
                 DockPane Pane = layouts.IsVisibleAsToolWindow ? layouts.Instance.DockHandler.Pane : sessionDetail.Instance.DockHandler.Pane;
-                this.sessions.ShowWindow(Pane, DockAlignment.Top, 0.5);
+                sessions.ShowWindow(Pane, DockAlignment.Top, 0.5);
             }
             else
             {
-                this.sessions.ShowWindow(DockState.DockRight);
+                sessions.ShowWindow(DockState.DockRight);
             }
         }
 
         private void logViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.logViewer.ShowWindow(DockState.DockBottom);
+            logViewer.ShowWindow(DockState.DockBottom);
         }
 
 
         private void layoutsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.sessionDetail.IsVisibleAsToolWindow)
+            if (sessionDetail.IsVisibleAsToolWindow)
             {
-                this.layouts.ShowWindow(this.sessionDetail.Instance.Pane, this.sessionDetail.Instance);
+                layouts.ShowWindow(sessionDetail.Instance.Pane, sessionDetail.Instance);
             }
-            else if (this.sessions.IsVisibleAsToolWindow)
+            else if (sessions.IsVisibleAsToolWindow)
             {
-                this.layouts.ShowWindow(sessions.Instance.DockHandler.Pane, DockAlignment.Bottom, 0.5);
+                layouts.ShowWindow(sessions.Instance.DockHandler.Pane, DockAlignment.Bottom, 0.5);
             }
             else
             {
-                this.layouts.ShowWindow(DockState.DockRight);
+                layouts.ShowWindow(DockState.DockRight);
             }
         }
 
         private void sessionDetailMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.layouts.IsVisibleAsToolWindow)
+            if (layouts.IsVisibleAsToolWindow)
             {
-                this.sessionDetail.ShowWindow(this.layouts.Instance.Pane, this.layouts.Instance);
+                sessionDetail.ShowWindow(layouts.Instance.Pane, layouts.Instance);
             }
-            else if (this.sessions.IsVisibleAsToolWindow)
+            else if (sessions.IsVisibleAsToolWindow)
             {
-                this.sessionDetail.ShowWindow(sessions.Instance.DockHandler.Pane, DockAlignment.Bottom, 0.5);
+                sessionDetail.ShowWindow(sessions.Instance.DockHandler.Pane, DockAlignment.Bottom, 0.5);
             }
             else
             {
-                this.sessionDetail.ShowWindow(DockState.DockRight);
+                sessionDetail.ShowWindow(DockState.DockRight);
             }
         }
 
@@ -592,18 +586,18 @@ namespace SuperPutty
 
         void ToggleFullScreen()
         {
-            if (this.fullScreenToolStripMenuItem.Checked)
+            if (fullScreenToolStripMenuItem.Checked)
             {
                 Log.InfoFormat("Restore from Fullscreen");
-                this.fullscreenViewState.Restore();
+                fullscreenViewState.Restore();
             }
             else
             {
                 Log.InfoFormat("Go to Fullscreen");
-                this.fullscreenViewState.SaveState();
-                this.fullscreenViewState.Hide();
+                fullscreenViewState.SaveState();
+                fullscreenViewState.Hide();
             }
-            this.fullScreenToolStripMenuItem.Checked = !this.fullScreenToolStripMenuItem.Checked;
+            fullScreenToolStripMenuItem.Checked = !fullScreenToolStripMenuItem.Checked;
 
         }
 
@@ -611,12 +605,12 @@ namespace SuperPutty
         {
             public ViewState(frmSuperPutty mainForm)
             {
-                this.MainForm = mainForm;
-                this.ConnectionBarLocation = this.MainForm.tsConnect.Location;
-                this.CommandBarLocation = this.MainForm.tsConnect.Location;
+                MainForm = mainForm;
+                ConnectionBarLocation = MainForm.tsConnect.Location;
+                CommandBarLocation = MainForm.tsConnect.Location;
             }
 
-            public frmSuperPutty MainForm { get; set; }
+            public frmSuperPutty MainForm { get; }
             public bool StatusBar { get; set; }
             public bool MenuBar { get; set; }
             public bool ConnectionBar { get; set; }
@@ -629,26 +623,26 @@ namespace SuperPutty
             public FormBorderStyle FormBorderStyle { get; set; }
             public FormWindowState FormWindowState { get; set; }
 
-            public Point ConnectionBarLocation { get; set; }
-            public Point CommandBarLocation { get; set; }
+            public Point ConnectionBarLocation { get; }
+            public Point CommandBarLocation { get; }
 
             public bool IsFullScreen { get; set; }
 
             public void SaveState()
             {
-                this.StatusBar = this.MainForm.showStatusBarToolStripMenuItem.Checked;
-                this.MenuBar = this.MainForm.showMenuBarToolStripMenuItem.Checked;
+                StatusBar = MainForm.showStatusBarToolStripMenuItem.Checked;
+                MenuBar = MainForm.showMenuBarToolStripMenuItem.Checked;
 
-                this.ConnectionBar = this.MainForm.quickConnectionToolStripMenuItem.Checked;
-                this.CommandBar = this.MainForm.sendCommandsToolStripMenuItem.Checked;
+                ConnectionBar = MainForm.quickConnectionToolStripMenuItem.Checked;
+                CommandBar = MainForm.sendCommandsToolStripMenuItem.Checked;
 
-                this.SessionsWindow = this.MainForm.sessions.IsVisible;
-                this.LogWindow = this.MainForm.logViewer.IsVisible;
-                this.LayoutWindow = this.MainForm.layouts.IsVisible;
-                this.SessionDetail = this.MainForm.sessionDetail.IsVisible;
+                SessionsWindow = MainForm.sessions.IsVisible;
+                LogWindow = MainForm.logViewer.IsVisible;
+                LayoutWindow = MainForm.layouts.IsVisible;
+                SessionDetail = MainForm.sessionDetail.IsVisible;
 
-                this.FormBorderStyle = this.MainForm.FormBorderStyle;
-                this.FormWindowState = this.MainForm.WindowState;
+                FormBorderStyle = MainForm.FormBorderStyle;
+                FormWindowState = MainForm.WindowState;
 
             }
 
@@ -656,38 +650,38 @@ namespace SuperPutty
             {
                 try
                 {
-                    this.MainForm.DockPanel.Visible = false;
+                    MainForm.DockPanel.Visible = false;
 
                     // windows
-                    this.MainForm.sessions.Hide();
-                    this.MainForm.layouts.Hide();
-                    this.MainForm.logViewer.Hide();
-                    this.MainForm.sessionDetail.Hide();
+                    MainForm.sessions.Hide();
+                    MainForm.layouts.Hide();
+                    MainForm.logViewer.Hide();
+                    MainForm.sessionDetail.Hide();
 
                     // status bar
-                    this.MainForm.statusStrip1.Hide();
+                    MainForm.statusStrip1.Hide();
 
                     // toolbars
-                    this.MainForm.tsCommands.Visible = false;
-                    this.MainForm.tsConnect.Visible = false;
+                    MainForm.tsCommands.Visible = false;
+                    MainForm.tsConnect.Visible = false;
 
                     // menubar
-                    this.MainForm.menuStrip1.Hide();
+                    MainForm.menuStrip1.Hide();
 
-                    this.MainForm.FormBorderStyle = FormBorderStyle.None;
-                    if (this.MainForm.WindowState == FormWindowState.Maximized)
+                    MainForm.FormBorderStyle = FormBorderStyle.None;
+                    if (MainForm.WindowState == FormWindowState.Maximized)
                     {
                         // if maximized, goto normal first
-                        this.MainForm.WindowState = FormWindowState.Normal;
+                        MainForm.WindowState = FormWindowState.Normal;
                     }
-                    this.MainForm.WindowState = FormWindowState.Maximized;
-                    this.MainForm.TopMost = true;
+                    MainForm.WindowState = FormWindowState.Maximized;
+                    MainForm.TopMost = true;
 
-                    this.IsFullScreen = true;
+                    IsFullScreen = true;
                 }
                 finally
                 {
-                    this.MainForm.DockPanel.Visible = true;
+                    MainForm.DockPanel.Visible = true;
                 }
 
             }
@@ -696,40 +690,40 @@ namespace SuperPutty
             {
                 try
                 {
-                    this.MainForm.DockPanel.Visible = false;
+                    MainForm.DockPanel.Visible = false;
 
                     // windows
-                    if (this.SessionsWindow) { this.MainForm.sessions.Restore(); }
-                    if (this.LayoutWindow) { this.MainForm.layouts.Restore(); }
-                    if (this.LogWindow) { this.MainForm.logViewer.Restore(); }
-                    if (this.SessionDetail) { this.MainForm.sessionDetail.Restore(); }
+                    if (SessionsWindow) { MainForm.sessions.Restore(); }
+                    if (LayoutWindow) { MainForm.layouts.Restore(); }
+                    if (LogWindow) { MainForm.logViewer.Restore(); }
+                    if (SessionDetail) { MainForm.sessionDetail.Restore(); }
 
                     // status bar
-                    if (this.StatusBar) { this.MainForm.statusStrip1.Show(); }
+                    if (StatusBar) { MainForm.statusStrip1.Show(); }
 
                     // toolbars
-                    if (this.CommandBar && this.ConnectionBar)
+                    if (CommandBar && ConnectionBar)
                     {
                         // both visible so set locations
-                        this.MainForm.tsConnect.Visible = true;
-                        this.MainForm.tsConnect.Location = this.ConnectionBarLocation;
-                        this.MainForm.tsCommands.Visible = true;
-                        this.MainForm.tsCommands.Location = this.CommandBarLocation;
+                        MainForm.tsConnect.Visible = true;
+                        MainForm.tsConnect.Location = ConnectionBarLocation;
+                        MainForm.tsCommands.Visible = true;
+                        MainForm.tsCommands.Location = CommandBarLocation;
                     }
-                    else if (this.CommandBar) { this.MainForm.tsCommands.Visible = true; }
-                    else if (this.ConnectionBar) { this.MainForm.tsConnect.Visible = true; }
+                    else if (CommandBar) { MainForm.tsCommands.Visible = true; }
+                    else if (ConnectionBar) { MainForm.tsConnect.Visible = true; }
 
                     // menubar
-                    if (this.MenuBar) { this.MainForm.menuStrip1.Show(); }
+                    if (MenuBar) { MainForm.menuStrip1.Show(); }
 
-                    this.MainForm.TopMost = false;
-                    this.MainForm.WindowState = this.FormWindowState;
-                    this.MainForm.FormBorderStyle = this.FormBorderStyle;
-                    this.IsFullScreen = false;
+                    MainForm.TopMost = false;
+                    MainForm.WindowState = FormWindowState;
+                    MainForm.FormBorderStyle = FormBorderStyle;
+                    IsFullScreen = false;
                 }
                 finally
                 {
-                    this.MainForm.DockPanel.Visible = true;
+                    MainForm.DockPanel.Visible = true;
 
                 }
             }
@@ -744,8 +738,8 @@ namespace SuperPutty
             String dir = SuperPuTTY.LayoutsDir;
             if (Directory.Exists(dir))
             {
-                this.openFileDialogLayout.InitialDirectory = dir;
-                this.saveFileDialogLayout.InitialDirectory = dir;
+                openFileDialogLayout.InitialDirectory = dir;
+                saveFileDialogLayout.InitialDirectory = dir;
             }
 
             if (SuperPuTTY.StartingSession != null)
@@ -758,7 +752,7 @@ namespace SuperPutty
             {
                 // default layout or null for hard-coded default
                 SuperPuTTY.LoadLayout(SuperPuTTY.StartingLayout);
-                SuperPuTTY.ApplyDockRestrictions(this.DockPanel);
+                SuperPuTTY.ApplyDockRestrictions(DockPanel);
             }
         }
 
@@ -771,7 +765,7 @@ namespace SuperPutty
             else
             {
                 // reset old layout (close old putty instances)
-                foreach (DockContent dockContent in this.DockPanel.DocumentsToArray())
+                foreach (DockContent dockContent in DockPanel.DocumentsToArray())
                 {
                     Log.Debug("Unhooking document: " + dockContent);
                     dockContent.DockPanel = null;
@@ -781,7 +775,7 @@ namespace SuperPutty
                         dockContent.Close();
                     }
                 }
-                List<DockContent> contents = this.DockPanel.Contents.Cast<DockContent>().ToList();
+                List<DockContent> contents = DockPanel.Contents.Cast<DockContent>().ToList();
                 foreach (DockContent dockContent in contents)
                 {
                     Log.Debug("Unhooking dock content: " + dockContent);
@@ -798,7 +792,7 @@ namespace SuperPutty
                 {
                     // 1st time or reset
                     Log.Debug("Initializing default layout");
-                    this.InitDefaultLayout();
+                    InitDefaultLayout();
                     toolStripStatusLabelLayout.Text = "";
                     SuperPuTTY.ReportStatus("Initialized default layout");
                 }
@@ -806,7 +800,7 @@ namespace SuperPutty
                 {
                     // file missing
                     Log.WarnFormat("Layout file doesn't exist, file={0}", eventArgs.New.FilePath);
-                    this.InitDefaultLayout();
+                    InitDefaultLayout();
                     toolStripStatusLabelLayout.Text = eventArgs.New.Name;
                     SuperPuTTY.ReportStatus("Could not load layout, file missing: {0}", eventArgs.New.FilePath);
                 }
@@ -814,7 +808,7 @@ namespace SuperPutty
                 {
                     // load new one
                     Log.DebugFormat("Loading layout: {0}", eventArgs.New.FilePath);
-                    this.DockPanel.LoadFromXml(eventArgs.New.FilePath, RestoreLayoutFromPersistString);
+                    DockPanel.LoadFromXml(eventArgs.New.FilePath, RestoreLayoutFromPersistString);
                     toolStripStatusLabelLayout.Text = eventArgs.New.Name;
                     SuperPuTTY.ReportStatus("Loaded layout: {0}", eventArgs.New.FilePath);
                 }
@@ -825,8 +819,8 @@ namespace SuperPutty
 
         void InitDefaultLayout()
         {
-            this.sessionsToolStripMenuItem_Click(this, EventArgs.Empty);
-            this.layoutsToolStripMenuItem_Click(this, EventArgs.Empty);
+            sessionsToolStripMenuItem_Click(this, EventArgs.Empty);
+            layoutsToolStripMenuItem_Click(this, EventArgs.Empty);
         }
 
         private void saveLayoutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -844,9 +838,9 @@ namespace SuperPutty
 
         private void saveLayoutAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (DialogResult.OK == this.saveFileDialogLayout.ShowDialog(this))
+            if (DialogResult.OK == saveFileDialogLayout.ShowDialog(this))
             {
-                String file = this.saveFileDialogLayout.FileName;
+                String file = saveFileDialogLayout.FileName;
                 SaveLayout(file, string.Format("Saving layout as: {0}", file));
                 SuperPuTTY.AddLayout(file);
             }
@@ -855,7 +849,7 @@ namespace SuperPutty
         void SaveLayout(string file, string statusMsg)
         {
             SuperPuTTY.ReportStatus(statusMsg);
-            this.DockPanel.SaveAsXml(file);
+            DockPanel.SaveAsXml(file);
         }
 
         private IDockContent RestoreLayoutFromPersistString(String persistString)
@@ -863,20 +857,20 @@ namespace SuperPutty
             if (typeof(SessionTreeview).FullName == persistString)
             {
                 // session tree
-                return this.sessions.Instance ?? this.sessions.Initialize();
+                return sessions.Instance ?? sessions.Initialize();
             }
             else if (typeof(LayoutsList).FullName == persistString)
             {
                 // layouts list
-                return this.layouts.Instance ?? this.layouts.Initialize();
+                return layouts.Instance ?? layouts.Initialize();
             }
             else if (typeof(Log4netLogViewer).FullName == persistString)
             {
-                return this.logViewer.Instance ?? this.logViewer.Initialize();
+                return logViewer.Instance ?? logViewer.Initialize();
             }
             else if (typeof(SessionDetail).FullName == persistString)
             {
-                return this.sessionDetail.Instance ?? this.sessionDetail.Initialize();
+                return sessionDetail.Instance ?? sessionDetail.Initialize();
             }
             else
             {
@@ -918,15 +912,15 @@ namespace SuperPutty
 
         void ApplySettings()
         {
-            SuperPuTTY.ApplyDockRestrictions(this.DockPanel);
+            SuperPuTTY.ApplyDockRestrictions(DockPanel);
 
             // apply tab switching strategy change
-            this.tabSwitcher.TabSwitchStrategy = TabSwitcher.StrategyFromTypeName(SuperPuTTY.Settings.TabSwitcher);
+            tabSwitcher.TabSwitchStrategy = TabSwitcher.StrategyFromTypeName(SuperPuTTY.Settings.TabSwitcher);
 
-            this.SaveLastWindowBounds();
-            this.UpdateShortcutsFromSettings();
-            this.Opacity = SuperPuTTY.Settings.Opacity;
-            this.DockPanel.ShowDocumentIcon = SuperPuTTY.Settings.ShowDocumentIcons;
+            SaveLastWindowBounds();
+            UpdateShortcutsFromSettings();
+            Opacity = SuperPuTTY.Settings.Opacity;
+            DockPanel.ShowDocumentIcon = SuperPuTTY.Settings.ShowDocumentIcons;
         }
 
         #endregion
@@ -983,8 +977,8 @@ namespace SuperPutty
 
         void TryConnectFromToolbar()
         {
-            String host = this.tbTxtBoxHost.Text;
-            String protoString = (string)this.tbComboProtocol.SelectedItem;
+            String host = tbTxtBoxHost.Text;
+            String protoString = (string)tbComboProtocol.SelectedItem;
 
             if (!String.IsNullOrEmpty(host))
             {
@@ -1001,45 +995,45 @@ namespace SuperPutty
                     SessionId = SuperPuTTY.MakeUniqueSessionId(SessionData.CombineSessionIds("ConnectBar", connStr.Host)),
                     Proto = proto,
                     Port = connStr.Port.GetValueOrDefault(dlgEditSession.GetDefaultPort(proto)),
-                    Username = this.tbTxtBoxLogin.Text,
-                    Password = this.tbTxtBoxPassword.Text,
-                    PuttySession = (string)this.tbComboSession.SelectedItem
+                    Username = tbTxtBoxLogin.Text,
+                    Password = tbTxtBoxPassword.Text,
+                    PuttySession = (string)tbComboSession.SelectedItem
                 };
                 SuperPuTTY.OpenSession(new SessionDataStartInfo { Session = session, UseScp = isScp });
-                oldHostName = this.tbTxtBoxHost.Text;
+                oldHostName = tbTxtBoxHost.Text;
                 RefreshConnectionToolbarData();
             }
         }
 
         void RefreshConnectionToolbarData()
         {
-            if (this.tbComboProtocol.Items.Count == 0)
+            if (tbComboProtocol.Items.Count == 0)
             {
-                this.tbComboProtocol.Items.Clear();
+                tbComboProtocol.Items.Clear();
                 foreach (ConnectionProtocol protocol in Enum.GetValues(typeof(ConnectionProtocol)))
                 {
-                    this.tbComboProtocol.Items.Add(protocol.ToString());
+                    tbComboProtocol.Items.Add(protocol.ToString());
                 }
-                this.tbComboProtocol.Items.Add("SCP");
-                this.tbComboProtocol.SelectedItem = ConnectionProtocol.SSH.ToString();
+                tbComboProtocol.Items.Add("SCP");
+                tbComboProtocol.SelectedItem = ConnectionProtocol.SSH.ToString();
             }
 
-            String prevSession = (string)this.tbComboSession.SelectedItem;
-            this.tbComboSession.Items.Clear();
+            String prevSession = (string)tbComboSession.SelectedItem;
+            tbComboSession.Items.Clear();
             foreach (string sessionName in PuttyDataHelper.GetSessionNames())
             {
-                this.tbComboSession.Items.Add(sessionName);
+                tbComboSession.Items.Add(sessionName);
             }
-            this.tbComboSession.SelectedItem = prevSession ?? PuttyDataHelper.SessionEmptySettings;
+            tbComboSession.SelectedItem = prevSession ?? PuttyDataHelper.SessionEmptySettings;
         }
 
         private void toolStripButtonClearFields_Click(object sender, EventArgs e)
         {
-            this.tbComboProtocol.SelectedItem = ConnectionProtocol.SSH.ToString();
-            this.tbTxtBoxHost.Clear();
-            this.tbTxtBoxLogin.Clear();
-            this.tbTxtBoxPassword.Clear();
-            this.tbComboSession.SelectedItem = PuttyDataHelper.SessionEmptySettings;
+            tbComboProtocol.SelectedItem = ConnectionProtocol.SSH.ToString();
+            tbTxtBoxHost.Clear();
+            tbTxtBoxLogin.Clear();
+            tbTxtBoxPassword.Clear();
+            tbComboSession.SelectedItem = PuttyDataHelper.SessionEmptySettings;
         }
 
         /// <summary>
@@ -1049,12 +1043,12 @@ namespace SuperPutty
         /// <param name="e"></param>
         private void tsBtnSelectDocs_Click(object sender, EventArgs e)
         {
-            Rectangle rect = this.tbBtnSelectDocs.Bounds;
-            int top = this.tsCommands.Top + this.tsCommands.Height + 3;
-            int left = rect.Left + rect.Width - this.sendCommandsDocumentSelector.Width + 3;
-            this.sendCommandsDocumentSelector.StartPosition = FormStartPosition.Manual;
-            this.sendCommandsDocumentSelector.Location = this.PointToScreen(new Point(left, top));
-            this.sendCommandsDocumentSelector.Show();
+            Rectangle rect = tbBtnSelectDocs.Bounds;
+            int top = tsCommands.Top + tsCommands.Height + 3;
+            int left = rect.Left + rect.Width - sendCommandsDocumentSelector.Width + 3;
+            sendCommandsDocumentSelector.StartPosition = FormStartPosition.Manual;
+            sendCommandsDocumentSelector.Location = PointToScreen(new Point(left, top));
+            sendCommandsDocumentSelector.Show();
         }
 
         private void tsSendCommandCombo_KeyDown(object sender, KeyEventArgs e)
@@ -1084,7 +1078,7 @@ namespace SuperPutty
             {
                 for(int i = 0; i < tsSendCommandCombo.Items.Count; i++)
                 {
-                    Console.WriteLine("{0} {1} MRUOld:{2}", i, ((HistoryEntry)tsSendCommandCombo.Items[i]).ToString(), commandMRUIndex);
+                    Console.WriteLine("{0} {1} MRUOld:{2}", i, ((HistoryEntry)tsSendCommandCombo.Items[i]), commandMRUIndex);
                 }
 
                 if (tsSendCommandCombo.Items.Count > 0)
@@ -1105,14 +1099,14 @@ namespace SuperPutty
             else if (e.KeyCode == Keys.Enter)
             {
                 // send commands
-                TrySendCommandsFromToolbar(new CommandData(this.tsSendCommandCombo.Text, new KeyEventArgs(Keys.Enter)), !this.tbBtnMaskText.Checked);
+                TrySendCommandsFromToolbar(new CommandData(tsSendCommandCombo.Text, new KeyEventArgs(Keys.Enter)), !tbBtnMaskText.Checked);
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
             else if (e.Control && e.KeyCode != Keys.ControlKey)
             {
                 // special keys
-                TrySendCommandsFromToolbar(new CommandData(e), !this.tbBtnMaskText.Checked);
+                TrySendCommandsFromToolbar(new CommandData(e), !tbBtnMaskText.Checked);
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
@@ -1121,26 +1115,19 @@ namespace SuperPutty
 
         private void tbBtnSendCommand_Click(object sender, EventArgs e)
         {
-            TrySendCommandsFromToolbar(!this.tbBtnMaskText.Checked);
+            TrySendCommandsFromToolbar(!tbBtnMaskText.Checked);
         }
 
         private void toggleCommandMaskToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.tbBtnMaskText.PerformClick();
+            tbBtnMaskText.PerformClick();
         }
 
         private void tbBtnMaskText_Click(object sender, EventArgs e)
         {
-            IntPtr handle = NativeMethods.GetWindow(this.tsSendCommandCombo.ComboBox.Handle, NativeMethods.GetWindowCmd.GW_CHILD);
-            if (this.tbBtnMaskText.Checked)
-            {
-                NativeMethods.SendMessage(handle, NativeMethods.EM_SETPASSWORDCHAR, (int)'*', 0);
-            }
-            else
-            {
-                NativeMethods.SendMessage(handle, NativeMethods.EM_SETPASSWORDCHAR, 0, 0);
-            }
-            this.tsSendCommandCombo.ComboBox.Refresh();
+            IntPtr handle = NativeMethods.GetWindow(tsSendCommandCombo.ComboBox.Handle, NativeMethods.GetWindowCmd.GW_CHILD);
+            NativeMethods.SendMessage(handle, NativeMethods.EM_SETPASSWORDCHAR, tbBtnMaskText.Checked ? '*' : 0, 0);
+            tsSendCommandCombo.ComboBox.Refresh();
         }
 
         /// <summary>Send command from send command toolbar to open sessions</summary>
@@ -1148,7 +1135,7 @@ namespace SuperPutty
         /// <returns>The number of commands sent</returns>
         private int TrySendCommandsFromToolbar(bool saveHistory)
         {
-            return TrySendCommandsFromToolbar(new CommandData(this.tsSendCommandCombo.Text), saveHistory);
+            return TrySendCommandsFromToolbar(new CommandData(tsSendCommandCombo.Text), saveHistory);
         }
 
         /// <summary>Send commands to open sessions</summary>
@@ -1158,18 +1145,18 @@ namespace SuperPutty
         private int TrySendCommandsFromToolbar(CommandData command, bool saveHistory)
         {
             int sent = 0;
-            if (command == null || string.IsNullOrEmpty(command.Command)) return 0;
+            if (string.IsNullOrEmpty(command?.Command)) return 0;
 
-            if (this.DockPanel.Contents.Count > 0)
+            if (DockPanel.Contents.Count > 0)
             {
-                foreach (IDockContent doc in VisualOrderTabSwitchStrategy.GetDocuments(this.DockPanel))
+                foreach (IDockContent doc in VisualOrderTabSwitchStrategy.GetDocuments(DockPanel))
                 {
                     if (doc is CtlPuttyPanel)
                     {
                         CtlPuttyPanel panel = doc as CtlPuttyPanel;
-                        if (this.sendCommandsDocumentSelector.IsDocumentSelected(panel))
+                        if (sendCommandsDocumentSelector.IsDocumentSelected(panel))
                         {
-                            System.IntPtr hPtr = panel.AppPanel.AppWindowHandle;
+                            IntPtr hPtr = panel.AppPanel.AppWindowHandle;
                             int handle = hPtr.ToInt32();
                             //Log.InfoFormat("SendCommand: session={0}, command=[{1}], handle={2}", panel.Session.SessionId, command, handle);
 
@@ -1183,11 +1170,11 @@ namespace SuperPutty
                 if (sent > 0)
                 {
                     // success...clear text and save in mru                    
-                    if (command != null && !string.IsNullOrEmpty(command.Command) && saveHistory)
+                    if (!string.IsNullOrEmpty(command?.Command) && saveHistory)
                     {
-                        if (this.InvokeRequired)
+                        if (InvokeRequired)
                         {
-                            this.BeginInvoke((MethodInvoker)delegate {
+                            BeginInvoke((MethodInvoker)delegate {
                                 tsCommandHistory.Insert(0, new HistoryEntry() { Command = command.Command });
                             });
                         }
@@ -1197,15 +1184,15 @@ namespace SuperPutty
                         }                       
                     }
 
-                    if (this.InvokeRequired)
+                    if (InvokeRequired)
                     {
-                        this.BeginInvoke((MethodInvoker)delegate {
-                            this.tsSendCommandCombo.Text = string.Empty;
+                        BeginInvoke((MethodInvoker)delegate {
+                            tsSendCommandCombo.Text = string.Empty;
                         });
                     }
                     else
                     {
-                        this.tsSendCommandCombo.Text = string.Empty;
+                        tsSendCommandCombo.Text = string.Empty;
                     }
                 }
             }
@@ -1256,7 +1243,7 @@ namespace SuperPutty
                         // make it current panel when Ctrl key is finally released.
                         if (SuperPuTTY.Settings.EnableControlTabSwitching && !isControlDown && !isShiftDown)
                         {
-                            this.tabSwitcher.CurrentDocument = (ToolWindow)this.DockPanel.ActiveDocument;
+                            tabSwitcher.CurrentDocument = (ToolWindow)DockPanel.ActiveDocument;
                         }
                     }
 
@@ -1266,16 +1253,16 @@ namespace SuperPutty
                         // make it current panel when both keys are finally released.
                         if (SuperPuTTY.Settings.EnableControlTabSwitching && !isControlDown && !isShiftDown)
                         {
-                            this.tabSwitcher.CurrentDocument = (ToolWindow)this.DockPanel.ActiveDocument;
+                            tabSwitcher.CurrentDocument = (ToolWindow)DockPanel.ActiveDocument;
                         }
                     }
 
                     if (SuperPuTTY.Settings.EnableControlTabSwitching && isControlDown && !isShiftDown && keys == Keys.Tab)
                     {
                         // Operator has pressed Ctrl-Tab, make next PuTTY panel active
-                        if (isKeyDown && this.DockPanel.ActiveDocument is ToolWindowDocument)
+                        if (isKeyDown && DockPanel.ActiveDocument is ToolWindowDocument)
                         {
-                            if (this.tabSwitcher.MoveToNextDocument())
+                            if (tabSwitcher.MoveToNextDocument())
                             {
                                 // Eat the keystroke
                                 return (IntPtr)1;
@@ -1286,9 +1273,9 @@ namespace SuperPutty
                     if (SuperPuTTY.Settings.EnableControlTabSwitching && isControlDown && isShiftDown && keys == Keys.Tab)
                     {
                         // Operator has pressed Ctrl-Shift-Tab, make previous PuTTY panel active
-                        if (isKeyDown && this.DockPanel.ActiveDocument is ToolWindowDocument)
+                        if (isKeyDown && DockPanel.ActiveDocument is ToolWindowDocument)
                         {
-                            if (this.tabSwitcher.MoveToPrevDocument())
+                            if (tabSwitcher.MoveToPrevDocument())
                             {
                                 // Eat the keystroke
                                 return (IntPtr)1;
@@ -1311,11 +1298,10 @@ namespace SuperPutty
                         {
                             Log.DebugFormat("#### TryExecute shortcut: keys={0}", keys);
                         }
-                        SuperPuttyAction action;
-                        if (this.shortcuts.TryGetValue(keys, out action))
+                        if (shortcuts.TryGetValue(keys, out var action))
                         {
                             // post action to avoid getting errant keystrokes (e.g. allow current to be eaten)
-                            this.BeginInvoke(new Action(() =>
+                            BeginInvoke(new Action(() =>
                             {
                                 ExecuteSuperPuttyAction(action);
                             }));
@@ -1343,7 +1329,7 @@ namespace SuperPutty
         {
             if (nCode >= 0 && (wParam == (IntPtr)NativeMethods.WM.LBUTTONUP || wParam == (IntPtr)NativeMethods.WM.RBUTTONUP) && IsForegroundWindow(this))
             {
-                this.BringToFront();
+                BringToFront();
                 //if (!Menu_IsMouseOver()) dockPanel.Focus();
             }
             return NativeMethods.CallNextHookEx(mHookID, nCode, wParam, lParam);
@@ -1380,9 +1366,9 @@ namespace SuperPutty
         void UpdateShortcutsFromSettings()
         {
             // remove old
-            this.shortcuts.Clear();
-            this.fullScreenToolStripMenuItem.ShortcutKeys = Keys.None;
-            this.optionsToolStripMenuItem.ShortcutKeys = Keys.None;
+            shortcuts.Clear();
+            fullScreenToolStripMenuItem.ShortcutKeys = Keys.None;
+            optionsToolStripMenuItem.ShortcutKeys = Keys.None;
 
             // reload new definitions
             foreach (KeyboardShortcut ks in SuperPuTTY.Settings.LoadShortcuts())
@@ -1394,23 +1380,23 @@ namespace SuperPutty
                     Keys keys = ks.Key | ks.Modifiers;
                     if (keys != Keys.None)
                     {
-                        this.shortcuts.Add(keys, action);
+                        shortcuts.Add(keys, action);
                     }
 
                     // sync menu items
                     switch (action)
                     {
                         case SuperPuttyAction.FullScreen:
-                            this.fullScreenToolStripMenuItem.ShortcutKeys = keys;
+                            fullScreenToolStripMenuItem.ShortcutKeys = keys;
                             break;
                         case SuperPuttyAction.Options:
-                            this.optionsToolStripMenuItem.ShortcutKeys = keys;
+                            optionsToolStripMenuItem.ShortcutKeys = keys;
                             break;
                         case SuperPuttyAction.OpenSession:
-                            this.openSessionToolStripMenuItem.ShortcutKeys = keys;
+                            openSessionToolStripMenuItem.ShortcutKeys = keys;
                             break;
                         case SuperPuttyAction.SwitchSession:
-                            this.switchSessionToolStripMenuItem.ShortcutKeys = keys;
+                            switchSessionToolStripMenuItem.ShortcutKeys = keys;
                             break;
                     }
                 }
@@ -1424,76 +1410,74 @@ namespace SuperPutty
 
         bool ExecuteSuperPuttyAction(SuperPuttyAction action)
         {
-            CtlPuttyPanel activePanel = this.DockPanel.ActiveDocument as CtlPuttyPanel;
+            CtlPuttyPanel activePanel = DockPanel.ActiveDocument as CtlPuttyPanel;
             bool success = true;
 
             Log.InfoFormat("Executing action, name={0}", action);
             switch (action)
             {
                 case SuperPuttyAction.CloseTab:
-                    ToolWindow win = this.DockPanel.ActiveDocument as ToolWindow;
-                    if (win != null) { win.Close(); }
+                    if (DockPanel.ActiveDocument is ToolWindow win) { win.Close(); }
                     break;
                 case SuperPuttyAction.NextTab:
-                    this.tabSwitcher.MoveToNextDocument();
+                    tabSwitcher.MoveToNextDocument();
                     break;
                 case SuperPuttyAction.PrevTab:
-                    this.tabSwitcher.MoveToPrevDocument();
+                    tabSwitcher.MoveToPrevDocument();
                     break;
                 case SuperPuttyAction.FullScreen:
-                    this.ToggleFullScreen();
+                    ToggleFullScreen();
                     break;
                 case SuperPuttyAction.OpenSession:
                     KeyEventWindowActivator.ActivateForm(this);
-                    this.openSessionToolStripMenuItem.PerformClick();
+                    openSessionToolStripMenuItem.PerformClick();
                     break;
                 case SuperPuttyAction.SwitchSession:
                     KeyEventWindowActivator.ActivateForm(this);
-                    this.switchSessionToolStripMenuItem.PerformClick();
+                    switchSessionToolStripMenuItem.PerformClick();
                     break;
                 case SuperPuttyAction.Options:
                     KeyEventWindowActivator.ActivateForm(this);
-                    this.optionsToolStripMenuItem.PerformClick();
+                    optionsToolStripMenuItem.PerformClick();
                     break;
                 case SuperPuttyAction.DuplicateSession:
-                    if (activePanel != null && activePanel.Session != null)
+                    if (activePanel?.Session != null)
                         SuperPuTTY.OpenPuttySession(activePanel.Session);
                     break;
                 case SuperPuttyAction.GotoCommandBar:
-                    if (!this.fullscreenViewState.IsFullScreen)
+                    if (!fullscreenViewState.IsFullScreen)
                     {
                         KeyEventWindowActivator.ActivateForm(this);
-                        if (!this.tsCommands.Visible)
+                        if (!tsCommands.Visible)
                         {
-                            this.toggleCheckedState(this.sendCommandsToolStripMenuItem, EventArgs.Empty);
+                            toggleCheckedState(sendCommandsToolStripMenuItem, EventArgs.Empty);
                         }
-                        this.tsSendCommandCombo.Focus();
+                        tsSendCommandCombo.Focus();
                     }
                     break;
                 case SuperPuttyAction.GotoConnectionBar:
                     // perhaps consider allowing this later...need to really have a better approach to the state saving/invoking the toggle.
-                    if (!this.fullscreenViewState.IsFullScreen)
+                    if (!fullscreenViewState.IsFullScreen)
                     {
                         KeyEventWindowActivator.ActivateForm(this);
-                        if (!this.tsConnect.Visible)
+                        if (!tsConnect.Visible)
                         {
-                            this.toggleCheckedState(this.quickConnectionToolStripMenuItem, EventArgs.Empty);
+                            toggleCheckedState(quickConnectionToolStripMenuItem, EventArgs.Empty);
                         }
-                        this.tbTxtBoxHost.Focus();
+                        tbTxtBoxHost.Focus();
                     }
                     break;
                 case SuperPuttyAction.FocusActiveSession:
                     // focus on current super putty session...or at least try to
                     KeyEventWindowActivator.ActivateForm(this);
-                    if (activePanel != null)
-                        activePanel.SetFocusToChildApplication("ExecuteAction");
+                    activePanel?.SetFocusToChildApplication("ExecuteAction");
                     break;
                 case SuperPuttyAction.OpenScriptEditor:
                     KeyEventWindowActivator.ActivateForm(this);
                     toolStripButtonRunScript_Click(this, EventArgs.Empty);
                     break;
                 case SuperPuttyAction.RenameTab:                    
-                    if (activePanel != null && activePanel.Session != null)
+                    if (activePanel?.Session != null)
                     {
                         dlgRenameItem dialog = new dlgRenameItem
                         {
@@ -1533,16 +1517,16 @@ namespace SuperPutty
         {
             if (SuperPuTTY.Settings.MinimizeToTray)
             {
-                if (FormWindowState.Minimized == this.WindowState && !notifyicon.Visible)
+                if (FormWindowState.Minimized == WindowState && !notifyicon.Visible)
                 {
                     notifyicon.Visible = true;
-                    this.ShowInTaskbar = false;
+                    ShowInTaskbar = false;
 
                 }
-                else if (FormWindowState.Normal == this.WindowState || FormWindowState.Maximized == this.WindowState)
+                else if (FormWindowState.Normal == WindowState || FormWindowState.Maximized == WindowState)
                 {
                     notifyicon.Visible = false;
-                    this.lastNonMinimizedWindowState = this.WindowState;
+                    lastNonMinimizedWindowState = WindowState;
                 }
             }
 
@@ -1551,9 +1535,9 @@ namespace SuperPutty
 
         private void SaveLastWindowBounds()
         {
-            if (this.WindowState == FormWindowState.Normal)
+            if (WindowState == FormWindowState.Normal)
             {
-                this.lastNormalDesktopBounds = this.DesktopBounds;
+                lastNormalDesktopBounds = DesktopBounds;
             }
         }
 
@@ -1561,15 +1545,15 @@ namespace SuperPutty
         {
             if (e.Button == MouseButtons.Left)
             {
-                this.ShowInTaskbar = true;
-                this.WindowState = this.lastNonMinimizedWindowState;
+                ShowInTaskbar = true;
+                WindowState = lastNonMinimizedWindowState;
             }
         }
 
         private void exitSuperPuTTYToolStripMenuItem_Click(object sender, EventArgs e)
         {
             forceClose = true;
-            this.Close();
+            Close();
         }
 
         #endregion
@@ -1578,10 +1562,9 @@ namespace SuperPutty
 
         private void logWindowLocationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (IDockContent c in this.DockPanel.Documents)
+            foreach (IDockContent c in DockPanel.Documents)
             {
-                CtlPuttyPanel panel = c as CtlPuttyPanel;
-                if (panel != null)
+                if (c is CtlPuttyPanel panel)
                 {
                     NativeMethods.RECT rect = new NativeMethods.RECT();
                     NativeMethods.GetWindowRect(panel.AppPanel.AppWindowHandle, ref rect);
@@ -1606,8 +1589,7 @@ namespace SuperPutty
                 {
                     if (regex.IsMatch(p.ProcessName))
                     {
-                        List<Process> procList;
-                        if (!procs.TryGetValue(p.ProcessName, out procList))
+                        if (!procs.TryGetValue(p.ProcessName, out var procList))
                         {
                             procList = new List<Process>();
                             procs.Add(p.ProcessName, procList);
@@ -1710,7 +1692,7 @@ namespace SuperPutty
             {
                 Log.Warn("An Exception occurred while trying to check for program updates: " + ex.ToString());
             }
-            catch (System.FormatException ex)
+            catch (FormatException ex)
             {
                 Log.Warn("An Exception occurred while trying to check for program updates: " + ex.ToString());
             }
@@ -1719,7 +1701,7 @@ namespace SuperPutty
 
         protected override void WndProc(ref Message m)
         {
-            bool callBase = this.focusHelper.WndProcForFocus(ref m);
+            bool callBase = focusHelper.WndProcForFocus(ref m);
             if (callBase)
             {
                 base.WndProc(ref m);
@@ -1759,8 +1741,7 @@ namespace SuperPutty
                     {
                         foreach (string line in scriptlines)
                         {
-                            CommandData command;                                                                                    
-                            SPSL.TryParseScriptLine(line, out command);
+                            SPSL.TryParseScriptLine(line, out var command);
                             if (command != null)
                             {
                                 TrySendCommandsFromToolbar(command, false);
@@ -1772,7 +1753,7 @@ namespace SuperPutty
                 {
                     foreach (string line in scriptlines)
                     {
-                        TrySendCommandsFromToolbar(new CommandData(line.TrimEnd('\n'), new KeyEventArgs(Keys.Enter)), !this.tbBtnMaskText.Checked);
+                        TrySendCommandsFromToolbar(new CommandData(line.TrimEnd('\n'), new KeyEventArgs(Keys.Enter)), !tbBtnMaskText.Checked);
                     }
                 }
             }

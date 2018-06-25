@@ -20,6 +20,7 @@
  */
 
 using System;
+using System.Globalization;
 
 namespace SuperPutty.Data
 {  
@@ -40,7 +41,7 @@ namespace SuperPutty.Data
 
         public override string ToString()
         {
-            return this.Command + " " + this.TimeStamp.ToString();
+            return Command + " " + TimeStamp.ToString(CultureInfo.CurrentCulture);
         }
     }    
 }

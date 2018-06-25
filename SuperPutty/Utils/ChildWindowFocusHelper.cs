@@ -17,50 +17,47 @@ namespace SuperPutty.Utils
 
         public ChildWindowFocusHelper(frmSuperPutty form)
         {
-            this.MainForm = form;
-            this.MainForm.ResizeEnd += HandleResizeEnd;
+            MainForm = form;
+            MainForm.ResizeEnd += HandleResizeEnd;
 
-            foreach (IDockContent doc in this.MainForm.DockPanel.Contents)
+            foreach (IDockContent doc in MainForm.DockPanel.Contents)
             {
-                CtlPuttyPanel pp = doc as CtlPuttyPanel;
-                if (pp != null)
+                if (doc is CtlPuttyPanel pp)
                 {
-                    this.childWindows.Add(pp.AppPanel.AppWindowHandle, pp);
+                    childWindows.Add(pp.AppPanel.AppWindowHandle, pp);
                 }
             }
-            this.MainForm.DockPanel.ContentAdded += DockPanel_ContentAdded;
-            this.MainForm.DockPanel.ContentRemoved += DockPanel_ContentRemoved;
+            MainForm.DockPanel.ContentAdded += DockPanel_ContentAdded;
+            MainForm.DockPanel.ContentRemoved += DockPanel_ContentRemoved;
         }
 
         void DockPanel_ContentAdded(object sender, DockContentEventArgs e)
         {
-            CtlPuttyPanel pp = e.Content as CtlPuttyPanel;
-            if (pp != null)
+            if (e.Content is CtlPuttyPanel pp)
             {
-                this.childWindows.Add(pp.AppPanel.AppWindowHandle, pp);
+                childWindows.Add(pp.AppPanel.AppWindowHandle, pp);
             }
         }
 
         void DockPanel_ContentRemoved(object sender, DockContentEventArgs e)
         {
-            CtlPuttyPanel pp = e.Content as CtlPuttyPanel;
-            if (pp != null)
+            if (e.Content is CtlPuttyPanel pp)
             {
-                this.childWindows.Remove(pp.AppPanel.AppWindowHandle);
+                childWindows.Remove(pp.AppPanel.AppWindowHandle);
             }
         }
 
         public void Start()
         {
-            this.m_shellHookNotify = NativeMethods.RegisterWindowMessage("SHELLHOOK");
-            NativeMethods.RegisterShellHookWindow(this.MainForm.Handle);
+            m_shellHookNotify = NativeMethods.RegisterWindowMessage("SHELLHOOK");
+            NativeMethods.RegisterShellHookWindow(MainForm.Handle);
         }
 
         public void Dispose()
         {
-            this.MainForm.ResizeEnd -= HandleResizeEnd;
-            this.MainForm.DockPanel.ContentAdded -= DockPanel_ContentAdded;
-            this.MainForm.DockPanel.ContentRemoved -= DockPanel_ContentRemoved;
+            MainForm.ResizeEnd -= HandleResizeEnd;
+            MainForm.DockPanel.ContentAdded -= DockPanel_ContentAdded;
+            MainForm.DockPanel.ContentRemoved -= DockPanel_ContentRemoved;
         }
 
         /// <summary>
@@ -103,7 +100,7 @@ namespace SuperPutty.Utils
                 case NativeMethods.WM.NCACTIVATE:
                     // Never allow this window to display itself as inactive
                     // http://msdn.microsoft.com/en-us/library/windows/desktop/ms632633(v=vs.85).aspx
-                    NativeMethods.DefWindowProc(this.MainForm.Handle, m.Msg, (IntPtr)1, m.LParam);
+                    NativeMethods.DefWindowProc(MainForm.Handle, m.Msg, (IntPtr)1, m.LParam);
                     m.Result = (IntPtr)1;
                     return false;
                 case NativeMethods.WM.SYSCOMMAND:
@@ -115,7 +112,7 @@ namespace SuperPutty.Utils
                         case NativeMethods.SC_MAXIMIZE:
                         case NativeMethods.SC_RESTORE:
                             //Log.InfoFormat("SysCommand: {0}", m.WParam);
-                            this.MainForm.BeginInvoke(new Action<string>(this.MainForm.FocusActiveDocument), "SYSCommand-Restore");
+                            MainForm.BeginInvoke(new Action<string>(MainForm.FocusActiveDocument), "SYSCommand-Restore");
                             break;
                     }
                     break;
@@ -129,18 +126,18 @@ namespace SuperPutty.Utils
                             case 4:
                             case 32772:
                                 IntPtr current = NativeMethods.GetForegroundWindow();
-                                if (current != this.MainForm.Handle && !this.ContainsChild(current))
+                                if (current != MainForm.Handle && !ContainsChild(current))
                                 {
                                     m_externalWindow = true;
                                 } 
                                 else if (m_externalWindow)
                                 {
                                     m_externalWindow = false;
-                                    NativeMethods.BringWindowToTop(this.MainForm.Handle);
-                                    this.MainForm.FocusActiveDocument("SHELLHOOK");
+                                    NativeMethods.BringWindowToTop(MainForm.Handle);
+                                    MainForm.FocusActiveDocument("SHELLHOOK");
                                     //return false;
                                 }
-                                else if (current == this.MainForm.Handle)
+                                else if (current == MainForm.Handle)
                                 {
                                     // round trip alt-tab or first alt-tab in 2x sequence...also when menus popup
                                     //NativeMethods.SetForegroundWindow(this.MainForm.Handle);
@@ -154,8 +151,6 @@ namespace SuperPutty.Utils
                                 //    }
                                 //}
                                 break;
-                            default:
-                                break;
                         }
                     }
                     break;
@@ -166,7 +161,7 @@ namespace SuperPutty.Utils
 
         bool ContainsChild(IntPtr childHandle)
         {
-            return this.childWindows.ContainsKey(childHandle);
+            return childWindows.ContainsKey(childHandle);
         }
 
         /// <summary>
@@ -176,7 +171,7 @@ namespace SuperPutty.Utils
         /// <param name="e"></param>
         private void HandleResizeEnd(Object sender, EventArgs e)
         {
-            this.MainForm.FocusActiveDocument("ResizeEnd");
+            MainForm.FocusActiveDocument("ResizeEnd");
         }
 
         frmSuperPutty MainForm { get; set; }

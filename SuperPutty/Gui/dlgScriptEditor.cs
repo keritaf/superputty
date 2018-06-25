@@ -34,43 +34,40 @@ namespace SuperPutty
         protected virtual void OnScriptReady(ExecuteScriptEventArgs e)
         {
             ExecuteScriptEventHandler handler = ScriptReady;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            handler?.Invoke(this, e);
         }
 
         /// <summary>A dialog that allows opening, saving, editing and executing multiline scripts</summary>
         public dlgScriptEditor()
         {
             InitializeComponent();
-            this.ActiveControl = textBoxSript;         
+            ActiveControl = textBoxSript;         
         }
 
         private void buttonRunScript_Click(object sender, EventArgs e)
         {
             ExecuteScriptEventArgs args = new ExecuteScriptEventArgs { Script = textBoxSript.Text };
             OnScriptReady(args);
-            this.Close();
+            Close();
             
         }
 
         private void buttonLoadScript_Click(object sender, EventArgs e)
         {
-            DialogResult dlgResult = this.openFileDialog1.ShowDialog();
+            DialogResult dlgResult = openFileDialog1.ShowDialog();
             if(dlgResult == DialogResult.OK)
             {
-                string script = File.ReadAllText(this.openFileDialog1.FileName);
+                string script = File.ReadAllText(openFileDialog1.FileName);
                 textBoxSript.AppendText(script);
             }
         }
 
         private void buttonSaveScript_Click(object sender, EventArgs e)
         {
-            DialogResult dlgResult = this.saveFileDialog1.ShowDialog();
+            DialogResult dlgResult = saveFileDialog1.ShowDialog();
             if(dlgResult == DialogResult.OK)
             {
-                File.WriteAllText(this.saveFileDialog1.FileName, textBoxSript.Text);
+                File.WriteAllText(saveFileDialog1.FileName, textBoxSript.Text);
             }
         }
     }
@@ -84,8 +81,8 @@ namespace SuperPutty
         public bool IsSPSL {
             get
             {
-                if (!string.IsNullOrEmpty(this.Script)
-                    && this.Script.StartsWith("#!/bin/spsl"))
+                if (!string.IsNullOrEmpty(Script)
+                    && Script.StartsWith("#!/bin/spsl"))
                     return true;
                 else
                     return false;

@@ -2,13 +2,14 @@
 using SuperPutty.Utils;
 using System;
 using System.Windows.Forms;
+using SuperPutty.Gui;
 
 namespace SuperPutty
 {
     public partial class SessionDetail : ToolWindow
     {
         private SessionTreeview TreeViewInstance;
-        SingletonToolWindowHelper<SessionTreeview> SessionsToolWindowHelper;
+        readonly SingletonToolWindowHelper<SessionTreeview> SessionsToolWindowHelper;
         private SessionDetail()
         {
             InitializeComponent();
@@ -27,59 +28,58 @@ namespace SuperPutty
                 SessionTreeviewInstanceChanged(SessionsToolWindowHelper.Instance);
             }
 
-            this.FormClosed += SessionDetail_FormClosed;
+            FormClosed += SessionDetail_FormClosed;
         }
 
-        private void SelectedSessionChanged(SessionData Session)
+        private void SelectedSessionChanged(SessionData session)
         {
-            SessionData OldSession = sessionDetailPropertyGrid.SelectedObject as SessionData;
-            if (OldSession != null)
+            if (sessionDetailPropertyGrid.SelectedObject is SessionData oldSession)
             {
-                OldSession.OnPropertyChanged -= OnPropertyChanged;
+                oldSession.OnPropertyChanged -= OnPropertyChanged;
             }
-            sessionDetailPropertyGrid.SelectedObject = Session;
-            if (Session != null)
+            sessionDetailPropertyGrid.SelectedObject = session;
+            if (session != null)
             {
-                Session.OnPropertyChanged += OnPropertyChanged;
+                session.OnPropertyChanged += OnPropertyChanged;
             }
         }
 
-        private void SessionTreeviewInstanceChanged(SessionTreeview TreeViewInstance)
+        private void SessionTreeviewInstanceChanged(SessionTreeview treeViewInstance)
         {
-            if (this.TreeViewInstance == TreeViewInstance)
+            if (TreeViewInstance == treeViewInstance)
                 return;
 
-            Attach(TreeViewInstance);
+            Attach(treeViewInstance);
         }
 
-        private void OnPropertyChanged(SessionData Session, String AttributeName)
+        private void OnPropertyChanged(SessionData session, String attributeName)
         {
-            if (Session == null)
+            if (session == null)
                 return;
 
             sessionDetailPropertyGrid.Refresh();
         }
 
-        private void Attach(SessionTreeview SessionTreeView)
+        private void Attach(SessionTreeview sessionTreeView)
         {
             Detach();
-            this.TreeViewInstance = SessionTreeView;
-            if (SessionTreeView != null)
+            TreeViewInstance = sessionTreeView;
+            if (sessionTreeView != null)
             {
-                this.TreeViewInstance.FormClosed += SessionTreeView_FormClosed;
-                SessionTreeView.SelectionChanged += SelectedSessionChanged;
-                SelectedSessionChanged(SessionTreeView.SelectedSession);
+                TreeViewInstance.FormClosed += SessionTreeView_FormClosed;
+                sessionTreeView.SelectionChanged += SelectedSessionChanged;
+                SelectedSessionChanged(sessionTreeView.SelectedSession);
             }
         }
 
         private void Detach()
         {
-            if (this.TreeViewInstance != null)
+            if (TreeViewInstance != null)
             {
                 TreeViewInstance.FormClosed -= SessionTreeView_FormClosed;
                 TreeViewInstance.SelectionChanged -= SelectedSessionChanged;
             }
-            this.TreeViewInstance = null;
+            TreeViewInstance = null;
             SelectedSessionChanged(null);
         }
 
@@ -99,23 +99,22 @@ namespace SuperPutty
 
         private void sessionDetailPropertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-            SessionData Session = sessionDetailPropertyGrid.SelectedObject as SessionData;
-            if (Session != null)
+            if (sessionDetailPropertyGrid.SelectedObject is SessionData Session)
             {
                 String HostPropertyName = "Host";
                 String PuttySessionPropertyName = "PuttySession";
-                if (e.ChangedItem.PropertyDescriptor.Name == HostPropertyName || e.ChangedItem.PropertyDescriptor.Name == PuttySessionPropertyName)
+                if (e.ChangedItem.PropertyDescriptor?.Name == HostPropertyName || e.ChangedItem.PropertyDescriptor?.Name == PuttySessionPropertyName)
                 {
                     if (String.IsNullOrEmpty(Session.PuttySession) && String.IsNullOrEmpty(Session.Host))
                     {
                         if (e.ChangedItem.PropertyDescriptor.Name == HostPropertyName)
                         {
-                            MessageBox.Show("A host name must be specified if a Putty Session Profile is not selected");
+                            MessageBox.Show(LocalizedText.SessionDetail_sessionDetailPropertyGrid_PropertyValueChanged_A_host_name_must_be_specified_if_a_Putty_Session_Profile_is_not_selected);
                             Session.Host = (String)e.OldValue;
                         }
                         else
                         {
-                            MessageBox.Show("A Putty Session Profile must be selected if a Host Name is not provided");
+                            MessageBox.Show(LocalizedText.SessionDetail_sessionDetailPropertyGrid_PropertyValueChanged_A_Putty_Session_Profile_must_be_selected_if_a_Host_Name_is_not_provided);
                             Session.PuttySession = (String)e.OldValue;
                         }
                         sessionDetailPropertyGrid.Refresh();
@@ -124,12 +123,12 @@ namespace SuperPutty
 
 
                 String ExtraArgsPropertyName = "ExtraArgs";
-                if (e.ChangedItem.PropertyDescriptor.Name == ExtraArgsPropertyName)
+                if (e.ChangedItem.PropertyDescriptor?.Name == ExtraArgsPropertyName)
                 {
                     
                     if (!String.IsNullOrEmpty(CommandLineOptions.getcommand(Session.ExtraArgs, "-pw")))
                     {
-                        if (MessageBox.Show("SuperPutty save the password in Sessions.xml file in plain text.\nUse a password in 'Extra PuTTY Arguments' is very insecure.\nFor a secure connection use SSH authentication with Pageant. \nSelect yes, if you want save the password", "Are you sure that you want to save the password?",
+                        if (MessageBox.Show(LocalizedText.SessionDetail_sessionDetailPropertyGrid_PropertyValueChanged_, LocalizedText.SessionDetail_sessionDetailPropertyGrid_PropertyValueChanged_Are_you_sure_that_you_want_to_save_the_password_,
                             MessageBoxButtons.OKCancel,
                             MessageBoxIcon.Warning,
                             MessageBoxDefaultButton.Button1) == DialogResult.Cancel)

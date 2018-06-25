@@ -18,13 +18,13 @@ namespace SuperPutty.Utils
 
         protected void OnPropertyChanged(string name)
         {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(name));
+            OnPropertyChanged(new PropertyChangedEventArgs(name));
         }
 
         protected void OnPropertyChanged(PropertyChangedEventArgs evt)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
-            SynchronizationContext context = this.Context;
+            SynchronizationContext context = Context;
             if (handler != null)
             {
                 if (context != null)
@@ -41,9 +41,8 @@ namespace SuperPutty.Utils
         protected virtual void OnPropertyChanged<T>(Expression<Func<T>> selectorExpression)
         {
             if (selectorExpression == null)
-                throw new ArgumentNullException("selectorExpression");
-            MemberExpression body = selectorExpression.Body as MemberExpression;
-            if (body == null)
+                throw new ArgumentNullException(nameof(selectorExpression));
+            if (!(selectorExpression.Body is MemberExpression body))
                 throw new ArgumentException("The body must be a member expression");
             OnPropertyChanged(body.Member.Name);
         }

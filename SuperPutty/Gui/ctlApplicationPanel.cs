@@ -30,28 +30,29 @@ using System.Configuration;
 using System.Collections.Generic;
 using SuperPutty.Utils;
 using System.Text;
+using SuperPutty.Gui;
 
 namespace SuperPutty
 {
     public delegate void PuttyClosedCallback(bool error);
 
-    public class ApplicationPanel : System.Windows.Forms.Panel
+    public class ApplicationPanel : Panel
     {
         #region Private Member Variables
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ApplicationPanel));
 
-        private static bool RefocusOnVisChanged = Convert.ToBoolean(ConfigurationManager.AppSettings["SuperPuTTY.RefocusOnVisChanged"] ?? "False");
-        private static bool LoopWaitForHandle = Convert.ToBoolean(ConfigurationManager.AppSettings["SuperPuTTY.LoopWaitForHandle"] ?? "False");
-        private static int ClosePuttyWaitTimeMs = Convert.ToInt32(ConfigurationManager.AppSettings["SuperPuTTY.ClosePuttyWaitTimeMs"] ?? "100");
-        private static string ActivatorTypeName = ConfigurationManager.AppSettings["SuperPuTTY.ActivatorTypeName"] ?? typeof(KeyEventWindowActivator).FullName;
+        private static bool RefocusOnVisChanged => Convert.ToBoolean(ConfigurationManager.AppSettings["SuperPuTTY.RefocusOnVisChanged"] ?? "False");
+        private static bool LoopWaitForHandle => Convert.ToBoolean(ConfigurationManager.AppSettings["SuperPuTTY.LoopWaitForHandle"] ?? "False");
+        private static int ClosePuttyWaitTimeMs => Convert.ToInt32(ConfigurationManager.AppSettings["SuperPuTTY.ClosePuttyWaitTimeMs"] ?? "100");
+        private static string ActivatorTypeName => ConfigurationManager.AppSettings["SuperPuTTY.ActivatorTypeName"] ?? typeof(KeyEventWindowActivator).FullName;
 
         private Process m_Process;
         private bool m_Created = false;
         private IntPtr m_AppWin;
-        private List<IntPtr> m_hWinEventHooks = new List<IntPtr>();
-        private List<NativeMethods.WinEventDelegate> lpfnWinEventProcs = new List<NativeMethods.WinEventDelegate>();
-        private WindowActivator m_windowActivator = null;
+        private readonly List<IntPtr> m_hWinEventHooks = new List<IntPtr>();
+        private readonly List<NativeMethods.WinEventDelegate> lpfnWinEventProcs = new List<NativeMethods.WinEventDelegate>();
+        private readonly WindowActivator m_windowActivator = null;
 
         internal PuttyClosedCallback m_CloseCallback;
 
@@ -64,26 +65,26 @@ namespace SuperPutty
         public string ApplicationParameters { get; set; }
 
         [Category("Data"), Description("The starting directory for the putty shell.  Relevant only to cygterm sessions"),
-DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public string ApplicationWorkingDirectory { get; set; }
 
-        public IntPtr AppWindowHandle { get { return this.m_AppWin; } } 
+        public IntPtr AppWindowHandle => m_AppWin;
 
         #endregion
 
         public ApplicationPanel()
         {
-            this.ApplicationName = "";
-            this.ApplicationParameters = "";
-            this.ApplicationWorkingDirectory = "";
+            ApplicationName = "";
+            ApplicationParameters = "";
+            ApplicationWorkingDirectory = "";
 
-            this.Disposed += new EventHandler(ApplicationPanel_Disposed);
+            Disposed += new EventHandler(ApplicationPanel_Disposed);
             SuperPuTTY.LayoutChanged += new EventHandler<Data.LayoutChangedEventArgs>(SuperPuTTY_LayoutChanged);
 
             // setup up the hook to watch for all EVENT_SYSTEM_FOREGROUND events system wide
 
             string typeName = string.IsNullOrEmpty(SuperPuTTY.Settings.WindowActivator) ? ActivatorTypeName : SuperPuTTY.Settings.WindowActivator;
-            this.m_windowActivator = (WindowActivator)Activator.CreateInstance(Type.GetType(typeName));
+            m_windowActivator = (WindowActivator)Activator.CreateInstance(Type.GetType(typeName));
             //this.m_windowActivator = new SetFGCombinedWindowActivator();
             SuperPuTTY.Settings.SettingsSaving += Settings_SettingsSaving;
             SuperPuTTY.WindowEvents.SystemSwitch += new EventHandler<GlobalWindowEventArgs>(OnSystemSwitch);
@@ -91,31 +92,31 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
 
         void Settings_SettingsSaving(object sender, CancelEventArgs e)
         {
-            this.UpdateTitle();
+            UpdateTitle();
         }
 
         void ApplicationPanel_Disposed(object sender, EventArgs e)
         {
-            this.Disposed -= new EventHandler(ApplicationPanel_Disposed);
+            Disposed -= new EventHandler(ApplicationPanel_Disposed);
             SuperPuTTY.LayoutChanged -= new EventHandler<Data.LayoutChangedEventArgs>(SuperPuTTY_LayoutChanged);
             SuperPuTTY.Settings.SettingsSaving -= Settings_SettingsSaving;
             SuperPuTTY.WindowEvents.SystemSwitch -= new EventHandler<GlobalWindowEventArgs>(OnSystemSwitch);
-            this.m_hWinEventHooks.ForEach(delegate(IntPtr hook) {
+            m_hWinEventHooks.ForEach(delegate(IntPtr hook) {
                 NativeMethods.UnhookWinEvent(hook);
             });
-            this.m_hWinEventHooks.Clear();
-            this.lpfnWinEventProcs.Clear();
+            m_hWinEventHooks.Clear();
+            lpfnWinEventProcs.Clear();
         }
 
         void SuperPuTTY_LayoutChanged(object sender, Data.LayoutChangedEventArgs e)
         {
             // move 1x after we're done loading
-            this.MoveWindow("LayoutChanged");
+            MoveWindow("LayoutChanged");
         }
 
         public void RefreshAppWindow()
         {
-            this.MoveWindow("RefreshWindow");
+            MoveWindow("RefreshWindow");
         }
 
         private void MoveWindow(string src)
@@ -130,7 +131,7 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
                 int primaryArea = primary.WorkingArea.Height * primary.WorkingArea.Width;
                 if (screen != primary && screenArea > primaryArea)
                 {
-                    this.MoveWindow("2ndScreenFix", 0, 1);
+                    MoveWindow("2ndScreenFix", 0, 1);
                 }
             }
             MoveWindow(src, 0, 0);
@@ -140,10 +141,10 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         {
             if (!SuperPuTTY.IsLayoutChanging)
             {
-                bool success = NativeMethods.MoveWindow(m_AppWin, x, y, this.Width, this.Height, this.Visible);
+                bool success = NativeMethods.MoveWindow(m_AppWin, x, y, Width, Height, Visible);
                 if (Log.IsInfoEnabled)
                 {
-                    Log.InfoFormat("MoveWindow [{3,-15}{4,20}] w={0,4}, h={1,4}, visible={2}, success={5}", this.Width, this.Height, this.Visible, src, this.Name, success);
+                    Log.InfoFormat("MoveWindow [{3,-15}{4,20}] w={0,4}, h={1,4}, visible={2}, success={5}", Width, Height, Visible, src, Name, success);
                 }
             }
         }
@@ -151,12 +152,12 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public bool ReFocusPuTTY(string caller)
         {
             bool result = false;
-            if (this.ExternalProcessCaptured && NativeMethods.GetForegroundWindow() != this.m_AppWin)
+            if (ExternalProcessCaptured && NativeMethods.GetForegroundWindow() != m_AppWin)
             {
                 //Log.InfoFormat("[{0}] ReFocusPuTTY - puttyTab={1}, caller={2}", this.m_AppWin, this.Parent.Text, caller);
                 settingForeground = true;
-                result = NativeMethods.SetForegroundWindow(this.m_AppWin);
-                Log.InfoFormat("[{0}] ReFocusPuTTY - puttyTab={1}, caller={2}, result={3}", this.m_AppWin, this.Parent.Text, caller, result);
+                result = NativeMethods.SetForegroundWindow(m_AppWin);
+                Log.InfoFormat("[{0}] ReFocusPuTTY - puttyTab={1}, caller={2}, result={3}", m_AppWin, Parent.Text, caller, result);
             }
             //return (this.m_AppWin != null
             //    && NativeMethods.GetForegroundWindow() != this.m_AppWin
@@ -186,10 +187,10 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
             switch (e.eventType)
             {
                 case (uint)NativeMethods.WinEvents.EVENT_SYSTEM_SWITCHSTART:
-                    this.isSwitchingViaAltTab = true;
+                    isSwitchingViaAltTab = true;
                     break;
                 case (uint)NativeMethods.WinEvents.EVENT_SYSTEM_SWITCHEND:
-                    this.isSwitchingViaAltTab = false;
+                    isSwitchingViaAltTab = false;
                     break;
             }
         }
@@ -224,7 +225,7 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
 
             // This is the easiest way I found to get the superputty window to be brought to the top
             // if you leave TopMost = true; then the window will always be on top.
-            if (this.TopLevelControl != null)
+            if (TopLevelControl != null)
             {
                 Form form = SuperPuTTY.MainForm;
                 if (form.WindowState == FormWindowState.Minimized)
@@ -233,11 +234,11 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
                 }
 
                 DesktopWindow window = DesktopWindow.GetFirstDesktopWindow();
-                this.m_windowActivator.ActivateForm(form, window, m_AppWin);
+                m_windowActivator.ActivateForm(form, window, m_AppWin);
 
                 // focus back to putty via setting active dock panel
-                CtlPuttyPanel parent = (CtlPuttyPanel)this.Parent;
-                if (parent != null && parent.DockPanel != null)
+                CtlPuttyPanel parent = (CtlPuttyPanel)Parent;
+                if (parent?.DockPanel != null)
                 {
                     if (parent.DockPanel.ActiveDocument != parent && parent.DockState == DockState.Document)
                     {
@@ -249,7 +250,7 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
                     else
                     {
                         // give focus back
-                        this.ReFocusPuTTY("WinEventProc-FG, AltTab=" + isSwitchingViaAltTab);
+                        ReFocusPuTTY("WinEventProc-FG, AltTab=" + isSwitchingViaAltTab);
                     }
                 }
             }
@@ -261,18 +262,18 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
             StringBuilder sb = new StringBuilder(length + 1);
             NativeMethods.SendMessage(m_AppWin, NativeMethods.WM_GETTEXT, sb.Capacity, sb);
             string controlText = sb.ToString();
-            string parentText = ((CtlPuttyPanel)this.Parent).TextOverride;
+            string parentText = ((CtlPuttyPanel)Parent).TextOverride;
 
-            switch ((SuperPutty.frmSuperPutty.TabTextBehavior)Enum.Parse(typeof(frmSuperPutty.TabTextBehavior), SuperPuTTY.Settings.TabTextBehavior))
+            switch ((frmSuperPutty.TabTextBehavior)Enum.Parse(typeof(frmSuperPutty.TabTextBehavior), SuperPuTTY.Settings.TabTextBehavior))
             {
                 case frmSuperPutty.TabTextBehavior.Static:
-                    this.Parent.Text = parentText;
+                    Parent.Text = parentText;
                     break;
                 case frmSuperPutty.TabTextBehavior.Dynamic:
-                    this.Parent.Text = controlText;
+                    Parent.Text = controlText;
                     break;
                 case frmSuperPutty.TabTextBehavior.Mixed:
-                    this.Parent.Text = parentText + ": " + controlText;
+                    Parent.Text = parentText + ": " + controlText;
                     break;
             }
         }
@@ -281,7 +282,7 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
 
         void OnInnerApplicationFocused()
         {
-            this.InnerApplicationFocused?.Invoke(this, EventArgs.Empty);
+            InnerApplicationFocused?.Invoke(this, EventArgs.Empty);
         }
 
         /*************************** End Hack to watch for windows focus change events ***************************************/
@@ -295,7 +296,7 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         /// <param name="e">Not used</param>
         protected override void OnSizeChanged(EventArgs e)
         {
-            this.Invalidate();
+            Invalidate();
             base.OnSizeChanged(e);
         }
        
@@ -313,7 +314,9 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
                 {
                     if(!File.Exists(ApplicationName))
                     {
-                        MessageBox.Show("putty.exe not found in configured path, please go into tools->settings and set the correct path", "Application Not Found");
+                        MessageBox.Show(
+                            LocalizedText.ApplicationPanel_OnVisibleChanged_putty_exe_not_found_in_configured_path__please_go_into_tools__settings_and_set_the_correct_path,
+                            LocalizedText.ApplicationPanel_OnVisibleChanged_Application_Not_Found);
                         return;
                     }
                     m_Process = new Process
@@ -327,10 +330,10 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
                     };
                     //m_Process.Exited += new EventHandler(p_Exited);
 
-                    if (!string.IsNullOrEmpty(this.ApplicationWorkingDirectory) &&
-                        Directory.Exists(this.ApplicationWorkingDirectory))
+                    if (!string.IsNullOrEmpty(ApplicationWorkingDirectory) &&
+                        Directory.Exists(ApplicationWorkingDirectory))
                     {
-                        m_Process.StartInfo.WorkingDirectory = this.ApplicationWorkingDirectory;
+                        m_Process.StartInfo.WorkingDirectory = ApplicationWorkingDirectory;
                     }
 
                     m_Process.Exited += delegate {
@@ -393,18 +396,18 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
                     }
                 }
 
-                if (SuperPuTTY.PuTTYAppName + " Command Line Error" == this.m_Process.MainWindowTitle)
+                if (SuperPuTTY.PuTTYAppName + " Command Line Error" == m_Process.MainWindowTitle)
                 {
                     // dont' try to capture or manipulate the window
-                    Log.WarnFormat("Error while creating putty session: title={0}, handle={1}.  Abort capture window", this.m_Process.MainWindowTitle, this.m_AppWin);
+                    Log.WarnFormat("Error while creating putty session: title={0}, handle={1}.  Abort capture window", m_Process.MainWindowTitle, m_AppWin);
                     MessageBox.Show("Could not start putty session: Arguments passed to commandline invalid.", "putty command line error.");
-                    this.m_AppWin = IntPtr.Zero;
+                    m_AppWin = IntPtr.Zero;
                 }
                 
-                if(this.m_AppWin != IntPtr.Zero)
+                if(m_AppWin != IntPtr.Zero)
                 {                    
                     // Set the application as a child of the parent form
-                    NativeMethods.SetParent(m_AppWin, this.Handle);
+                    NativeMethods.SetParent(m_AppWin, Handle);
 
                     // Show it! (must be done before we set the windows visibility parameters below                
                     NativeMethods.ShowWindow(m_AppWin, NativeMethods.WindowShowStyle.Maximize);
@@ -414,11 +417,11 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
                     lStyle &= ~(NativeMethods.WS_BORDER | NativeMethods.WS_THICKFRAME);
                     NativeMethods.SetWindowLong(m_AppWin, NativeMethods.GWL_STYLE, lStyle);
                     NativeMethods.WinEventDelegate lpfnWinEventProc = new NativeMethods.WinEventDelegate(WinEventProc);
-                    this.lpfnWinEventProcs.Add(lpfnWinEventProc);
+                    lpfnWinEventProcs.Add(lpfnWinEventProc);
                     uint eventType = (uint)NativeMethods.WinEvents.EVENT_OBJECT_NAMECHANGE;
-                    this.m_hWinEventHooks.Add(NativeMethods.SetWinEventHook(eventType, eventType, IntPtr.Zero, lpfnWinEventProc, (uint)m_Process.Id, 0, NativeMethods.WINEVENT_OUTOFCONTEXT));
+                    m_hWinEventHooks.Add(NativeMethods.SetWinEventHook(eventType, eventType, IntPtr.Zero, lpfnWinEventProc, (uint)m_Process.Id, 0, NativeMethods.WINEVENT_OUTOFCONTEXT));
                     eventType = (uint)NativeMethods.WinEvents.EVENT_SYSTEM_FOREGROUND;
-                    this.m_hWinEventHooks.Add(NativeMethods.SetWinEventHook(eventType, eventType, IntPtr.Zero, lpfnWinEventProc, (uint)m_Process.Id, 0, NativeMethods.WINEVENT_OUTOFCONTEXT));
+                    m_hWinEventHooks.Add(NativeMethods.SetWinEventHook(eventType, eventType, IntPtr.Zero, lpfnWinEventProc, (uint)m_Process.Id, 0, NativeMethods.WINEVENT_OUTOFCONTEXT));
                 }
                 else
                 {
@@ -433,14 +436,14 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
                     return;
                 }
             }
-            if (this.Visible && this.m_Created && this.ExternalProcessCaptured)
+            if (Visible && m_Created && ExternalProcessCaptured)
             {
                 // Move the child so it's located over the parent
-                this.MoveWindow("OnVisChanged");
+                MoveWindow("OnVisChanged");
                 
-                if (RefocusOnVisChanged && NativeMethods.GetForegroundWindow() != this.m_AppWin)
+                if (RefocusOnVisChanged && NativeMethods.GetForegroundWindow() != m_AppWin)
                 {
-                    this.BeginInvoke(new MethodInvoker(delegate { this.ReFocusPuTTY("OnVisChanged"); }));
+                    BeginInvoke(new MethodInvoker(delegate { ReFocusPuTTY("OnVisChanged"); }));
                 }
             }
                   
@@ -454,7 +457,7 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         /// <param name="e"></param>
         protected override void OnHandleDestroyed(EventArgs e)
         {
-            if (this.ExternalProcessCaptured)
+            if (ExternalProcessCaptured)
             {
                 // Send WM_DESTROY instead of WM_CLOSE, so that the Client doesn't
                 // ask in the Background whether the session shall be closed.
@@ -479,15 +482,15 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
             if (ExternalProcessCaptured)
             {
                 // if not minimizing && visible
-                if (this.Height > 0 && this.Width > 0 && this.Visible)
+                if (Height > 0 && Width > 0 && Visible)
                 {
-                    this.MoveWindow("OnResize");
+                    MoveWindow("OnResize");
                 }
             }
             base.OnResize(e);
         }
 
-        public bool ExternalProcessCaptured { get { return this.m_AppWin != IntPtr.Zero; } }
+        public bool ExternalProcessCaptured => m_AppWin != IntPtr.Zero;
 
         #endregion    
     

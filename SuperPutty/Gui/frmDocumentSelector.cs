@@ -32,32 +32,31 @@ namespace SuperPutty
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(frmDocumentSelector));
 
-        private DockPanel dockPanel;
+        private readonly DockPanel dockPanel;
 
         public frmDocumentSelector(DockPanel dockPanel)
         {
             this.dockPanel = dockPanel;
             InitializeComponent();
-            this.checkSendToVisible.Checked = SuperPuTTY.Settings.SendCommandsToVisibleOnly;
+            checkSendToVisible.Checked = SuperPuTTY.Settings.SendCommandsToVisibleOnly;
         }
 
         protected override void OnVisibleChanged(EventArgs e)
         {
-            var d = this.dockPanel;
+            var d = dockPanel;
             base.OnVisibleChanged(e);
-            if (this.Visible)
+            if (Visible)
             {
                 // load docs into the ListView
-                this.listViewDocs.Items.Clear();
+                listViewDocs.Items.Clear();
                 int i = 0;
-                foreach (IDockContent doc in VisualOrderTabSwitchStrategy.GetDocuments(this.dockPanel))
+                foreach (IDockContent doc in VisualOrderTabSwitchStrategy.GetDocuments(dockPanel))
                 {
                     i++;
-                    CtlPuttyPanel pp = doc as CtlPuttyPanel;
-                    if (pp != null)
+                    if (doc is CtlPuttyPanel pp)
                     {
-                        string tabNum = pp == this.dockPanel.ActiveDocument ? i + "*" : i.ToString();
-                        ListViewItem item = this.listViewDocs.Items.Add(tabNum);
+                        string tabNum = pp == dockPanel.ActiveDocument ? i + "*" : i.ToString();
+                        ListViewItem item = listViewDocs.Items.Add(tabNum);
                         item.SubItems.Add(new ListViewItem.ListViewSubItem(item, pp.Text));
                         item.SubItems.Add(new ListViewItem.ListViewSubItem(item, pp.Session.SessionId));
                         item.SubItems.Add(new ListViewItem.ListViewSubItem(item, pp.GetHashCode().ToString()));
@@ -67,49 +66,49 @@ namespace SuperPutty
                     }
 
                 }
-                this.BeginInvoke(new Action(delegate { this.listViewDocs.Focus(); }));
+                BeginInvoke(new Action(delegate { listViewDocs.Focus(); }));
             }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Log.Debug("Cancel");
-            this.Hide();
+            Hide();
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
             Log.Debug("OK");
-            foreach (ListViewItem item in this.listViewDocs.Items)
+            foreach (ListViewItem item in listViewDocs.Items)
             {
                 ((CtlPuttyPanel)item.Tag).AcceptCommands = item.Selected;
             }
-            this.DialogResult = DialogResult.OK;
-            this.Hide();
+            DialogResult = DialogResult.OK;
+            Hide();
 
-            SuperPuTTY.Settings.SendCommandsToVisibleOnly = this.checkSendToVisible.Checked;
+            SuperPuTTY.Settings.SendCommandsToVisibleOnly = checkSendToVisible.Checked;
         }
 
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
             e.Cancel = true;
-            this.Hide();
+            Hide();
         }
 
         public bool IsDocumentSelected(CtlPuttyPanel document)
         {
             bool selected = false;
-            if (document != null && document.Session != null)
+            if (document?.Session != null)
             {
-                selected = this.checkSendToVisible.Checked ? document.Visible : document.AcceptCommands;
+                selected = checkSendToVisible.Checked ? document.Visible : document.AcceptCommands;
             }
             return selected;
         }
 
         private void checkSendToVisible_CheckedChanged(object sender, EventArgs e)
         {
-            this.listViewDocs.Enabled = !this.checkSendToVisible.Checked;
+            listViewDocs.Enabled = !checkSendToVisible.Checked;
         }
     }
 }

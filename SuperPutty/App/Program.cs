@@ -29,6 +29,7 @@ using System.Reflection;
 using System.IO;
 using System.Drawing;
 using System.Text;
+using SuperPutty.Gui;
 
 namespace SuperPutty
 {
@@ -36,7 +37,7 @@ namespace SuperPutty
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
 
-        private static bool EnforceSingleInstance = Convert.ToBoolean(
+        private static bool EnforceSingleInstance => Convert.ToBoolean(
             ConfigurationManager.AppSettings["SuperPuTTY.SingleInstance"] ?? "False");
         
         //ISSUE: In Release mode (1.4.0.6) doesn't work single instance option 
@@ -52,8 +53,7 @@ namespace SuperPutty
             // send log to console
             log4net.Config.BasicConfigurator.Configure();
 
-            bool onlyInstance = false;
-            mutex = new Mutex(true, "SuperPutty", out onlyInstance);
+            mutex = new Mutex(true, "SuperPutty", out var onlyInstance);
 
             Log.InfoFormat(
                 "IsFirstRun={0}, SingleInstanceMode={1}, onlyInstance={2}", 
@@ -82,8 +82,8 @@ namespace SuperPutty
                 Log.Info("Starting");
                 SuperPuTTY.Initialize(args);
 
-                AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-                Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
+                AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+                Application.ThreadException += Application_ThreadException;
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 
@@ -114,7 +114,7 @@ namespace SuperPutty
                 }
 
                 FieldInfo field = typeof(Form).GetField("defaultIcon", BindingFlags.NonPublic | BindingFlags.Static);
-                field.SetValue(null, form.Icon);
+                field?.SetValue(null, form.Icon);
             }
             catch (Exception ex)
             {
@@ -124,8 +124,8 @@ namespace SuperPutty
 
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            String msg = String.Format("CurrentDomain_UnhandledException: IsTerminating={0}, ex={1}", e.IsTerminating, e.ExceptionObject);
-            MessageBox.Show(msg, "Unhandled Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            String msg = $"CurrentDomain_UnhandledException: IsTerminating={e.IsTerminating}, ex={e.ExceptionObject}";
+            MessageBox.Show(msg, LocalizedText.Program_CurrentDomain_UnhandledException_Unhandled_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             Log.Error(msg);
         }
 
@@ -148,7 +148,7 @@ namespace SuperPutty
             }
 
             Log.Error("Application_ThreadException", e.Exception);
-            MessageBox.Show(sb.ToString(), "Application_ThreadException", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(sb.ToString(), @"Application_ThreadException", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
 

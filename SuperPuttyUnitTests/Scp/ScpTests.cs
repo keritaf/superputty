@@ -59,13 +59,13 @@ namespace SuperPuttyUnitTests.Scp
         void proc_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
             Log.InfoFormat("ERR {0:000} {1}", ++lineNum, e.Data);
-            this.errData.Add(e.Data);
+            errData.Add(e.Data);
         }
 
         void proc_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             Log.InfoFormat("OUT {0:000} {1}", ++lineNum, e.Data);
-            this.outData.Add(e.Data);
+            outData.Add(e.Data);
         }
 
         void ListDirectory(string user, string password, string host)
@@ -117,7 +117,7 @@ namespace SuperPuttyUnitTests.Scp
         public void ListDirSuccess()
         {
             ListDirectory(ScpConfig.UserName, ScpConfig.Password, ScpConfig.KnownHost);
-            Assert.Greater(this.outData.Count, 0);
+            Assert.Greater(outData.Count, 0);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace SuperPuttyUnitTests.Scp
         public void ListDirBadPassword()
         {
             bool returned = false;
-            Thread t = new Thread(x => 
+            Thread t = new Thread(x =>
             {
                 ListDirectory(ScpConfig.UserName, ScpConfig.Password + "zzz", ScpConfig.KnownHost);
                 lock (this)
@@ -136,8 +136,7 @@ namespace SuperPuttyUnitTests.Scp
                     Monitor.Pulse(this);
                     returned = true;
                 }
-            });
-            t.IsBackground = true;
+            }) {IsBackground = true};
             t.Start();
 
             lock (this)
@@ -145,8 +144,8 @@ namespace SuperPuttyUnitTests.Scp
                 Monitor.Wait(this, 5000);
             }
             Assert.False(returned);
-            Assert.AreEqual(0, this.outData.Count);
-            Assert.AreEqual(0, this.errData.Count);
+            Assert.AreEqual(0, outData.Count);
+            Assert.AreEqual(0, errData.Count);
         }
 
         /// <summary>
@@ -164,8 +163,7 @@ namespace SuperPuttyUnitTests.Scp
                     Monitor.Pulse(this);
                     returned = true;
                 }
-            });
-            t.IsBackground = true;
+            }) {IsBackground = true};
             t.Start();
 
             lock (this)
@@ -173,9 +171,9 @@ namespace SuperPuttyUnitTests.Scp
                 Monitor.Wait(this, 5000);
             }
             Assert.False(returned);
-            Assert.AreEqual(0, this.outData.Count);
-            Assert.Greater(this.errData.Count, 1);
-            Assert.IsTrue(this.errData[0].Contains("The server's host key is not cached "));
+            Assert.AreEqual(0, outData.Count);
+            Assert.Greater(errData.Count, 1);
+            Assert.IsTrue(errData[0].Contains("The server's host key is not cached "));
         }
     }
 
@@ -341,6 +339,6 @@ namespace SuperPuttyUnitTests.Scp
         public static readonly string KnownHost = ConfigurationManager.AppSettings["SuperPuTTY.ScpTests.KnownHost"];
         public static readonly string UnKnownHost = ConfigurationManager.AppSettings["SuperPuTTY.ScpTests.UnKnownHost"];
 
-        public static PscpOptions DefaultOptions = new PscpOptions { PscpLocation = ScpConfig.PscpLocation };
+        public static PscpOptions DefaultOptions = new PscpOptions { PscpLocation = PscpLocation };
     }
 }

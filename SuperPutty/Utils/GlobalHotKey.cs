@@ -9,38 +9,38 @@ namespace SuperPutty.Utils
     {
         public GlobalHotkey(Form form, KeyboardShortcut shortcut)
         {
-            this.Form = form;
-            this.Shortcut = shortcut;
+            Form = form;
+            Shortcut = shortcut;
 
             // convert the Keys to modifiers
-            this.Modifiers = NativeMethods.HotKeysConstants.NOMOD;
+            Modifiers = NativeMethods.HotKeysConstants.NOMOD;
             if (IsControlSet)
             {
-                this.Modifiers += NativeMethods.HotKeysConstants.CTRL;
+                Modifiers += NativeMethods.HotKeysConstants.CTRL;
             }
             if (IsAltSet)
             {
-                this.Modifiers += NativeMethods.HotKeysConstants.ALT;
+                Modifiers += NativeMethods.HotKeysConstants.ALT;
             }
             if (IsShiftSet)
             {
-                this.Modifiers += NativeMethods.HotKeysConstants.SHIFT;
+                Modifiers += NativeMethods.HotKeysConstants.SHIFT;
             }
 
             // make uid
-            this.Id = this.Shortcut.GetHashCode() ^ this.Form.Handle.ToInt32();
+            Id = Shortcut.GetHashCode() ^ Form.Handle.ToInt32();
 
-            this.Register();
+            Register();
         }
 
         public bool Register()
         {
-            return NativeMethods.RegisterHotKey((IntPtr) this.Form.Handle, this.Id, this.Modifiers, (int) this.Shortcut.Key);
+            return NativeMethods.RegisterHotKey(Form.Handle, Id, Modifiers, (int) Shortcut.Key);
         }
 
         public void Dispose()
         {
-            NativeMethods.UnregisterHotKey(this.Form.Handle, this.Id);
+            NativeMethods.UnregisterHotKey(Form.Handle, Id);
         }
 
         private static bool IsSet(Keys keys, params Keys[] modifiers)
@@ -48,9 +48,9 @@ namespace SuperPutty.Utils
             return modifiers.Any(modifier => (keys & modifier) == modifier);
         }
 
-        public bool IsControlSet { get { return IsSet(this.Shortcut.Modifiers, Keys.Control); } }
-        public bool IsAltSet { get { return IsSet(this.Shortcut.Modifiers, Keys.Alt); } }
-        public bool IsShiftSet { get { return IsSet(this.Shortcut.Modifiers, Keys.Shift); } }
+        public bool IsControlSet => IsSet(Shortcut.Modifiers, Keys.Control);
+        public bool IsAltSet => IsSet(Shortcut.Modifiers, Keys.Alt);
+        public bool IsShiftSet => IsSet(Shortcut.Modifiers, Keys.Shift);
 
         public KeyboardShortcut Shortcut { get; private set; }
         public Form Form { get; private set; }

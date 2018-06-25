@@ -26,8 +26,8 @@ namespace SuperPuttyUnitTests
         void AddViewButtons(MethodInfo methodAutoStart)
         {
             // special case for no auto-start
-            this.comboAutoStart.Items.Add(NoAutoStart);
-            this.comboAutoStart.SelectedItem = NoAutoStart;
+            comboAutoStart.Items.Add(NoAutoStart);
+            comboAutoStart.SelectedItem = NoAutoStart;
 
             MethodInfo[] methods = TestViewAttribute.GetAllTestViews(Assembly.GetEntryAssembly());
             Array.Reverse(methods);
@@ -37,10 +37,10 @@ namespace SuperPuttyUnitTests
                 Log.InfoFormat("Adding TestView: type={0}, method={1}", mi.DeclaringType, mi.Name);
 
                 string item = ToComboItem(mi);
-                this.comboAutoStart.Items.Add(item);
+                comboAutoStart.Items.Add(item);
                 if (mi == methodAutoStart)
                 {
-                    this.comboAutoStart.SelectedItem = item;
+                    comboAutoStart.SelectedItem = item;
                 }
                 Button btn = new Button
                 {
@@ -67,12 +67,12 @@ namespace SuperPuttyUnitTests
                 method.Invoke(instance, null);
 
                 // set as selected item
-                this.comboAutoStart.SelectedItem = ToComboItem(method);
+                comboAutoStart.SelectedItem = ToComboItem(method);
 
                 // kill forms together
-                if (Form.ActiveForm != this)
+                if (ActiveForm != null && ActiveForm != this)
                 {
-                    Form.ActiveForm.FormClosed += (s, e) => this.Close();
+                    ActiveForm.FormClosed += (s, e) => Close();
                 }
             }
             catch (Exception ex)
@@ -97,12 +97,9 @@ namespace SuperPuttyUnitTests
                         Type t = Type.GetType(parts[0]);
                         if (t != null)
                         {
-                            this.comboAutoStart.SelectedItem = autoStartType;
-                            this.BeginInvoke(
-                                new Action<MethodInfo>((mi) =>
-                                {
-                                    RunTestView(mi);
-                                }), 
+                            comboAutoStart.SelectedItem = autoStartType;
+                            BeginInvoke(
+                                new Action<MethodInfo>(RunTestView), 
                                 t.GetMethod(parts[1]));
                         }
                     }
@@ -119,7 +116,7 @@ namespace SuperPuttyUnitTests
             base.OnFormClosed(e);
 
             // save autostart view
-            string item = (string) this.comboAutoStart.SelectedItem;
+            string item = (string) comboAutoStart.SelectedItem;
             if (item != NoAutoStart)
             {
                 File.WriteAllText(AutoStartFile, item);

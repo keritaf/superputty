@@ -17,35 +17,35 @@ namespace SuperPutty.Scp
 
         public BrowserViewModel()
         {
-            this.currentPath = null;
-            this.status = String.Empty;
-            this.browserState = BrowserState.Ready;
-            this.Files = new BindingList<BrowserFileInfo>();
-            this.Context = SynchronizationContext.Current;
+            currentPath = null;
+            status = String.Empty;
+            browserState = BrowserState.Ready;
+            Files = new BindingList<BrowserFileInfo>();
+            Context = SynchronizationContext.Current;
         }
 
         public string Name
         {
-            get { return this.name; }
-            set { SetField(ref this.name, value, () => this.Name); }
+            get => name;
+            set { SetField(ref name, value, () => Name); }
         }
 
         public string CurrentPath
         {
-            get { return this.currentPath; }
-            set { SetField(ref this.currentPath, value, () => this.CurrentPath); }
+            get => currentPath;
+            set { SetField(ref currentPath, value, () => CurrentPath); }
         }
 
         public string Status
         {
-            get { return this.status; }
-            set { SetField(ref this.status, value, () => this.Status); }
+            get => status;
+            set { SetField(ref status, value, () => Status); }
         }
 
         public BrowserState BrowserState
         {
-            get { return this.browserState; }
-            set { SetField(ref this.browserState, value, () => this.BrowserState); }
+            get => browserState;
+            set { SetField(ref browserState, value, () => BrowserState); }
         }
 
         public BindingList<BrowserFileInfo> Files { get; private set; }

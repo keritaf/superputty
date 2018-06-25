@@ -39,13 +39,13 @@ namespace SuperPutty
 
         public dlgLogin(string userName)
         {
-            this.Username = WindowsIdentity.GetCurrent().Name.Split('\\')[1];
+            Username = WindowsIdentity.GetCurrent().Name.Split('\\')[1];
             InitializeComponent();
 
             if (!String.IsNullOrEmpty(userName))
-                this.Username = userName;
+                Username = userName;
 
-            textBoxUsername.Text = this.Username;
+            textBoxUsername.Text = Username;
         }
 
         public dlgLogin(SessionData session) : this(session.Username)
@@ -80,7 +80,7 @@ namespace SuperPutty
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
+            DialogResult = DialogResult.Cancel;
         }
     }
 }

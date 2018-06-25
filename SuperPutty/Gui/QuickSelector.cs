@@ -10,8 +10,8 @@ namespace SuperPutty.Gui
     public partial class QuickSelector : Form
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(QuickSelector));
-        private static char[] sanitizeChars = { '*', '[', ',' };
-        private static char[] splitChars = { ' ', '.', '*' };
+        private static readonly char[] sanitizeChars = { '*', '[', ',' };
+        private static readonly char[] splitChars = { ' ', '.', '*' };
 
         public QuickSelector()
         {
@@ -20,25 +20,25 @@ namespace SuperPutty.Gui
 
         void DoClose()
         {
-            this.SelectedItem = null;
-            this.DialogResult = DialogResult.Cancel;
+            SelectedItem = null;
+            DialogResult = DialogResult.Cancel;
         }
 
         void DoSelectItem()
         {
-            DataGridViewSelectedRowCollection selectedRows = this.dataGridViewData.SelectedRows;
+            DataGridViewSelectedRowCollection selectedRows = dataGridViewData.SelectedRows;
             if (selectedRows.Count == 1)
             {
                 DataRowView row = (DataRowView) selectedRows[0].DataBoundItem;
-                this.SelectedItem = (QuickSelectorData.ItemDataRow) row.Row;
-                this.DialogResult = DialogResult.OK;
+                SelectedItem = (QuickSelectorData.ItemDataRow) row.Row;
+                DialogResult = DialogResult.OK;
             }
         }
 
         void UpdateFilter()
         {
-            this.DataView.RowFilter = String.IsNullOrEmpty(this.textBoxData.Text) ? String.Empty : FormatFilterString(this.textBoxData.Text);
-            this.Text = string.Format("{0} [{1}]", this.Options.BaseText, this.DataView.Count);
+            DataView.RowFilter = String.IsNullOrEmpty(textBoxData.Text) ? String.Empty : FormatFilterString(textBoxData.Text);
+            Text = string.Format("{0} [{1}]", Options.BaseText, DataView.Count);
         }
 
         string FormatFilterString(string text)
@@ -90,7 +90,7 @@ namespace SuperPutty.Gui
         {
             base.OnFormClosed(e);
             Log.InfoFormat("Closed - DialogResult={0}, SelectedItem={1}", 
-                this.DialogResult, this.SelectedItem != null ? this.SelectedItem.Name + ":" + this.SelectedItem.Detail : "");
+                DialogResult, SelectedItem != null ? SelectedItem.Name + ":" + SelectedItem.Detail : "");
         }
 
         private void textBoxData_KeyDown(object sender, KeyEventArgs e)
@@ -98,53 +98,51 @@ namespace SuperPutty.Gui
             switch (e.KeyCode)
             {
                 case Keys.Enter:
-                    if (this.DataView.Count > 0)
+                    if (DataView.Count > 0)
                     {
-                        this.DoSelectItem();
+                        DoSelectItem();
                     }
                     break;
                 case Keys.Escape:
-                    this.DoClose();
+                    DoClose();
                     e.Handled = true;
                     break;
                 case Keys.Down:
                     // focus grid and move selection down by 1 row if possible
-                    this.dataGridViewData.Focus();
-                    if (this.dataGridViewData.SelectedRows[0].Index == 0)
+                    dataGridViewData.Focus();
+                    if (dataGridViewData.SelectedRows[0].Index == 0)
                     {
-                        if (this.dataGridViewData.Rows.Count > 1)
+                        if (dataGridViewData.Rows.Count > 1)
                         {
-                            this.dataGridViewData.CurrentCell = this.dataGridViewData.Rows[1].Cells[0];
+                            dataGridViewData.CurrentCell = dataGridViewData.Rows[1].Cells[0];
                         }
                     }
                     e.Handled = true;
                     break;
                 case Keys.Back:
-                    if (e.Control && this.textBoxData.SelectionStart == this.textBoxData.Text.Length)
+                    if (e.Control && textBoxData.SelectionStart == textBoxData.Text.Length)
                     {
                         // delete word
-                        int idx = this.textBoxData.Text.LastIndexOf("/");
+                        int idx = textBoxData.Text.LastIndexOf("/", StringComparison.Ordinal);
                         if (idx != -1)
                         {
-                            this.textBoxData.Text = this.textBoxData.Text.Substring(0, idx);
-                            this.textBoxData.SelectionStart = this.textBoxData.Text.Length;
+                            textBoxData.Text = textBoxData.Text.Substring(0, idx);
+                            textBoxData.SelectionStart = textBoxData.Text.Length;
                         }
                         else
                         {
-                            this.textBoxData.Text = "";
+                            textBoxData.Text = "";
                         }
                         e.Handled = true;
                         e.SuppressKeyPress = true;
                     }
-                    break;
-                default:
                     break;
             }
         }
 
         private void textBoxData_TextChanged(object sender, EventArgs e)
         {
-            this.UpdateFilter();
+            UpdateFilter();
         }
 
         private void dataGridViewData_KeyDown(object sender, KeyEventArgs e)
@@ -152,28 +150,26 @@ namespace SuperPutty.Gui
             switch (e.KeyCode)
             {
                 case Keys.Enter:
-                    this.DoSelectItem();
+                    DoSelectItem();
                     e.Handled = true;
                     break;
                 case Keys.Escape:
-                    this.DoClose();
+                    DoClose();
                     e.Handled = true;
                     break;
                 case Keys.Up:
-                    if (this.dataGridViewData.Rows[0].Selected)
+                    if (dataGridViewData.Rows[0].Selected)
                     {
-                        this.textBoxData.Focus();
+                        textBoxData.Focus();
                         e.Handled = true;
                     }
-                    break;
-                default:
                     break;
             }
         }
 
         private void dataGridViewData_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            this.DoSelectItem();
+            DoSelectItem();
         }
 
         private void dataGridViewData_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -181,7 +177,7 @@ namespace SuperPutty.Gui
             if (e.RowIndex >= 0)
             {
                 QuickSelectorData.ItemDataRow row = 
-                    (QuickSelectorData.ItemDataRow) ((DataRowView)this.dataGridViewData.Rows[e.RowIndex].DataBoundItem).Row;
+                    (QuickSelectorData.ItemDataRow) ((DataRowView)dataGridViewData.Rows[e.RowIndex].DataBoundItem).Row;
                 if (!row.IsTextColorNull())
                 {
                     e.CellStyle.ForeColor = (Color) row.TextColor;
@@ -189,21 +185,21 @@ namespace SuperPutty.Gui
             }
         }
 
-        Brush highLighter = new SolidBrush(Color.FromArgb(120, 255, 255, 0));
+        readonly Brush highLighter = new SolidBrush(Color.FromArgb(120, 255, 255, 0));
 
         private void dataGridViewData_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            if (!this.Options.HighlightMatchingText) { return; }
+            if (!Options.HighlightMatchingText) { return; }
 
             // draw default
             e.Paint(e.ClipBounds, DataGridViewPaintParts.All);
 
-            String txt = this.textBoxData.Text;
+            String txt = textBoxData.Text;
             if (txt.Length > 0)
             {
                 String display = (String) e.FormattedValue;
                 
-                int idx = display.IndexOf(txt);
+                int idx = display.IndexOf(txt, StringComparison.Ordinal);
                 if (idx != -1)
                 {
                     String skipText = display.Substring(0, idx);
@@ -226,20 +222,20 @@ namespace SuperPutty.Gui
         public DialogResult ShowDialog(IWin32Window parent, QuickSelectorData data, QuickSelectorOptions options)
         {
             // bind data
-            this.Options = options;
-            this.DataView = new DataView(data.ItemData) {Sort = options.Sort};
-            this.dataGridViewData.DataSource = this.DataView;
+            Options = options;
+            DataView = new DataView(data.ItemData) {Sort = options.Sort};
+            dataGridViewData.DataSource = DataView;
 
             // configure grid
-            this.nameDataGridViewTextBoxColumn.Visible = this.Options.ShowNameColumn;
-            this.detailDataGridViewTextBoxColumn.Visible = this.Options.ShowDetailColumn;
-            if (this.Options.ShowDetailColumn && !this.Options.ShowNameColumn)
+            nameDataGridViewTextBoxColumn.Visible = Options.ShowNameColumn;
+            detailDataGridViewTextBoxColumn.Visible = Options.ShowDetailColumn;
+            if (Options.ShowDetailColumn && !Options.ShowNameColumn)
             {
-                this.detailDataGridViewTextBoxColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                detailDataGridViewTextBoxColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             }
 
             // update title
-            this.UpdateFilter();            
+            UpdateFilter();            
             return ShowDialog(parent);
         }
 
@@ -251,8 +247,8 @@ namespace SuperPutty.Gui
     {
         public QuickSelectorOptions()
         {
-            this.ShowDetailColumn = true;
-            this.BaseText = "Select Item";
+            ShowDetailColumn = true;
+            BaseText = "Select Item";
         }
         public bool ShowNameColumn { get; set; }
         public bool ShowDetailColumn { get; set; }

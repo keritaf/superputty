@@ -14,7 +14,7 @@ namespace SuperPutty.Gui
 {
     public delegate void ImageListPopupEventHandler(object sender, ImageListPopupEventArgs ilpea);
 
-    public class ImageListPopup : System.Windows.Forms.Form
+    public class ImageListPopup : Form
     {
         #region Protected Member Variables
         protected Bitmap _Bitmap = null;
@@ -53,7 +53,7 @@ namespace SuperPutty.Gui
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Minimized;
             base.Show();
-            base.Hide();
+            Hide();
             WindowState = FormWindowState.Normal;
             ShowInTaskbar = false;
             
@@ -76,8 +76,8 @@ namespace SuperPutty.Gui
             _nItemHeight = _imageList.ImageSize.Height + nVSpace;
             _nBitmapWidth = _nColumns * _nItemWidth + 1;
             _nBitmapHeight = _nRows * _nItemHeight + 1;
-            this.Width = _nBitmapWidth;
-            this.Height = _nBitmapHeight;
+            Width = _nBitmapWidth;
+            Height = _nBitmapHeight;
 
 
             _Bitmap = new Bitmap(_nBitmapWidth, _nBitmapHeight);
@@ -105,8 +105,8 @@ namespace SuperPutty.Gui
 
         public void Show(int x, int y)
         {
-            this.Left = x;
-            this.Top = y;
+            Left = x;
+            Top = y;
             base.Show();
         }
         #endregion
@@ -124,7 +124,7 @@ namespace SuperPutty.Gui
         protected override void OnDeactivate(EventArgs ea)
         {
             // If the form loses focus, we hide it
-            this.Hide();
+            Hide();
         }
 
         protected override void OnKeyDown(KeyEventArgs kea)
@@ -286,14 +286,14 @@ namespace SuperPutty.Gui
 
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
             // 
             // ImageListPopup
             // 
-            this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Name = "ImageListPopup";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.ResumeLayout(false);
+            ClientSize = new Size(284, 262);
+            Name = "ImageListPopup";
+            StartPosition = FormStartPosition.CenterParent;
+            ResumeLayout(false);
 
         }
     }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using SuperPutty.Scp;
 using log4net;
@@ -27,7 +24,7 @@ namespace SuperPuttyUnitTests.Scp
 
         public MockFileTransferPresenter()
         {
-            this.ViewModel = new FileTransferViewModel();
+            ViewModel = new FileTransferViewModel();
         }
 
         public bool CanTransferFile(BrowserFileInfo source, BrowserFileInfo target)
@@ -38,7 +35,7 @@ namespace SuperPuttyUnitTests.Scp
         public void TransferFiles(FileTransferRequest transfer)
         {
             Log.InfoFormat("TransferFiles: {0}", transfer);
-            this.LastRequest = transfer;
+            LastRequest = transfer;
         }
 
         public FileTransferRequest LastRequest { get; set; }
@@ -48,17 +45,17 @@ namespace SuperPuttyUnitTests.Scp
 
         public void Cancel(int id)
         {
-            this.filePresenter.Cancel(id);
+            filePresenter.Cancel(id);
         }
 
         public void Remove(int id)
         {
-            this.filePresenter.Remove(id);
+            filePresenter.Remove(id);
         }
 
         public void Restart(int id)
         {
-            this.filePresenter.Restart(id);
+            filePresenter.Restart(id);
         }
     }
 
@@ -119,8 +116,7 @@ namespace SuperPuttyUnitTests.Scp
 
                     view.BeginInvoke(new Action(() => presenter.ViewModel.FileTransfers.ResetItem(0)), null);
                 }
-            });
-            thread.IsBackground = true;
+            }) {IsBackground = true};
             thread.Start();
         }
 
@@ -143,14 +139,16 @@ namespace SuperPuttyUnitTests.Scp
 
             FileTransferView fileTransferView = new FileTransferView(fileTransferPresenter) { Dock = DockStyle.Bottom };
             BrowserView localBrowserView = new BrowserView(
-                new BrowserPresenter("Local", new LocalBrowserModel(), session, fileTransferPresenter), 
-                new BrowserFileInfo(new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Desktop))));
-            localBrowserView.Dock = DockStyle.Fill;
-            
+                new BrowserPresenter("Local", new LocalBrowserModel(), session, fileTransferPresenter),
+                new BrowserFileInfo(new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.Desktop))))
+            {
+                Dock = DockStyle.Fill
+            };
+
             BrowserView remoteBrowserView = new BrowserView(
-                new BrowserPresenter("Remote", new RemoteBrowserModel(ScpConfig.DefaultOptions), session, fileTransferPresenter),
-                RemoteBrowserModel.NewDirectory("/home/" + ScpConfig.UserName));
-            remoteBrowserView.Dock = DockStyle.Fill;
+                new BrowserPresenter("Remote", new RemoteBrowserModel(ScpConfig.DefaultOptions), session,
+                    fileTransferPresenter),
+                RemoteBrowserModel.NewDirectory("/home/" + ScpConfig.UserName)) {Dock = DockStyle.Fill};
 
             SplitContainer browserPanel = new SplitContainer() 
             { 
@@ -179,8 +177,8 @@ namespace SuperPuttyUnitTests.Scp
                 Port = 22
             };
 
-            PscpBrowserPanel panel = new PscpBrowserPanel(session, ScpConfig.DefaultOptions);
-            panel.Size = new Size(1024, 768);
+            PscpBrowserPanel panel =
+                new PscpBrowserPanel(session, ScpConfig.DefaultOptions) {Size = new Size(1024, 768)};
             panel.Show();
         }
     }

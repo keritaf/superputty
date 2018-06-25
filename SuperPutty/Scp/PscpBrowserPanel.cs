@@ -22,8 +22,8 @@ namespace SuperPutty.Scp
 
         public PscpBrowserPanel(SessionData session, PscpOptions options, string localStartingDir) : this()
         {
-            this.Name = session.SessionName;
-            this.TabText = session.SessionName;
+            Name = session.SessionName;
+            TabText = session.SessionName;
 
              //set the remote path
             String remotePath = "";            
@@ -42,15 +42,15 @@ namespace SuperPutty.Scp
             }
  		 
 
-            this.fileTransferPresenter = new FileTransferPresenter(options);
-            this.localBrowserPresenter = new BrowserPresenter(
+            fileTransferPresenter = new FileTransferPresenter(options);
+            localBrowserPresenter = new BrowserPresenter(
                 "Local", new LocalBrowserModel(), session, fileTransferPresenter);
-            this.remoteBrowserPresenter = new BrowserPresenter(
+            remoteBrowserPresenter = new BrowserPresenter(
                 "Remote", new RemoteBrowserModel(options), session, fileTransferPresenter);
 
-            this.browserViewLocal.Initialize(this.localBrowserPresenter, new BrowserFileInfo(new DirectoryInfo(localPath)));
-            this.browserViewRemote.Initialize(this.remoteBrowserPresenter, RemoteBrowserModel.NewDirectory(remotePath));
-            this.fileTransferView.Initialize(this.fileTransferPresenter);
+            browserViewLocal.Initialize(localBrowserPresenter, new BrowserFileInfo(new DirectoryInfo(localPath)));
+            browserViewRemote.Initialize(remoteBrowserPresenter, RemoteBrowserModel.NewDirectory(remotePath));
+            fileTransferView.Initialize(fileTransferPresenter);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace SuperPutty.Utils
     #region WindowActivator
     public abstract class WindowActivator
     {
-        protected ILog Log { get { return LogManager.GetLogger(this.GetType()); } }
+        protected ILog Log => LogManager.GetLogger(GetType());
 
         public abstract void ActivateForm(Form form, DesktopWindow window, IntPtr hwnd);
     } 
@@ -111,10 +111,8 @@ namespace SuperPutty.Utils
             {
                 Log.InfoFormat("[{0}] Activating Main Window - current=({1})", hwnd, window != null ? window.Exe : "?");
 
-                uint fgProcessId;
-                uint spProcessId;
-                NativeMethods.GetWindowThreadProcessId(NativeMethods.GetForegroundWindow(), out fgProcessId);
-                NativeMethods.GetWindowThreadProcessId(form.Handle, out spProcessId);
+                NativeMethods.GetWindowThreadProcessId(NativeMethods.GetForegroundWindow(), out var fgProcessId);
+                NativeMethods.GetWindowThreadProcessId(form.Handle, out var spProcessId);
 
                 if (fgProcessId != spProcessId)
                 {

@@ -48,7 +48,7 @@ namespace SuperPutty.Utils
 
         public override void Initialize(string name, System.Collections.Specialized.NameValueCollection config)
         {
-            base.Initialize(this.ApplicationName, config);
+            base.Initialize(ApplicationName, config);
         }
 
         public override string ApplicationName
@@ -152,29 +152,29 @@ namespace SuperPutty.Utils
             {
                 // If we dont hold an xml document, try opening one.
                 // If it doesnt exist then create a new one ready.
-                if (this.settingsXML == null)
+                if (settingsXML == null)
                 {
-                    this.settingsXML = new XmlDocument();             
+                    settingsXML = new XmlDocument();             
                     string settingsFile = GetAppSettingsFilePath();
-                    this.SettingsFilePath = settingsFile;
+                    SettingsFilePath = settingsFile;
                     try
                     {
-                        this.settingsXML.Load( settingsFile );
+                        settingsXML.Load( settingsFile );
                         Log.InfoFormat("Loaded settings from {0}", settingsFile);
                     }
                     catch (Exception)
                     {
                         Log.InfoFormat("Could not load file ({0}), creating settings file", settingsFile);
                         // Create new document
-                        XmlDeclaration declaration = this.settingsXML.CreateXmlDeclaration("1.0", "utf-8", String.Empty);
-                        this.settingsXML.AppendChild(declaration);
+                        XmlDeclaration declaration = settingsXML.CreateXmlDeclaration("1.0", "utf-8", String.Empty);
+                        settingsXML.AppendChild(declaration);
 
-                        XmlNode nodeRoot = this.settingsXML.CreateNode(XmlNodeType.Element, SettingsRoot, String.Empty);
-                        this.settingsXML.AppendChild(nodeRoot);
+                        XmlNode nodeRoot = settingsXML.CreateNode(XmlNodeType.Element, SettingsRoot, String.Empty);
+                        settingsXML.AppendChild(nodeRoot);
                     }
                 }
 
-                return this.settingsXML;
+                return settingsXML;
             }
         }
 
@@ -186,22 +186,17 @@ namespace SuperPutty.Utils
             {
                 if (UseRoamingSettings(setting))
                 {
-                    XmlNode node = SettingsXML.SelectSingleNode(SettingsRoot + "/" + setting.Name);
-                    if (node == null)
-                    {
-                        // try go by host...backwards compatibility
-                        node = SettingsXML.SelectSingleNode(SettingsRoot + "/" + GetHostName() + "/" + setting.Name);
-                    }
+                    XmlNode node = SettingsXML.SelectSingleNode(SettingsRoot + "/" + setting.Name) ?? SettingsXML.SelectSingleNode(SettingsRoot + "/" + GetHostName() + "/" + setting.Name);
                     value = node.InnerText;
                 }
                 else
                 {
-                    value = SettingsXML.SelectSingleNode(SettingsRoot + "/" + GetHostName() + "/" + setting.Name).InnerText;
+                    value = SettingsXML.SelectSingleNode(SettingsRoot + "/" + GetHostName() + "/" + setting.Name)?.InnerText;
                 }
             }
             catch (Exception)
             {
-                value = setting.DefaultValue != null ? setting.DefaultValue.ToString() : String.Empty;
+                value = setting.DefaultValue?.ToString() ?? String.Empty;
             }
 
             return value;
@@ -209,7 +204,6 @@ namespace SuperPutty.Utils
 
         private void SetValue(SettingsPropertyValue propVal)
         {
-            XmlNode machineNode;
             XmlNode settingNode;
 
             // Determine if the setting is roaming.
@@ -247,6 +241,7 @@ namespace SuperPutty.Utils
                     // Its machine specific, store as an element of the machine name node,
                     // creating a new machine name node if one doesnt exist.
                     string nodePath = SettingsRoot + "/" + GetHostName();
+                    XmlNode machineNode;
                     try
                     {
                         machineNode = (XmlElement)SettingsXML.SelectSingleNode(nodePath);
@@ -255,7 +250,7 @@ namespace SuperPutty.Utils
                     {
                         Log.Error("Error selecting node, " + nodePath, ex);
                         machineNode = SettingsXML.CreateElement(GetHostName());
-                        SettingsXML.SelectSingleNode(SettingsRoot).AppendChild(machineNode);
+                        SettingsXML.SelectSingleNode(SettingsRoot)?.AppendChild(machineNode);
                     }
 
                     if (machineNode == null)

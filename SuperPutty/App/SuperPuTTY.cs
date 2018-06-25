@@ -34,6 +34,7 @@ using WeifenLuo.WinFormsUI.Docking;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Drawing;
+using SuperPutty.Gui;
 using SuperPutty.Scp;
 using SuperPuTTY.Scripting;
 
@@ -51,9 +52,9 @@ namespace SuperPutty
 
         public static event Action<String> StatusEvent;
 
-        static BindingList<LayoutData> layouts = new BindingList<LayoutData>();
-        static SortedList<string, SessionData> sessionsMap = new SortedList<string, SessionData>();
-        static BindingList<SessionData> sessionsList = new BindingList<SessionData>();
+        static readonly BindingList<LayoutData> layouts = new BindingList<LayoutData>();
+        static readonly SortedList<string, SessionData> sessionsMap = new SortedList<string, SessionData>();
+        static readonly BindingList<SessionData> sessionsList = new BindingList<SessionData>();
         static bool? isFirstRun;
 
         public static void Initialize(string[] args)
@@ -64,7 +65,7 @@ namespace SuperPutty
 
             Images = LoadImageList("default");
 
-            if (!SuperPuTTY.IsFirstRun)
+            if (!IsFirstRun)
             {
                 // parse command line args
                 CommandLine = new CommandLineOptions(args);
@@ -72,7 +73,7 @@ namespace SuperPutty
                 // display help if --help specified
                 if (CommandLine.Help)
                 {
-                    if (DialogResult.Cancel == MessageBox.Show(CommandLineOptions.Usage(), "SuperPutty CLI Help", MessageBoxButtons.OKCancel))
+                    if (DialogResult.Cancel == MessageBox.Show(CommandLineOptions.Usage(), LocalizedText.SuperPuTTY_Initialize_SuperPutty_CLI_Help, MessageBoxButtons.OKCancel))
                     {
                         Environment.Exit(0);
                     }
@@ -220,8 +221,8 @@ namespace SuperPutty
                 }
                 else
                 {
-                    Log.InfoFormat("Creating layouts dir: " + SuperPuTTY.LayoutsDir);
-                    Directory.CreateDirectory(SuperPuTTY.LayoutsDir);
+                    Log.InfoFormat("Creating layouts dir: " + LayoutsDir);
+                    Directory.CreateDirectory(LayoutsDir);
                     layouts.Add(autoRestore);
                 }
             }            
@@ -283,8 +284,8 @@ namespace SuperPutty
                 if (layout != null)
                 {
                     ReportStatus("Setting {0} as default layout", layoutName);
-                    SuperPuTTY.Settings.DefaultLayoutName = layoutName;
-                    SuperPuTTY.Settings.Save();
+                    Settings.DefaultLayoutName = layoutName;
+                    Settings.Save();
 
                     // so gui change is propagated via events
                     LoadLayouts();
@@ -297,7 +298,7 @@ namespace SuperPutty
         #region Sessions
 
         /// <summary>Returns A string containing the path to the saved sessions database on disk</summary>
-        private static string SessionsFileName { get { return Path.Combine(Settings.SettingsFolder, "Sessions.XML"); } }
+        private static string SessionsFileName => Path.Combine(Settings.SettingsFolder, "Sessions.XML");
 
         /// <summary>Load sessions database from file into the application</summary>
         public static void LoadSessions()
@@ -432,52 +433,44 @@ namespace SuperPutty
                 String Executable = PuttyStartInfo.GetExecutable(session);
                 if (String.IsNullOrEmpty(Executable))
                 {
-                    MessageBox.Show("Error trying to create session: " + session.ToString() +
-                        "\nExecutable not set for " + session.Proto.ToString() + " protocol." +
-                        "\nGo to tools->options->General tab to set the path to the executable."
-                        , "Failed to create a session", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(
+                        string.Format(LocalizedText.SuperPuTTY_Error_trying_to_create_session_Executable_not_set, session, session.Proto),
+                        LocalizedText.SuperPuTTY_OpenPuttySession_Failed_to_create_a_session, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return null;
                 }
                 if (!File.Exists(Executable))
                 {
-                    MessageBox.Show("Error trying to create session: " + session.ToString() +
-                        "\nExecutable not found for " + session.Proto.ToString() + " protocol." +
-                        "\nThe path for the executable was set as \"" + Executable + "\"." +
-                        "\nGo to tools->options->General tab to set the path to the executable."
-                        , "Failed to create a session", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(string.Format(LocalizedText.SuperPuTTY_Error_trying_to_create_session_Executable_not_found, session, session.Proto, Executable)
+                        , LocalizedText.SuperPuTTY_OpenPuttySession_Failed_to_create_a_session, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return null;
                 }
 
                 // This is the callback fired when the panel containing the terminal is closed
                 // We use this to save the last docking location and to close the panel
-                PuttyClosedCallback callback = delegate
+                void ClosedCallback(bool error)
                 {
                     if (panel != null)
                     {
                         // save the last dockstate (if it has been changed)
-                        if (session.LastDockstate != panel.DockState
-                            && panel.DockState != DockState.Unknown
-                            && panel.DockState != DockState.Hidden)
+                        if (session.LastDockstate != panel.DockState && panel.DockState != DockState.Unknown && panel.DockState != DockState.Hidden)
                         {
                             session.LastDockstate = panel.DockState;
-                            SuperPuTTY.SaveSessions();
+                            SaveSessions();
                         }
 
                         if (panel.InvokeRequired)
                         {
-                            panel.BeginInvoke((MethodInvoker)delegate {
-                                panel.Close();
-                            });
+                            panel.BeginInvoke((MethodInvoker) delegate { panel.Close(); });
                         }
                         else
                         {
                             panel.Close();
                         }
                     }
-                };
+                }
 
                 try {
-                    panel = new CtlPuttyPanel(session, callback);
+                    panel = new CtlPuttyPanel(session, ClosedCallback);
 
                     ApplyDockRestrictions(panel);
                     ApplyIconForWindow(panel, session);
@@ -495,7 +488,10 @@ namespace SuperPutty
                     }
                 } catch (InvalidOperationException ex)
                 {
-                    MessageBox.Show("Error trying to create session " + ex.Message, "Failed to create session panel", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(
+                        string.Format(LocalizedText.SuperPuTTY_Error_trying_to_create_session, ex.Message),
+                        LocalizedText.SuperPuTTY_OpenPuttySession_Failed_to_create_session_panel,
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             return panel;
@@ -515,7 +511,7 @@ namespace SuperPutty
             Log.InfoFormat("Opening scp session, id={0}", session == null ? "" : session.SessionId);
             if (!IsScpEnabled && session != null)
             {
-                SuperPuTTY.ReportStatus("Could not open session, pscp not found: {0} [SCP]", session.SessionId);
+                ReportStatus("Could not open session, pscp not found: {0} [SCP]", session.SessionId);
             }
             else if (session != null)
             {
@@ -526,7 +522,7 @@ namespace SuperPutty
                 ApplyIconForWindow(panel, session);
                 panel.Show(MainForm.DockPanel, session.LastDockstate);
 
-                SuperPuTTY.ReportStatus("Opened session: {0} [SCP]", session.SessionId);
+                ReportStatus("Opened session: {0} [SCP]", session.SessionId);
             }
             else
             {
@@ -538,8 +534,9 @@ namespace SuperPutty
         /// <param name="panel">The <seealso cref="DockPanel"/> to apply the restrictions to</param>
         public static void ApplyDockRestrictions(DockPanel panel)
         {
-            foreach (DockContent doc in panel.Documents)
+            foreach (var dockContent in panel.Documents)
             {
+                var doc = (DockContent) dockContent;
                 if (doc is ToolWindowDocument)
                 {
                     ApplyDockRestrictions(doc);
@@ -551,12 +548,12 @@ namespace SuperPutty
         /// <param name="panel">The <seealso cref="DockContent"/> panel to apply the restrictions to</param>
         public static void ApplyDockRestrictions(DockContent panel)
         {
-            if (SuperPuTTY.Settings.RestrictContentToDocumentTabs)
+            if (Settings.RestrictContentToDocumentTabs)
             {
                 panel.DockAreas = DockAreas.Document | DockAreas.Float;
             }
 
-            if (SuperPuTTY.Settings.DockingRestrictFloatingWindows)
+            if (Settings.DockingRestrictFloatingWindows)
             {
                 panel.DockAreas = panel.DockAreas ^ DockAreas.Float;
             }
@@ -574,11 +571,11 @@ namespace SuperPutty
             {
                 if (ssi.UseScp)
                 {
-                    SuperPuTTY.OpenScpSession(ssi.Session);
+                    OpenScpSession(ssi.Session);
                 }
                 else
                 {
-                    SuperPuTTY.OpenPuttySession(ssi.Session);
+                    OpenPuttySession(ssi.Session);
                 }
             }
         }
@@ -684,8 +681,8 @@ namespace SuperPutty
             ImageList imgIcons = new ImageList();
 
             // Load the 2 standard icons in case no icons exist in icons directory, these will be used.
-            imgIcons.Images.Add(SessionTreeview.ImageKeyFolder, SuperPutty.Properties.Resources.folder);
-            imgIcons.Images.Add(SessionTreeview.ImageKeySession, SuperPutty.Properties.Resources.computer);
+            imgIcons.Images.Add(SessionTreeview.ImageKeyFolder, Resources.folder);
+            imgIcons.Images.Add(SessionTreeview.ImageKeySession, Resources.computer);
 
             try
             {
@@ -733,8 +730,7 @@ namespace SuperPutty
                 try
                 {
                     Image img = Images.Images[imageKey];
-                    Bitmap bmp = img as Bitmap;
-                    if (bmp != null)
+                    if (img is Bitmap bmp)
                     {
                         icon = Icon.FromHandle(bmp.GetHicon());
                     }
@@ -768,25 +764,25 @@ namespace SuperPutty
         }
 
         /// <summary>true if the application has not defined where the putty scp program is located</summary>
-        public static bool IsScpEnabled { get { return File.Exists(SuperPuTTY.Settings.PscpExe); } }
+        public static bool IsScpEnabled => File.Exists(Settings.PscpExe);
 
         /// <summary>true if the application has defined where the filezilla program is located</summary>
-        public static bool IsFilezillaEnabled { get { return File.Exists(SuperPuTTY.Settings.FileZillaExe); } }
+        public static bool IsFilezillaEnabled => File.Exists(Settings.FileZillaExe);
 
         /// <summary>true if the application has defined where the winSCP program is located</summary>
-        public static bool IsWinSCPEnabled { get { return File.Exists(SuperPuTTY.Settings.WinSCPExe); } }
+        public static bool IsWinSCPEnabled => File.Exists(Settings.WinSCPExe);
 
         /// <summary>Returns a string containing the current version of SuperPuTTY</summary>
-        public static string Version { get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); } }
+        public static string Version => Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-        internal static Settings Settings { get { return Settings.Default; } }
+        internal static Settings Settings => Settings.Default;
         public static frmSuperPutty MainForm { get; set; }        
-        public static string LayoutsDir { get { return Path.Combine(Settings.SettingsFolder, "layouts"); } }
+        public static string LayoutsDir => Path.Combine(Settings.SettingsFolder, "layouts");
         public static LayoutData CurrentLayout { get; private set; }
         public static LayoutData StartingLayout { get; private set; }
         public static SessionDataStartInfo StartingSession { get; private set; }
-        public static BindingList<LayoutData> Layouts { get { return layouts; } }
-        public static BindingList<SessionData> Sessions { get { return sessionsList; } }
+        public static BindingList<LayoutData> Layouts => layouts;
+        public static BindingList<SessionData> Sessions => sessionsList;
         public static CommandLineOptions CommandLine { get; private set; }
         public static ImageList Images { get; private set; }
         public static GlobalWindowEvents WindowEvents { get; private set; }
@@ -818,7 +814,7 @@ namespace SuperPutty
         }
 
         /// <summary>The path to the default AutoRestore layout configuration</summary>
-        public static string AutoRestoreLayoutPath { get { return Path.Combine(Settings.SettingsFolder, LayoutData.AutoRestoreLayoutFileName); } }
+        public static string AutoRestoreLayoutPath => Path.Combine(Settings.SettingsFolder, LayoutData.AutoRestoreLayoutFileName);
 
         #endregion
     }

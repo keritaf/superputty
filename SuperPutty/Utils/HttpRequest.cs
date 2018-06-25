@@ -65,7 +65,7 @@ namespace SuperPutty
             };
             ((HttpWebRequest)request).UserAgent = "SuperPuTTY/" + Assembly.GetExecutingAssembly().GetName().Version;
 
-            IAsyncResult result = (IAsyncResult)request.BeginGetResponse(new AsyncCallback(RespCallback), state);     
+            IAsyncResult _ = request.BeginGetResponse(RespCallback, state);     
         }
 
         private static void RespCallback(IAsyncResult ar)
@@ -89,7 +89,7 @@ namespace SuperPutty
 
                 //  Pass rs.BufferRead to BeginRead. Read data into rs.BufferRead
                 IAsyncResult iarRead = ResponseStream.BeginRead(rs.BufferRead, 0,
-                   BufferSize, new System.AsyncCallback(ReadCallBack), rs);
+                   BufferSize, new AsyncCallback(ReadCallBack), rs);
             }
             catch (WebException ex)
             {
@@ -129,7 +129,7 @@ namespace SuperPutty
                 // responseStream.EndRead returns –1.
                 IAsyncResult ar = responseStream.BeginRead(
                    rs.BufferRead, 0, BufferSize,
-                   new System.AsyncCallback(ReadCallBack), rs);
+                   new AsyncCallback(ReadCallBack), rs);
             }
             else
             {
@@ -143,7 +143,6 @@ namespace SuperPutty
                 responseStream.Close();
 
             }
-            return;
         }
     }
 

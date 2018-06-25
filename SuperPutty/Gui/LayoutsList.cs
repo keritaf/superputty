@@ -13,12 +13,12 @@ namespace SuperPutty
         {
             InitializeComponent();
 
-            this.listBoxLayouts.DataSource = SuperPuTTY.Layouts;
+            listBoxLayouts.DataSource = SuperPuTTY.Layouts;
         }
 
         protected override void OnClosed(EventArgs e)
         {
-            this.listBoxLayouts.DataSource = null;
+            listBoxLayouts.DataSource = null;
             base.OnClosed(e);
         }
 
@@ -30,7 +30,7 @@ namespace SuperPutty
             if (e.Cancel)
                 return;
             
-            LayoutData layout = (LayoutData) this.listBoxLayouts.Items[idx];
+            LayoutData layout = (LayoutData) listBoxLayouts.Items[idx];
 
             loadInNewInstanceToolStripMenuItem.Enabled = !SuperPuTTY.Settings.SingleInstanceMode;
             renameToolStripMenuItem.Enabled = !layout.IsReadOnly;
@@ -42,17 +42,17 @@ namespace SuperPutty
             if (e.Button == MouseButtons.Right)
             {
                 // select item under mouse
-                int idx = this.listBoxLayouts.IndexFromPoint(e.X, e.Y);
+                int idx = listBoxLayouts.IndexFromPoint(e.X, e.Y);
                 if (idx != -1)
                 {
-                    this.listBoxLayouts.SelectedIndex = idx;
+                    listBoxLayouts.SelectedIndex = idx;
                 }
             }
         }
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LayoutData layout = (LayoutData) this.listBoxLayouts.SelectedItem;
+            LayoutData layout = (LayoutData) listBoxLayouts.SelectedItem;
             if (layout != null)
             {
                 SuperPuTTY.LoadLayout(layout);
@@ -61,7 +61,7 @@ namespace SuperPutty
 
         private void loadInNewInstanceToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LayoutData layout = (LayoutData)this.listBoxLayouts.SelectedItem;
+            LayoutData layout = (LayoutData)listBoxLayouts.SelectedItem;
             if (layout != null)
             {
                 SuperPuTTY.LoadLayoutInNewInstance(layout);
@@ -70,7 +70,7 @@ namespace SuperPutty
 
         private void setAsDefaultLayoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LayoutData layout = (LayoutData)this.listBoxLayouts.SelectedItem;
+            LayoutData layout = (LayoutData)listBoxLayouts.SelectedItem;
             if (layout != null)
             {
                 SuperPuTTY.SetLayoutAsDefault(layout.Name);
@@ -82,7 +82,7 @@ namespace SuperPutty
             int idx = IndexAtCursor();
             if (idx != -1)
             {
-                LayoutData layout = (LayoutData)this.listBoxLayouts.Items[idx];
+                LayoutData layout = (LayoutData)listBoxLayouts.Items[idx];
                 if (layout != null)
                 {
                     SuperPuTTY.LoadLayout(layout);
@@ -93,13 +93,13 @@ namespace SuperPutty
 
         int IndexAtCursor()
         {
-            Point p = this.listBoxLayouts.PointToClient(Cursor.Position);
-            return this.listBoxLayouts.IndexFromPoint(p.X, p.Y);
+            Point p = listBoxLayouts.PointToClient(Cursor.Position);
+            return listBoxLayouts.IndexFromPoint(p.X, p.Y);
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LayoutData layout = (LayoutData)this.listBoxLayouts.SelectedItem;
+            LayoutData layout = (LayoutData)listBoxLayouts.SelectedItem;
             if (layout != null)
             {
                 if (DialogResult.Yes == MessageBox.Show(this, "Delete Layout (" + layout.Name + ")?", "Delete Layout", MessageBoxButtons.YesNo, MessageBoxIcon.Warning))
@@ -111,14 +111,14 @@ namespace SuperPutty
 
         private void renameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LayoutData layout = (LayoutData)this.listBoxLayouts.SelectedItem;
+            LayoutData layout = (LayoutData)listBoxLayouts.SelectedItem;
             if (layout != null)
             {
                 dlgRenameItem renameDialog = new dlgRenameItem
                 {
                     DetailName = String.Empty,
                     ItemName = layout.Name,
-                    ItemNameValidator = this.ValidateLayoutName
+                    ItemNameValidator = ValidateLayoutName
                 };
                 if (DialogResult.OK == renameDialog.ShowDialog(this))
                 {

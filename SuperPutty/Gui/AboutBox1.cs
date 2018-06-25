@@ -23,6 +23,7 @@ using System;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Diagnostics;
+using SuperPutty.Gui;
 
 namespace SuperPutty
 {
@@ -31,19 +32,19 @@ namespace SuperPutty
         public AboutBox1()
         {
             InitializeComponent();
-            this.Text = String.Format("About {0}", AssemblyTitle);
-            this.labelProductName.Text = AssemblyProduct;
-            this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
-            this.labelCopyright.Text = AssemblyCopyright;
-            this.linkLabelCompany.Text = AssemblyCompany;
-            this.linkLabelCompany2.Text = "https://github.com/jimradford/superputty";
+            Text = String.Format("About {0}", AssemblyTitle);
+            labelProductName.Text = AssemblyProduct;
+            labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
+            labelCopyright.Text = AssemblyCopyright;
+            linkLabelCompany.Text = AssemblyCompany;
+            linkLabelCompany2.Text = LocalizedText.AboutBox1_AboutBox1_https___github_com_jimradford_superputty;
             //this.textBoxDescription.Text = AssemblyDescription;
 
-            textBoxSupportText.AppendText("SuperPuTTY Version: " + SuperPuTTY.Version + System.Environment.NewLine);
+            textBoxSupportText.AppendText("SuperPuTTY Version: " + SuperPuTTY.Version + Environment.NewLine);
             Assembly[] asms = AppDomain.CurrentDomain.GetAssemblies();
             foreach(var a in asms)
             {                
-                textBoxSupportText.AppendText(a.FullName + System.Environment.NewLine);                
+                textBoxSupportText.AppendText(a.FullName + Environment.NewLine);                
             }
 
 
@@ -68,7 +69,7 @@ namespace SuperPutty
             }
         }
 
-        public string AssemblyVersion { get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); } }
+        public string AssemblyVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         public string AssemblyDescription
         {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using System.Windows.Forms;
+﻿using System.Collections.Generic;
 using SuperPutty.Gui;
 using SuperPutty.Data;
 using System.Drawing;
@@ -28,9 +23,11 @@ namespace SuperPuttyUnitTests
                     sd.Proto == ConnectionProtocol.Cygterm || sd.Proto == ConnectionProtocol.Mintty ? Color.Blue : Color.Black, null);
             }
 
-            QuickSelectorOptions opt = new QuickSelectorOptions();
-            opt.Sort = data.ItemData.DetailColumn.ColumnName;
-            opt.BaseText = "Open Session";
+            QuickSelectorOptions opt = new QuickSelectorOptions
+            {
+                Sort = data.ItemData.DetailColumn.ColumnName,
+                BaseText = "Open Session"
+            };
 
             QuickSelector d = new QuickSelector();
             d.ShowDialog(null, data, opt);

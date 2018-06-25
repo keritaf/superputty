@@ -61,6 +61,34 @@ namespace SuperPutty.Gui {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://github.com/jimradford/superputty.
+        /// </summary>
+        internal static string AboutBox1_AboutBox1_https___github_com_jimradford_superputty {
+            get {
+                return ResourceManager.GetString("AboutBox1_AboutBox1_https___github_com_jimradford_superputty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application Not Found.
+        /// </summary>
+        internal static string ApplicationPanel_OnVisibleChanged_Application_Not_Found {
+            get {
+                return ResourceManager.GetString("ApplicationPanel_OnVisibleChanged_Application_Not_Found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to putty.exe not found in configured path, please go into tools-&gt;settings and set the correct path.
+        /// </summary>
+        internal static string ApplicationPanel_OnVisibleChanged_putty_exe_not_found_in_configured_path__please_go_into_tools__settings_and_set_the_correct_path {
+            get {
+                return ResourceManager.GetString("ApplicationPanel_OnVisibleChanged_putty_exe_not_found_in_configured_path__please_" +
+                        "go_into_tools__settings_and_set_the_correct_path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close {0} Tabs?.
         /// </summary>
         internal static string CtlPuttyPanel_CloseDocs_Close__0__Tabs_ {
@@ -93,6 +121,216 @@ namespace SuperPutty.Gui {
         internal static string dlgFindPutty_PuttyCheck_PuTTY_Not_Found {
             get {
                 return ResourceManager.GetString("dlgFindPutty_PuttyCheck_PuTTY_Not_Found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File {0}, {1} kB Transferred ({2} kB/s) Time left {3}.
+        /// </summary>
+        internal static string frmTransferStatus_labelCurrentFile {
+            get {
+                return ResourceManager.GetString("frmTransferStatus_labelCurrentFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transfered {0}/{1} kB (file {2} of {3}).
+        /// </summary>
+        internal static string frmTransferStatus_labelOverall {
+            get {
+                return ResourceManager.GetString("frmTransferStatus_labelOverall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 100%.
+        /// </summary>
+        internal static string frmTransferStatus_UpdateProgress__100_percent {
+            get {
+                return ResourceManager.GetString("frmTransferStatus_UpdateProgress__100_percent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        internal static string frmTransferStatus_UpdateProgress_Close {
+            get {
+                return ResourceManager.GetString("frmTransferStatus_UpdateProgress_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}%.
+        /// </summary>
+        internal static string frmTransferStatus_UpdateProgress_Percent {
+            get {
+                return ResourceManager.GetString("frmTransferStatus_UpdateProgress_Percent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Shortcut - {0}.
+        /// </summary>
+        internal static string KeyboardShortcutEditor_Edit_shortcut {
+            get {
+                return ResourceManager.GetString("KeyboardShortcutEditor_Edit_shortcut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (default).
+        /// </summary>
+        internal static string LayoutData_default {
+            get {
+                return ResourceManager.GetString("LayoutData_default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unhandled Error.
+        /// </summary>
+        internal static string Program_CurrentDomain_UnhandledException_Unhandled_Error {
+            get {
+                return ResourceManager.GetString("Program_CurrentDomain_UnhandledException_Unhandled_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unhandled Domain Exception: isTerminating={0}, ex={1}.
+        /// </summary>
+        internal static string Program_Unhandled_domain_exception {
+            get {
+                return ResourceManager.GetString("Program_Unhandled_domain_exception", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Host Key not found or changed.
+        /// </summary>
+        internal static string PscpTransfer_BeginGetDirectoryListing_Host_Key_not_found_or_changed {
+            get {
+                return ResourceManager.GetString("PscpTransfer_BeginGetDirectoryListing_Host_Key_not_found_or_changed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The key of the host you are attempting to connect to has changed or is not cached 
+        ///You must connect to this host with with a PuTTY ssh terminal to accept the key and store it in the cache.
+        /// </summary>
+        internal static string PscpTransfer_BeginGetDirectoryListing_KeyChanged {
+            get {
+                return ResourceManager.GetString("PscpTransfer_BeginGetDirectoryListing_KeyChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} KB.
+        /// </summary>
+        internal static string RemoteFileListPanel_N_KB {
+            get {
+                return ResourceManager.GetString("RemoteFileListPanel_N_KB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SuperPutty save the password in Sessions.xml file in plain text.
+        ///Use a password in &apos;Extra PuTTY Arguments&apos; is very insecure.
+        ///For a secure connection use SSH authentication with Pageant. 
+        ///Select yes, if you want save the password.
+        /// </summary>
+        internal static string SessionDetail_sessionDetailPropertyGrid_PropertyValueChanged_ {
+            get {
+                return ResourceManager.GetString("SessionDetail_sessionDetailPropertyGrid_PropertyValueChanged_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A host name must be specified if a Putty Session Profile is not selected.
+        /// </summary>
+        internal static string SessionDetail_sessionDetailPropertyGrid_PropertyValueChanged_A_host_name_must_be_specified_if_a_Putty_Session_Profile_is_not_selected {
+            get {
+                return ResourceManager.GetString("SessionDetail_sessionDetailPropertyGrid_PropertyValueChanged_A_host_name_must_be_" +
+                        "specified_if_a_Putty_Session_Profile_is_not_selected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Putty Session Profile must be selected if a Host Name is not provided.
+        /// </summary>
+        internal static string SessionDetail_sessionDetailPropertyGrid_PropertyValueChanged_A_Putty_Session_Profile_must_be_selected_if_a_Host_Name_is_not_provided {
+            get {
+                return ResourceManager.GetString("SessionDetail_sessionDetailPropertyGrid_PropertyValueChanged_A_Putty_Session_Prof" +
+                        "ile_must_be_selected_if_a_Host_Name_is_not_provided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure that you want to save the password?.
+        /// </summary>
+        internal static string SessionDetail_sessionDetailPropertyGrid_PropertyValueChanged_Are_you_sure_that_you_want_to_save_the_password_ {
+            get {
+                return ResourceManager.GetString("SessionDetail_sessionDetailPropertyGrid_PropertyValueChanged_Are_you_sure_that_yo" +
+                        "u_want_to_save_the_password_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error trying to create session: {0}.
+        /// </summary>
+        internal static string SuperPuTTY_Error_trying_to_create_session {
+            get {
+                return ResourceManager.GetString("SuperPuTTY_Error_trying_to_create_session", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error trying to create session: {0}
+        ///Executable not found for {1} protocol.
+        ///The path for the executable was set as &quot;{2}&quot;.
+        ///Go to tools-&gt;options-&gt;General tab to set the path to the executable..
+        /// </summary>
+        internal static string SuperPuTTY_Error_trying_to_create_session_Executable_not_found {
+            get {
+                return ResourceManager.GetString("SuperPuTTY_Error_trying_to_create_session_Executable_not_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error trying to create session: {0}
+        ///Executable not set for {1} protocol.
+        ///Go to tools-&gt;options-&gt;General tab to set the path to the executable..
+        /// </summary>
+        internal static string SuperPuTTY_Error_trying_to_create_session_Executable_not_set {
+            get {
+                return ResourceManager.GetString("SuperPuTTY_Error_trying_to_create_session_Executable_not_set", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SuperPutty CLI Help.
+        /// </summary>
+        internal static string SuperPuTTY_Initialize_SuperPutty_CLI_Help {
+            get {
+                return ResourceManager.GetString("SuperPuTTY_Initialize_SuperPutty_CLI_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to create a session.
+        /// </summary>
+        internal static string SuperPuTTY_OpenPuttySession_Failed_to_create_a_session {
+            get {
+                return ResourceManager.GetString("SuperPuTTY_OpenPuttySession_Failed_to_create_a_session", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to create session panel.
+        /// </summary>
+        internal static string SuperPuTTY_OpenPuttySession_Failed_to_create_session_panel {
+            get {
+                return ResourceManager.GetString("SuperPuTTY_OpenPuttySession_Failed_to_create_session_panel", resourceCulture);
             }
         }
     }

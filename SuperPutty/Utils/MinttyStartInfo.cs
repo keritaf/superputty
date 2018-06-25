@@ -55,14 +55,14 @@ namespace SuperPutty.Utils
             {
                 // start bash...will start in process start dir
                 // >mintty.exe /bin/env CHERE_INVOKING=1 /bin/bash -l
-                this.Args = "-o daemonize=false /bin/env CHERE_INVOKING=1 /bin/bash -l";
-                this.StartingDir = dir;
+                Args = "-o daemonize=false /bin/env CHERE_INVOKING=1 /bin/bash -l";
+                StartingDir = dir;
             }
             else
             {
                 // login shell
                 // http://code.google.com/p/puttycyg/wiki/FAQ
-                this.Args = "-o daemonize=false -";
+                Args = "-o daemonize=false -";
             }
         }
 

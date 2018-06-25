@@ -11,10 +11,10 @@ namespace SuperPutty.Utils
     {
         public TextBoxFocusHelper(TextBox txt)
         {
-            this.TextBox = txt;
-            this.TextBox.GotFocus += TextBox_GotFocus;
-            this.TextBox.MouseUp += TextBox_MouseUp;
-            this.TextBox.Leave += TextBox_Leave;
+            TextBox = txt;
+            TextBox.GotFocus += TextBox_GotFocus;
+            TextBox.MouseUp += TextBox_MouseUp;
+            TextBox.Leave += TextBox_Leave;
         }
 
         void TextBox_MouseUp(object sender, MouseEventArgs e)
@@ -22,10 +22,10 @@ namespace SuperPutty.Utils
             // Web browsers like Google Chrome select the text on mouse up.
             // They only do it if the textbox isn't already focused,
             // and if the user hasn't selected all text.
-            if (!alreadyFocused && this.TextBox.SelectionLength == 0)
+            if (!alreadyFocused && TextBox.SelectionLength == 0)
             {
                 alreadyFocused = true;
-                this.TextBox.SelectAll();
+                TextBox.SelectAll();
             }
         }
 
@@ -35,7 +35,7 @@ namespace SuperPutty.Utils
             // This makes tabbing to the textbox give focus.
             if (Control.MouseButtons == MouseButtons.None)
             {
-                this.TextBox.SelectAll();
+                TextBox.SelectAll();
                 alreadyFocused = true;
             }
         }
@@ -47,10 +47,10 @@ namespace SuperPutty.Utils
 
         public void Dispose()
         {
-            this.TextBox.GotFocus -= TextBox_GotFocus;
-            this.TextBox.MouseUp -= TextBox_MouseUp;
-            this.TextBox.Leave -= TextBox_Leave;
-            this.TextBox = null;
+            TextBox.GotFocus -= TextBox_GotFocus;
+            TextBox.MouseUp -= TextBox_MouseUp;
+            TextBox.Leave -= TextBox_Leave;
+            TextBox = null;
         }
 
         bool alreadyFocused;

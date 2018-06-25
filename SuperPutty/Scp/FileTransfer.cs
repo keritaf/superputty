@@ -19,30 +19,30 @@ namespace SuperPutty.Scp
 
         public FileTransfer(PscpOptions options, FileTransferRequest request)
         {
-            this.Options = options;
-            this.Request = request;
+            Options = options;
+            Request = request;
 
-            this.Id = Interlocked.Increment(ref idSeed);
+            Id = Interlocked.Increment(ref idSeed);
         }
 
         public void Start()
         {
             lock (this)
             {
-                if (this.TransferStatus == Status.Initializing || CanRestart(this.TransferStatus))
+                if (TransferStatus == Status.Initializing || CanRestart(TransferStatus))
                 {
-                    Log.InfoFormat("Starting transfer, id={0}", this.Id);
+                    Log.InfoFormat("Starting transfer, id={0}", Id);
 
-                    this.StartTime = DateTime.Now;
+                    StartTime = DateTime.Now;
 
-                    this.thread = new Thread(this.DoTransfer) {IsBackground = false};
-                    this.thread.Start();
+                    thread = new Thread(DoTransfer) {IsBackground = false};
+                    thread.Start();
 
-                    this.UpdateStatus(0, Status.Running, "Started transfer");
+                    UpdateStatus(0, Status.Running, "Started transfer");
                 }
                 else
                 {
-                    Log.WarnFormat("Attempted to start active transfer, id={0}", this.Id);
+                    Log.WarnFormat("Attempted to start active transfer, id={0}", Id);
                 }
             }
         }
@@ -51,16 +51,16 @@ namespace SuperPutty.Scp
         {
             lock (this)
             {
-                if (CanCancel(this.TransferStatus))
+                if (CanCancel(TransferStatus))
                 {
-                    Log.InfoFormat("Canceling active transfer, id={0}", this.Id);
-                    this.thread.Abort();
-                    Log.InfoFormat("Canceled active transfer, id={0}", this.Id);
-                    this.UpdateStatus(this.PercentComplete, Status.Canceled, "Canceled");
+                    Log.InfoFormat("Canceling active transfer, id={0}", Id);
+                    thread.Abort();
+                    Log.InfoFormat("Canceled active transfer, id={0}", Id);
+                    UpdateStatus(PercentComplete, Status.Canceled, "Canceled");
                 }
                 else
                 {
-                    Log.WarnFormat("Attempted to cancel inactive transfer, id={0}", this.Id);
+                    Log.WarnFormat("Attempted to cancel inactive transfer, id={0}", Id);
                 }
             }
         }
@@ -69,12 +69,12 @@ namespace SuperPutty.Scp
         {
             try
             {
-                PscpClient client = new PscpClient(this.Options, this.Request.Session);
+                PscpClient client = new PscpClient(Options, Request.Session);
 
                 int estSizeKB = Int32.MaxValue;
                 FileTransferResult res = client.CopyFiles(
-                    this.Request.SourceFiles,
-                    this.Request.TargetFile,
+                    Request.SourceFiles,
+                    Request.TargetFile,
                     (complete, cancelAll, s) =>
                     {
                         string msg;
@@ -96,39 +96,39 @@ namespace SuperPutty.Scp
                             // < 1% completed
                             msg = string.Format("{0}, ({1} KB, {2})", s.Filename, s.BytesTransferred, s.TimeLeft);
                         }
-                        this.UpdateStatus(s.PercentComplete, Status.Running, msg);
+                        UpdateStatus(s.PercentComplete, Status.Running, msg);
                     });
 
-                this.EndTime = DateTime.Now;
+                EndTime = DateTime.Now;
                 switch (res.StatusCode)
                 {
                     case ResultStatusCode.Success:
                         double duration = (EndTime.Value - StartTime.Value).TotalSeconds;
-                        this.UpdateStatus(100, Status.Complete, String.Format("Duration {0:#,###} s", duration));
+                        UpdateStatus(100, Status.Complete, String.Format("Duration {0:#,###} s", duration));
                         break;
                     case ResultStatusCode.RetryAuthentication:
                     case ResultStatusCode.Error:
-                        this.UpdateStatus(this.PercentComplete, Status.Error, res.ErrorMsg);
+                        UpdateStatus(PercentComplete, Status.Error, res.ErrorMsg);
                         break;
                 }
             }
             catch (ThreadAbortException)
             {
-                this.UpdateStatus(this.PercentComplete, Status.Canceled, "");
+                UpdateStatus(PercentComplete, Status.Canceled, "");
             }
             catch (Exception ex)
             {
-                Log.Error("Error running transfer, id=" + this.Id, ex);
-                this.UpdateStatus(0, Status.Error, ex.Message);
+                Log.Error("Error running transfer, id=" + Id, ex);
+                UpdateStatus(0, Status.Error, ex.Message);
             }
         }
 
         void UpdateStatus(int percentageComplete, Status status, string message)
         {
-            this.PercentComplete = percentageComplete;
-            this.TransferStatus = status;
-            this.TransferStatusMsg = message;
-            this.Update?.Invoke(this, EventArgs.Empty);
+            PercentComplete = percentageComplete;
+            TransferStatus = status;
+            TransferStatusMsg = message;
+            Update?.Invoke(this, EventArgs.Empty);
         }
 
         public static bool CanRestart(Status status)
@@ -147,8 +147,8 @@ namespace SuperPutty.Scp
 
         public Status TransferStatus
         {
-            get { lock (this) { return this.status; } }
-            private set { lock (this) { this.status = value; } }
+            get { lock (this) { return status; } }
+            private set { lock (this) { status = value; } }
         }
 
         public int PercentComplete { get; private set; }
@@ -172,7 +172,7 @@ namespace SuperPutty.Scp
     {
         public FileTransferRequest()
         {
-            this.SourceFiles = new List<BrowserFileInfo>();
+            SourceFiles = new List<BrowserFileInfo>();
         }
         public SessionData Session { get; set; }
         public List<BrowserFileInfo> SourceFiles { get; set; }

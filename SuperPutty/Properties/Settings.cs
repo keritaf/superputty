@@ -21,25 +21,24 @@ namespace SuperPutty.Properties {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Settings));
 
         public Settings() {
-            this.SettingChanging += this.SettingChangingEventHandler;
-            this.SettingsSaving += this.SettingsSavingEventHandler;
+            SettingChanging += SettingChangingEventHandler;
+            SettingsSaving += SettingsSavingEventHandler;
         }
 
         public string SettingsFilePath { get; private set; }
 
-        protected override void OnSettingsLoaded(object sender, System.Configuration.SettingsLoadedEventArgs e)
+        protected override void OnSettingsLoaded(object sender, SettingsLoadedEventArgs e)
         {
             Log.InfoFormat("Settings Loaded");
             base.OnSettingsLoaded(sender, e);
 
-            PortableSettingsProvider provider = e.Provider as PortableSettingsProvider;
-            if (provider != null)
+            if (e.Provider is PortableSettingsProvider provider)
             {
                 SettingsFilePath = provider.SettingsFilePath;
             }
         }
         
-        private void SettingChangingEventHandler(object sender, System.Configuration.SettingChangingEventArgs e) {
+        private void SettingChangingEventHandler(object sender, SettingChangingEventArgs e) {
             // Add code to handle the SettingChangingEvent event here.
             Log.DebugFormat("SettingChanging: name={0}, oldVal={1}, newVal={2}", e.SettingName, this[e.SettingName], e.NewValue);
 

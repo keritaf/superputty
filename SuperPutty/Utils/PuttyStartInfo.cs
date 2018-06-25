@@ -33,36 +33,36 @@ namespace SuperPutty.Utils
         {
             string argsToLog = null;
 
-            this.Executable = GetExecutable(session);
+            Executable = GetExecutable(session);
 
             if (session.Proto == ConnectionProtocol.Cygterm)
             {
                 CygtermStartInfo cyg = new CygtermStartInfo(session);
-                this.Args = cyg.Args;
-                this.WorkingDir = cyg.StartingDir;
+                Args = cyg.Args;
+                WorkingDir = cyg.StartingDir;
             }
             else if (session.Proto == ConnectionProtocol.Mintty)
             {
                 MinttyStartInfo mintty = new MinttyStartInfo(session);
-                this.Args = mintty.Args;
-                this.WorkingDir = mintty.StartingDir;
+                Args = mintty.Args;
+                WorkingDir = mintty.StartingDir;
             }
             else if (session.Proto == ConnectionProtocol.VNC)
             {
                 VNCStartInfo vnc = new VNCStartInfo(session);
-                this.Args = vnc.Args;
-                this.WorkingDir = vnc.StartingDir;
+                Args = vnc.Args;
+                WorkingDir = vnc.StartingDir;
             }
             else
             {
-                this.Args = MakeArgs(session, true);
+                Args = MakeArgs(session, true);
                 argsToLog = MakeArgs(session, false);
             }
 
             // attempt to parse env vars
-            this.Args = this.Args.Contains('%') ? TryParseEnvVars(this.Args) : this.Args;
+            Args = Args.Contains('%') ? TryParseEnvVars(Args) : Args;
 
-            Log.InfoFormat("Putty Args: '{0}'", argsToLog ?? this.Args);
+            Log.InfoFormat("Putty Args: '{0}'", argsToLog ?? Args);
         }
 
         static string MakeArgs(SessionData session, bool includePassword)
@@ -115,12 +115,12 @@ namespace SuperPutty.Utils
         {
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
-                FileName = this.Executable,
-                Arguments = this.Args
+                FileName = Executable,
+                Arguments = Args
             };
-            if (this.WorkingDir != null && Directory.Exists(this.WorkingDir))
+            if (WorkingDir != null && Directory.Exists(WorkingDir))
             {
-                startInfo.WorkingDirectory = this.WorkingDir;
+                startInfo.WorkingDirectory = WorkingDir;
             }
             Process.Start(startInfo);
         }

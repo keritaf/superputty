@@ -10,7 +10,7 @@ namespace SuperPutty.Scp
 
         public RemoteBrowserModel(PscpOptions options)
         {
-            this.Options = options;
+            Options = options;
         }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace SuperPutty.Scp
         {
             ListDirectoryResult result;
 
-            if (session == null || session.Username == null)
+            if (session?.Username == null)
             {
                 result = new ListDirectoryResult(path)
                 {
@@ -36,12 +36,12 @@ namespace SuperPutty.Scp
                 string targetPath = path.Path;
                 if (targetPath == null || targetPath == ".")
                 {
-                    targetPath = string.Format("/home/{0}", session.Username);
+                    targetPath = $"/home/{session.Username}";
                     Log.InfoFormat("Defaulting path: {0}->{1}", path.Path, targetPath);
                     path.Path = targetPath;
                 }
 
-                PscpClient client = new PscpClient(this.Options, session);
+                PscpClient client = new PscpClient(Options, session);
                 result = client.ListDirectory(path);
             }
 

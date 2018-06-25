@@ -23,8 +23,8 @@ namespace SuperPutty.Scp
         {
             if (initialized) return;
 
-            this.Presenter = presenter;
-            this.bindingSource.DataSource = presenter.ViewModel.FileTransfers;
+            Presenter = presenter;
+            bindingSource.DataSource = presenter.ViewModel.FileTransfers;
             initialized = true;
         }
 
@@ -33,14 +33,14 @@ namespace SuperPutty.Scp
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
             Point p = PointToClient(MousePosition);
-            DataGridView.HitTestInfo hit = this.grid.HitTest(p.X, p.Y);
+            DataGridView.HitTestInfo hit = grid.HitTest(p.X, p.Y);
             if (hit.Type == DataGridViewHitTestType.Cell)
             {
                 // toggle on/off the actions based on view model
-                FileTransferViewItem item = (FileTransferViewItem) ((DataGridViewRow) grid.Rows[hit.RowIndex]).DataBoundItem;
-                this.runAgainToolStripMenuItem.Enabled = item.CanRestart;
-                this.cancelToolStripMenuItem.Enabled = item.CanCancel;
-                this.deleteToolStripMenuItem.Enabled = item.CanDelete;
+                FileTransferViewItem item = (FileTransferViewItem) grid.Rows[hit.RowIndex].DataBoundItem;
+                runAgainToolStripMenuItem.Enabled = item.CanRestart;
+                cancelToolStripMenuItem.Enabled = item.CanCancel;
+                deleteToolStripMenuItem.Enabled = item.CanDelete;
             }
             else
             {
@@ -67,7 +67,7 @@ namespace SuperPutty.Scp
             FileTransferViewItem item = GetSelectedItem<FileTransferViewItem>();
             if (item != null)
             {
-                this.Presenter.Cancel(item.Id);
+                Presenter.Cancel(item.Id);
             }
         }
 
@@ -76,7 +76,7 @@ namespace SuperPutty.Scp
             FileTransferViewItem item = GetSelectedItem<FileTransferViewItem>();
             if (item != null)
             {
-                this.Presenter.Remove(item.Id);
+                Presenter.Remove(item.Id);
             }
         }
 
@@ -85,7 +85,7 @@ namespace SuperPutty.Scp
             FileTransferViewItem item = GetSelectedItem<FileTransferViewItem>();
             if (item != null)
             {
-                this.Presenter.Restart(item.Id);
+                Presenter.Restart(item.Id);
             }
         }
 
@@ -94,7 +94,7 @@ namespace SuperPutty.Scp
         T GetSelectedItem<T>()
         {
             T item = default(T);
-            foreach (DataGridViewRow row in this.grid.SelectedRows)
+            foreach (DataGridViewRow row in grid.SelectedRows)
             {
                 item = (T) row.DataBoundItem;
                 break;

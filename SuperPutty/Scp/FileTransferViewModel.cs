@@ -18,16 +18,16 @@ namespace SuperPutty.Scp
     {
         public FileTransferViewModel()
         {
-            this.FileTransfers = new SortableBindingList<FileTransferViewItem>();
-            this.Context = SynchronizationContext.Current;
+            FileTransfers = new SortableBindingList<FileTransferViewItem>();
+            Context = SynchronizationContext.Current;
         }
 
         public int FindIndexById(int id)
         {
             int idx = -1;
-            for (int i = 0; i < this.FileTransfers.Count; i++)
+            for (int i = 0; i < FileTransfers.Count; i++)
             {
-                FileTransferViewItem item = this.FileTransfers[i];
+                FileTransferViewItem item = FileTransfers[i];
                 if (item.Id == id)
                 {
                     idx = i;
@@ -54,19 +54,19 @@ namespace SuperPutty.Scp
         public FileTransferViewItem(string session, string source, string target)
             : this()
         {
-            this.Session = session;
-            this.Source = source;
-            this.Target = target;
+            Session = session;
+            Source = source;
+            Target = target;
         }
 
         public FileTransferViewItem(FileTransfer transfer)
             : this()
         {
-            this.Id = transfer.Id;
-            this.Session = transfer.Request.Session.SessionId;
-            this.Source = ToString(transfer.Request.SourceFiles);
-            this.Target = transfer.Request.TargetFile.Path;
-            this.Start = DateTime.Now;
+            Id = transfer.Id;
+            Session = transfer.Request.Session.SessionId;
+            Source = ToString(transfer.Request.SourceFiles);
+            Target = transfer.Request.TargetFile.Path;
+            Start = DateTime.Now;
         }
 
         public int Id { get; private set; }
@@ -90,7 +90,7 @@ namespace SuperPutty.Scp
         {
             if (source == null)
             {
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             }
 
             string strSource;

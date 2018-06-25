@@ -32,8 +32,7 @@ namespace SuperPuTTY.Scripting
         /// <returns>null to prevent any command from being sent to a session</returns>
         internal static CommandData SleepHandler(string arg)
         {
-            int duration = 0;            
-            if(int.TryParse(arg, out duration) && duration > 0)
+            if(int.TryParse(arg, out var duration) && duration > 0)
             {
                 Thread.Sleep(duration);
             }

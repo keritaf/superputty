@@ -62,9 +62,9 @@ namespace SuperPutty.Scp
 
         public void SetError(string msg, Exception ex)
         {
-            this.ErrorMsg = msg;
-            this.Error = ex;
-            this.StatusCode = ResultStatusCode.Error;
+            ErrorMsg = msg;
+            Error = ex;
+            StatusCode = ResultStatusCode.Error;
         }
 
         public ResultStatusCode StatusCode { get; set; }
@@ -79,20 +79,20 @@ namespace SuperPutty.Scp
     {
         public ListDirectoryResult(BrowserFileInfo path)
         {
-            this.Path = path;
-            this.Files = new List<BrowserFileInfo>();
+            Path = path;
+            Files = new List<BrowserFileInfo>();
         }
 
         public void Add(BrowserFileInfo fileInfo)
         {
-            this.Files.Add(fileInfo);
+            Files.Add(fileInfo);
             if (fileInfo.Type == FileType.File)
             {
-                this.FileCount++;
+                FileCount++;
             }
             else if (fileInfo.Type == FileType.Directory)
             {
-                this.DirCount++;
+                DirCount++;
             }
         }
 
@@ -100,9 +100,9 @@ namespace SuperPutty.Scp
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("[").Append(GetType().Name);
-            sb.Append(" Path=").Append(this.Path.Path);
-            sb.Append(", StatusCode=").Append(this.StatusCode);
-            sb.Append(", ErrorMsg=").Append(this.ErrorMsg);
+            sb.Append(" Path=").Append(Path.Path);
+            sb.Append(", StatusCode=").Append(StatusCode);
+            sb.Append(", ErrorMsg=").Append(ErrorMsg);
             sb.Append("]");
             return sb.ToString();
         }
@@ -124,8 +124,8 @@ namespace SuperPutty.Scp
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("[").Append(GetType().Name);
-            sb.Append(", StatusCode=").Append(this.StatusCode);
-            sb.Append(", ErrorMsg=").Append(this.ErrorMsg);
+            sb.Append(", StatusCode=").Append(StatusCode);
+            sb.Append(", ErrorMsg=").Append(ErrorMsg);
             sb.Append("]");
             return sb.ToString();
         }
@@ -214,16 +214,16 @@ namespace SuperPutty.Scp
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder("[BrowserFileInfo ");
-            sb.Append("Path=").Append(this.Path);
-            sb.Append(", Name=").Append(this.Name);
-            sb.Append(", Type=").Append(this.Type);
-            sb.Append(", Permissions=").Append(this.Permissions);
-            sb.AppendFormat(", Size={0:0.0}KB", this.Size / 1024.0);
-            sb.Append(", Owner=").Append(this.Owner);
-            sb.Append(", Group=").Append(this.Group);
-            sb.AppendFormat(", CreateTime={0:s}", this.CreateTime);
-            sb.AppendFormat(", LastModTime={0:s}", this.LastModTime);
-            sb.AppendFormat(", Source={0}", this.Source);
+            sb.Append("Path=").Append(Path);
+            sb.Append(", Name=").Append(Name);
+            sb.Append(", Type=").Append(Type);
+            sb.Append(", Permissions=").Append(Permissions);
+            sb.AppendFormat(", Size={0:0.0}KB", Size / 1024.0);
+            sb.Append(", Owner=").Append(Owner);
+            sb.Append(", Group=").Append(Group);
+            sb.AppendFormat(", CreateTime={0:s}", CreateTime);
+            sb.AppendFormat(", LastModTime={0:s}", LastModTime);
+            sb.AppendFormat(", Source={0}", Source);
             sb.Append("]");
             return sb.ToString();
         }

@@ -14,42 +14,41 @@ namespace SuperPutty.Gui
         }
 
         public string ItemName {
-            get { return this.txtItemName.Text; }
-            set { this.txtItemName.Text = value; }
+            get => txtItemName.Text;
+            set => txtItemName.Text = value;
         }
 
         public string DetailName
         {
-            get { return this.labelDetailName.Text; }
-            set { this.labelDetailName.Text = value; }
+            get => labelDetailName.Text;
+            set => labelDetailName.Text = value;
         }
 
         public ItemNameValidationHandler ItemNameValidator { get; set; }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
+            DialogResult = DialogResult.OK;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void txtItemName_Validating(object sender, CancelEventArgs e)
         {
-            if (this.ItemNameValidator != null)
+            if (ItemNameValidator != null)
             {
-                string error;
-                if (!this.ItemNameValidator(txtItemName.Text, out error))
+                if (!ItemNameValidator(txtItemName.Text, out var error))
                 {
-                    this.errorProvider.SetError(this.txtItemName, error ?? "Invalid Name");
-                    this.btnOK.Enabled = false;
+                    errorProvider.SetError(txtItemName, error ?? "Invalid Name");
+                    btnOK.Enabled = false;
                 }
                 else
                 {
-                    this.errorProvider.SetError(this.txtItemName, String.Empty);
-                    this.btnOK.Enabled = true;
+                    errorProvider.SetError(txtItemName, String.Empty);
+                    btnOK.Enabled = true;
                 }
             }
 

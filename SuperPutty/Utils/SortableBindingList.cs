@@ -19,7 +19,6 @@
  * THE SOFTWARE.
  */
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Collections;
@@ -34,7 +33,7 @@ namespace SuperPutty.Utils
     /// <typeparam name="T"></typeparam>
     public class SortableBindingList<T> : BindingList<T>, IList<T>
     {
-        protected override bool SupportsSortingCore { get { return true; } }
+        protected override bool SupportsSortingCore => true;
 
         protected override bool IsSortedCore
         {
@@ -77,10 +76,10 @@ namespace SuperPutty.Utils
         }
 
         private ListSortDirection sortDirection;
-        protected override ListSortDirection SortDirectionCore { get { return sortDirection; } } 
+        protected override ListSortDirection SortDirectionCore => sortDirection;
 
         private PropertyDescriptor sortProperty;
-        protected override PropertyDescriptor SortPropertyCore { get { return sortProperty; } }
+        protected override PropertyDescriptor SortPropertyCore => sortProperty;
 
         protected override void ApplySortCore(PropertyDescriptor prop, ListSortDirection direction)
         {
@@ -92,7 +91,7 @@ namespace SuperPutty.Utils
             {
                 if (sortProperty != null)
                 {
-                    if (Object.ReferenceEquals(lhs, rhs)) return 0;
+                    if (ReferenceEquals(lhs, rhs)) return 0;
                     object lhsValue = lhs == null ? null : sortProperty.GetValue(lhs);
                     object rhsValue = rhs == null ? null : sortProperty.GetValue(rhs);
                     int result;
@@ -133,8 +132,8 @@ namespace SuperPutty.Utils
         {            
             // Check to see if the item is added to the end of the list,
             // and if so, re-sort the list.
-            if (sortProperty != null && itemIndex == this.Count - 1)
-                ApplySortCore(this.sortProperty, this.sortDirection);
+            if (sortProperty != null && itemIndex == Count - 1)
+                ApplySortCore(sortProperty, sortDirection);
 
             base.EndNew(itemIndex);                      
         }
@@ -143,7 +142,7 @@ namespace SuperPutty.Utils
         /// <returns>An XML formatted string containing the collection</returns>
         public string SerializeXML()
         {
-            XmlSerializer xs = new XmlSerializer(base.Items.GetType());
+            XmlSerializer xs = new XmlSerializer(Items.GetType());
 
             using (StringWriter text = new StringWriter())
             {

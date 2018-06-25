@@ -27,10 +27,7 @@ namespace SuperPutty.Gui
 
         public override DataGridViewCell CellTemplate
         {
-            get
-            {
-                return base.CellTemplate;
-            }
+            get => base.CellTemplate;
             set
             {
                 if (value != null &&
@@ -49,35 +46,32 @@ namespace SuperPutty.Gui
             get
             {
 
-                if (this.ProgressBarCellTemplate == null)
+                if (ProgressBarCellTemplate == null)
                 {
                     throw new InvalidOperationException("Operation cannot be completed because this DataGridViewColumn does not have a CellTemplate.");
                 }
-                return this.ProgressBarCellTemplate.ProgressBarColor;
+                return ProgressBarCellTemplate.ProgressBarColor;
 
             }
             set
             {
 
-                if (this.ProgressBarCellTemplate == null)
+                if (ProgressBarCellTemplate == null)
                 {
                     throw new InvalidOperationException("Operation cannot be completed because this DataGridViewColumn does not have a CellTemplate.");
                 }
-                this.ProgressBarCellTemplate.ProgressBarColor = value;
-                if (this.DataGridView != null)
+                ProgressBarCellTemplate.ProgressBarColor = value;
+                if (DataGridView != null)
                 {
-                    DataGridViewRowCollection dataGridViewRows = this.DataGridView.Rows;
+                    DataGridViewRowCollection dataGridViewRows = DataGridView.Rows;
                     int rowCount = dataGridViewRows.Count;
                     for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
                     {
                         DataGridViewRow dataGridViewRow = dataGridViewRows.SharedRow(rowIndex);
-                        DataGridViewProgressCell dataGridViewCell = dataGridViewRow.Cells[this.Index] as DataGridViewProgressCell;
-                        if (dataGridViewCell != null)
-                        {
-                            dataGridViewCell.SetProgressBarColor(rowIndex, value);
-                        }
+                        DataGridViewProgressCell dataGridViewCell = dataGridViewRow.Cells[Index] as DataGridViewProgressCell;
+                        dataGridViewCell?.SetProgressBarColor(rowIndex, value);
                     }
-                    this.DataGridView.InvalidateColumn(this.Index);
+                    DataGridView.InvalidateColumn(Index);
                     // TODO: This column and/or grid rows may need to be autosized depending on their
                     //       autosize settings. Call the autosizing methods to autosize the column, rows, 
                     //       column headers / row headers as needed.
@@ -86,20 +80,20 @@ namespace SuperPutty.Gui
         }
 
 
-        private DataGridViewProgressCell ProgressBarCellTemplate { get { return (DataGridViewProgressCell)this.CellTemplate; } } 
+        private DataGridViewProgressCell ProgressBarCellTemplate => (DataGridViewProgressCell)CellTemplate;
     }
 
     class DataGridViewProgressCell : DataGridViewImageCell
     {
         // Used to make custom cell consistent with a DataGridViewImageCell
-        static Image emptyImage;
+        static readonly Image emptyImage;
         // Used to remember color of the progress bar
         static Color _ProgressBarColor;
 
         public Color ProgressBarColor
         {
-            get { return _ProgressBarColor; }
-            set { _ProgressBarColor = value; }
+            get => _ProgressBarColor;
+            set => _ProgressBarColor = value;
         }
 
         static DataGridViewProgressCell()
@@ -109,7 +103,7 @@ namespace SuperPutty.Gui
         }
         public DataGridViewProgressCell()
         {
-            this.ValueType = typeof(int);
+            ValueType = typeof(int);
         }
         // Method required to make the Progress Cell consistent with the default Image Cell.
         // The default Image Cell assumes an Image as a value, although the value of the Progress Cell is an int.
@@ -122,9 +116,9 @@ namespace SuperPutty.Gui
             return emptyImage;
         }
 
-        protected override void Paint(System.Drawing.Graphics g,
-            System.Drawing.Rectangle clipBounds,
-            System.Drawing.Rectangle cellBounds,
+        protected override void Paint(Graphics g,
+            Rectangle clipBounds,
+            Rectangle cellBounds,
             int rowIndex,
             DataGridViewElementStates cellState,
             object value, object formattedValue,
@@ -140,6 +134,7 @@ namespace SuperPutty.Gui
 
             int progressVal = Convert.ToInt32(value);
 
+            // ReSharper disable once RedundantCast
             float percentage = (float)progressVal / 100.0f; // Need to convert to float before division; otherwise C# returns int which is 0 for anything but 100%.
             Brush backColorBrush = new SolidBrush(cellStyle.BackColor);
             Brush foreColorBrush = new SolidBrush(cellStyle.ForeColor);
@@ -208,7 +203,7 @@ namespace SuperPutty.Gui
             {
                 //if percentage is negative, we don't want to draw progress bar
                 //wa want only text
-                if (this.DataGridView.CurrentRow.Index == rowIndex)
+                if (DataGridView.CurrentRow.Index == rowIndex)
                 {
                     g.DrawString(progressVal.ToString() + "%", cellStyle.Font, new SolidBrush(cellStyle.SelectionForeColor), posX, posX);
                 }
@@ -224,14 +219,14 @@ namespace SuperPutty.Gui
             DataGridViewProgressCell dataGridViewCell = base.Clone() as DataGridViewProgressCell;
             if (dataGridViewCell != null)
             {
-                dataGridViewCell.ProgressBarColor = this.ProgressBarColor;
+                dataGridViewCell.ProgressBarColor = ProgressBarColor;
             }
             return dataGridViewCell;
         }
 
         internal void SetProgressBarColor(int rowIndex, Color value)
         {
-            this.ProgressBarColor = value;
+            ProgressBarColor = value;
         }
 
     }

@@ -40,14 +40,14 @@ namespace SuperPutty.Utils
         /// <param name="command">A string containing the command to send</param>
         public CommandData(string command)
         {
-            this.Command = command;
+            Command = command;
         }
 
         /// <summary>Construct a new <seealso cref="CommandData"/> object, specifying keyboard keystrokes to send</summary>
         /// <param name="keys">A <seealso cref="KeyEventArgs"/> object containing the keyboard keystrokes</param>
         public CommandData(KeyEventArgs keys)
         {
-            this.KeyData = keys;
+            KeyData = keys;
         }
 
         /// <summary>Construct a new <seealso cref="CommandData"/> object, specifying both a command and keyboard keystrokes to send</summary>
@@ -55,8 +55,8 @@ namespace SuperPutty.Utils
         /// <param name="keys">A <seealso cref="KeyEventArgs"/> object containing the keyboard keystrokes</param>
         public CommandData(string command, KeyEventArgs keys)
         {
-            this.Command = command;
-            this.KeyData = keys;
+            Command = command;
+            KeyData = keys;
         }
         
         /// <summary>Send commands and keystrokes to the specified session</summary>
@@ -64,40 +64,40 @@ namespace SuperPutty.Utils
         public void SendToTerminal(int handle)
         {
             Log.InfoFormat("SendToTerminal: Handle={0}, Command=[{1}]", handle, this);
-            if (!string.IsNullOrEmpty(this.Command))
+            if (!string.IsNullOrEmpty(Command))
             {
                 // send normal string command
-                foreach (Char c in this.Command)
+                foreach (Char c in Command)
                 {
-                    NativeMethods.SendMessage(handle, NativeMethods.WM_CHAR, (int)c, 0);
+                    NativeMethods.SendMessage(handle, NativeMethods.WM_CHAR, c, 0);
                 }                
             }
 
-            if (this.KeyData != null)
+            if (KeyData != null)
             {
                 // special keys
-                if (this.KeyData.Control) { NativeMethods.PostMessage(handle, NativeMethods.WM_KEYDOWN, NativeMethods.VK_CONTROL, 0); }
-                if (this.KeyData.Shift) { NativeMethods.PostMessage(handle, NativeMethods.WM_KEYDOWN, NativeMethods.VK_SHIFT, 0); }
+                if (KeyData.Control) { NativeMethods.PostMessage(handle, NativeMethods.WM_KEYDOWN, NativeMethods.VK_CONTROL, 0); }
+                if (KeyData.Shift) { NativeMethods.PostMessage(handle, NativeMethods.WM_KEYDOWN, NativeMethods.VK_SHIFT, 0); }
 
-                char charStr = Convert.ToChar(this.KeyData.KeyCode);
-                NativeMethods.PostMessage(handle, NativeMethods.WM_KEYDOWN, (int)charStr, 0);
+                char charStr = Convert.ToChar(KeyData.KeyCode);
+                NativeMethods.PostMessage(handle, NativeMethods.WM_KEYDOWN, charStr, 0);
 
-                if (this.KeyData.Shift) { NativeMethods.PostMessage(handle, NativeMethods.WM_KEYUP, NativeMethods.VK_SHIFT, 0); }
-                if (this.KeyData.Control) { NativeMethods.PostMessage(handle, NativeMethods.WM_KEYUP, NativeMethods.VK_CONTROL, 0); }
+                if (KeyData.Shift) { NativeMethods.PostMessage(handle, NativeMethods.WM_KEYUP, NativeMethods.VK_SHIFT, 0); }
+                if (KeyData.Control) { NativeMethods.PostMessage(handle, NativeMethods.WM_KEYUP, NativeMethods.VK_CONTROL, 0); }
             }            
         }
         
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            if (!string.IsNullOrEmpty(this.Command))
+            if (!string.IsNullOrEmpty(Command))
             {
-                sb.Append(this.Command);
+                sb.Append(Command);
             }
 
-            if (this.KeyData != null)
+            if (KeyData != null)
             {
-                sb.AppendFormat("({0})", this.KeyData.KeyData);
+                sb.AppendFormat("({0})", KeyData.KeyData);
             }
             return sb.ToString();
         }

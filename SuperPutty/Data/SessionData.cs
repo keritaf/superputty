@@ -66,12 +66,12 @@ namespace SuperPutty.Data
         [Browsable(false)]
         public string SessionId
         {
-            get { return this._SessionId; }
+            get => _SessionId;
             set
             {
                 if (_SessionId != value)
                 {
-                    this.OldSessionId = SessionId;
+                    OldSessionId = SessionId;
 
                     UpdateField(ref _SessionId, value, "SessionId");
                 }
@@ -84,11 +84,8 @@ namespace SuperPutty.Data
         [Browsable(false)]
         public string OldName
         {
-            get { return _OldName; }
-            set 
-            {
-                UpdateField(ref _OldName, value, "OldName");
-            }
+            get => _OldName;
+            set => UpdateField(ref _OldName, value, "OldName");
         }
 
         private string _SessionName;
@@ -97,7 +94,7 @@ namespace SuperPutty.Data
         [Description("This is the name of the session.")]
         public string SessionName
         {
-            get { return _SessionName; }
+            get => _SessionName;
             set 
             { 
                 if (_SessionName != value)
@@ -122,11 +119,8 @@ namespace SuperPutty.Data
         [TypeConverter(typeof(ImageKeyConverter))]
         public string ImageKey
         {
-            get { return _ImageKey; }
-            set 
-            {
-                UpdateField(ref _ImageKey, value, "ImageKey");
-            }
+            get => _ImageKey;
+            set => UpdateField(ref _ImageKey, value, "ImageKey");
         }
 
         private string _Host;
@@ -135,11 +129,8 @@ namespace SuperPutty.Data
         [Description("This is the host name or the IP address of the destination.")]
         public string Host
         {
-            get { return _Host; }
-            set 
-            {
-                UpdateField(ref _Host, value, "Host");
-            }
+            get => _Host;
+            set => UpdateField(ref _Host, value, "Host");
         }
 
         private int _Port;
@@ -148,11 +139,8 @@ namespace SuperPutty.Data
         [Description("This is the port that will be used to connect to the destination.")]
         public int Port
         {
-            get { return _Port; }
-            set 
-            {
-                UpdateField(ref _Port, value, "Port");
-            }
+            get => _Port;
+            set => UpdateField(ref _Port, value, "Port");
         }
 
         private ConnectionProtocol _Proto;
@@ -161,11 +149,8 @@ namespace SuperPutty.Data
         [Description("This is the login protocol.")]
         public ConnectionProtocol Proto
         {
-            get { return _Proto; }
-            set 
-            {
-                UpdateField(ref _Proto, value, "Proto");
-            }
+            get => _Proto;
+            set => UpdateField(ref _Proto, value, "Proto");
         }
 
         private string _PuttySession;
@@ -175,11 +160,8 @@ namespace SuperPutty.Data
         [Description("This is the PuTTY session profile associated to this session.")]
         public string PuttySession
         {
-            get { return _PuttySession; }
-            set 
-            {
-                UpdateField(ref _PuttySession, value, "PuttySession");
-            }
+            get => _PuttySession;
+            set => UpdateField(ref _PuttySession, value, "PuttySession");
         }
 
         private string _Username;
@@ -188,11 +170,8 @@ namespace SuperPutty.Data
         [Description("This is the username that will be used to login.")]
         public string Username
         {
-            get { return _Username; }
-            set 
-            {
-                UpdateField(ref _Username, value, "Username");
-            }
+            get => _Username;
+            set => UpdateField(ref _Username, value, "Username");
         }
 
         private string _Password;
@@ -204,14 +183,11 @@ namespace SuperPutty.Data
                 
                  if (String.IsNullOrEmpty(_Password)){
                     // search if ExtraArgs contains the password
-                    UpdateField(ref _Password, CommandLineOptions.getcommand(this.ExtraArgs, "-pw"), "Password");
+                    UpdateField(ref _Password, CommandLineOptions.getcommand(ExtraArgs, "-pw"), "Password");
                 }
                 return _Password;
             }
-            set 
-            {
-                UpdateField(ref _Password, value, "Password");
-            }
+            set => UpdateField(ref _Password, value, "Password");
         }
 
         private string _ExtraArgs;
@@ -220,11 +196,8 @@ namespace SuperPutty.Data
         [Description("Extra PuTTY arguments.")]
         public string ExtraArgs
         {
-            get { return _ExtraArgs; }
-            set 
-            {
-                UpdateField(ref _ExtraArgs, value, "ExtraArgs");
-            }
+            get => _ExtraArgs;
+            set => UpdateField(ref _ExtraArgs, value, "ExtraArgs");
         }
 
         private DockState m_LastDockstate = DockState.Document;
@@ -232,11 +205,8 @@ namespace SuperPutty.Data
         [Browsable(false)]
         public DockState LastDockstate
         {
-            get { return m_LastDockstate; }
-            set 
-            {
-                UpdateField(ref m_LastDockstate, value, "LastDockstate");
-            }
+            get => m_LastDockstate;
+            set => UpdateField(ref m_LastDockstate, value, "LastDockstate");
         }
 
         private bool m_AutoStartSession = false;
@@ -244,11 +214,8 @@ namespace SuperPutty.Data
         [Browsable(false)]
         public bool AutoStartSession
         {
-            get { return m_AutoStartSession; }
-            set 
-            {
-                UpdateField(ref m_AutoStartSession, value, "AutoStartSession");
-            }
+            get => m_AutoStartSession;
+            set => UpdateField(ref m_AutoStartSession, value, "AutoStartSession");
         }
 
         private string m_SPSLFileName = string.Empty;
@@ -257,11 +224,8 @@ namespace SuperPutty.Data
         [Description("SPSL Script Filename")]
         public string SPSLFileName
         {
-            get { return m_SPSLFileName; }
-            set
-            {
-                UpdateField(ref m_SPSLFileName, value, "SPSLFileName");
-            }
+            get => m_SPSLFileName;
+            set => UpdateField(ref m_SPSLFileName, value, "SPSLFileName");
         }
 
 
@@ -303,13 +267,11 @@ namespace SuperPutty.Data
             {
                 Object NewValueObj = NewValue;
                 bool CancelChange = false;
-                if (OnPropertyChanging != null)
-                    OnPropertyChanging(this, PropertyName, NewValueObj, ref CancelChange);
+                OnPropertyChanging?.Invoke(this, PropertyName, NewValueObj, ref CancelChange);
                 if (!CancelChange)
                 {
                     Field = NewValue;
-                    if (OnPropertyChanged != null)
-                        OnPropertyChanged(this, PropertyName);
+                    OnPropertyChanged?.Invoke(this, PropertyName);
                 }
             }
         }
@@ -449,8 +411,7 @@ namespace SuperPutty.Data
 
         public int CompareTo(object obj)
         {
-            SessionData s = obj as SessionData;
-            return s == null ? 1 : this.SessionId.CompareTo(s.SessionId);
+            return !(obj is SessionData s) ? 1 : String.Compare(SessionId, s.SessionId, StringComparison.Ordinal);
         }
 
         public static string CombineSessionIds(string parent, string child) 
@@ -532,20 +493,20 @@ namespace SuperPutty.Data
         /// <returns>A string in uri format containing connection information to this sessions host</returns>
         public override string ToString()
         {
-            if (this.Proto == ConnectionProtocol.Cygterm || this.Proto == ConnectionProtocol.Mintty)
+            if (Proto == ConnectionProtocol.Cygterm || Proto == ConnectionProtocol.Mintty)
             {
-                return string.Format("{0}://{1}", this.Proto.ToString().ToLower(), this.Host);
+                return string.Format("{0}://{1}", Proto.ToString().ToLower(), Host);
             }
 
-            if (this.Proto == ConnectionProtocol.VNC)
+            if (Proto == ConnectionProtocol.VNC)
             {
-                if (this.Port == 0)
-                    return string.Format("{0}://{1}", this.Proto.ToString().ToLower(), this.Host);
+                if (Port == 0)
+                    return string.Format("{0}://{1}", Proto.ToString().ToLower(), Host);
                 else
-                    return string.Format("{0}://{1}::{2}", this.Proto.ToString().ToLower(), this.Host, this.Port);
+                    return string.Format("{0}://{1}::{2}", Proto.ToString().ToLower(), Host, Port);
             }
 
-            return string.Format("{0}://{1}:{2}", this.Proto.ToString().ToLower(), this.Host, this.Port);
+            return string.Format("{0}://{1}:{2}", Proto.ToString().ToLower(), Host, Port);
         }
 
         class PuttySessionConverter : StringConverter
@@ -554,7 +515,7 @@ namespace SuperPutty.Data
             {
                 return true;
             }
-            public override TypeConverter.StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
+            public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
             {
                 return new StandardValuesCollection(PuttyDataHelper.GetSessionNames());
             }
@@ -571,7 +532,7 @@ namespace SuperPutty.Data
             {
                 return true;
             }
-            public override TypeConverter.StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
+            public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
             {
                 return new StandardValuesCollection(SuperPuTTY.Images.Images.Keys);
             }

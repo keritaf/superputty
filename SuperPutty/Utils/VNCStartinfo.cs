@@ -22,8 +22,6 @@
 using System;
 using log4net;
 using SuperPutty.Data;
-using System.Text.RegularExpressions;
-using System.IO;
 
 namespace SuperPutty.Utils
 {
@@ -40,20 +38,20 @@ namespace SuperPutty.Utils
         public VNCStartInfo(SessionData session)
         {
             this.session = session;
-            this.Args = "-scale=auto ";
+            Args = "-scale=auto ";
 
             if (session.Port != 0)
-                this.Args += "-port=" + session.Port.ToString() + " ";
+                Args += "-port=" + session.Port.ToString() + " ";
 
             if (!String.IsNullOrEmpty(session.Password))
-                this.Args += "-password=\"" + session.Password + "\" ";
+                Args += "-password=\"" + session.Password + "\" ";
 
             if (!String.IsNullOrEmpty(session.ExtraArgs))
-                this.Args += session.ExtraArgs + " ";
+                Args += session.ExtraArgs + " ";
 
-            this.Args += "\"" + session.Host + "\"";
+            Args += "\"" + session.Host + "\"";
 
-            this.StartingDir = "%userprofile%\\Desktop";
+            StartingDir = "%userprofile%\\Desktop";
         }
 
         public string Args { get; set; }

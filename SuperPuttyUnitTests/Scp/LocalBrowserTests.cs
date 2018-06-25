@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using SuperPutty.Scp;
 using log4net;
@@ -9,7 +6,6 @@ using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Threading;
-using System.ComponentModel;
 using SuperPutty.Data;
 
 namespace SuperPuttyUnitTests.Scp
@@ -103,11 +99,10 @@ namespace SuperPuttyUnitTests.Scp
                 "Local", new LocalBrowserModel(), new SessionData(), new MockFileTransferPresenter());
 
             string dir = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            BrowserView view = new BrowserView(presenter, new BrowserFileInfo(new DirectoryInfo(dir)));
-            view.Dock = DockStyle.Fill;
+            BrowserView view =
+                new BrowserView(presenter, new BrowserFileInfo(new DirectoryInfo(dir))) {Dock = DockStyle.Fill};
 
-            Form form = new Form();
-            form.Size = new Size(600, 800);
+            Form form = new Form {Size = new Size(600, 800)};
             form.Controls.Add(view);
             form.ShowDialog();
         }

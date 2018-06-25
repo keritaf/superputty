@@ -23,10 +23,12 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 using SuperPutty.Data;
 using log4net;
+using SuperPutty.Gui;
 
 namespace SuperPutty
 {
@@ -34,11 +36,11 @@ namespace SuperPutty
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RemoteFileListPanel));
 
-        private DockPanel m_DockPanel;
-        private PscpTransfer m_Transfer;
-        private SessionData m_Session;
-        private string m_Path = ".";
-        private dlgMouseFeedback m_MouseFollower;
+        private readonly DockPanel m_DockPanel;
+        private readonly PscpTransfer m_Transfer;
+        private readonly SessionData m_Session;
+        private string m_path = ".";
+        private readonly dlgMouseFeedback m_MouseFollower;
         public RemoteFileListPanel(PscpTransfer transfer, DockPanel dockPanel, SessionData session)
         {
             Log.InfoFormat("Started new File Transfer Session for {0}", session.SessionName);
@@ -48,23 +50,24 @@ namespace SuperPutty
             m_MouseFollower = new dlgMouseFeedback();
             InitializeComponent();
             
-            this.TabText = session.SessionName;
+            TabText = session.SessionName;
 
-            LoadDirectory(m_Path);
+            LoadDirectory(m_path);
         }
 
         private bool LoadDirectory(string path)
         {
             Log.InfoFormat("Request directory listing for '{0}/{1}'", m_Session.SessionName, path);
-            DirListingCallback dirCallback = delegate(RequestResult result, List<FileEntry> files)
+
+            void DirCallback(RequestResult result, List<FileEntry> files)
             {
                 switch (result)
                 {
                     case RequestResult.RetryAuthentication:
-                        this.BeginInvoke(new Action(() =>
+                        BeginInvoke(new Action(() =>
                         {
                             dlgLogin m_Login = new dlgLogin(m_Session);
-                            if (m_Login.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+                            if (m_Login.ShowDialog(this) == DialogResult.OK)
                             {
                                 m_Session.Username = m_Login.Username;
                                 m_Session.Password = m_Login.Password;
@@ -72,7 +75,7 @@ namespace SuperPutty
                             }
                             else
                             {
-                                this.Close();
+                                Close();
                             }
                         }));
 
@@ -92,21 +95,21 @@ namespace SuperPutty
                         break;
                     case RequestResult.CancelLogin:
                         Log.Info("User cancel login");
-                        this.BeginInvoke(new MethodInvoker(this.Close));
+                        BeginInvoke(new MethodInvoker(Close));
                         break;
                     default:
                         Log.InfoFormat("Unknown result '{0}'", result);
                         break;
                 }
-            };
+            }
 
-            m_Transfer.BeginGetDirectoryListing(path, dirCallback);                       
+            m_Transfer.BeginGetDirectoryListing(path, DirCallback);                       
             return true;
         }
 
         private void RefreshListView(List<FileEntry> files)
         {
-            if (this.IsDisposed) return;
+            if (IsDisposed) return;
             if (listView1.InvokeRequired)
             {
                 listView1.BeginInvoke((MethodInvoker)delegate {
@@ -127,8 +130,8 @@ namespace SuperPutty
                         ListViewItem addedItem = listView1.Items.Add(file.Name, file.Name);
                         addedItem.ImageIndex = file.IsFile ? 1 : 0;
                         addedItem.Tag = file;
-                        addedItem.SubItems.Add(new ListViewItem.ListViewSubItem(addedItem, file.TimeStamp.ToLocalTime().ToString()));
-                        addedItem.SubItems.Add(new ListViewItem.ListViewSubItem(addedItem, String.Format("{0} KB", file.BlockCount / 1024)));
+                        addedItem.SubItems.Add(new ListViewItem.ListViewSubItem(addedItem, file.TimeStamp.ToLocalTime().ToString(CultureInfo.CurrentCulture)));
+                        addedItem.SubItems.Add(new ListViewItem.ListViewSubItem(addedItem, String.Format(LocalizedText.RemoteFileListPanel_N_KB, file.BlockCount / 1024)));
                         addedItem.SubItems.Add(new ListViewItem.ListViewSubItem(addedItem, file.OwnerName));
                         addedItem.SubItems.Add(new ListViewItem.ListViewSubItem(addedItem, file.GroupName));
                         addedItem.SubItems.Add(new ListViewItem.ListViewSubItem(addedItem, file.PermissionString));
@@ -148,21 +151,21 @@ namespace SuperPutty
                     if (fe.Name == "..")
                     {
                         // strip off last path part (not handling escaped / case...)
-                        int idx = m_Path.LastIndexOf('/');
+                        int idx = m_path.LastIndexOf('/');
                         if (idx != -1)
                         {
-                            m_Path = m_Path.Substring(0, idx);
+                            m_path = m_path.Substring(0, idx);
                         }
                         else
                         {
-                            m_Path += "/" + fe.Name;
+                            m_path += "/" + fe.Name;
                         }
                     }
                     else
                     {
-                        m_Path += "/" + fe.Name;
+                        m_path += "/" + fe.Name;
                     }
-                    LoadDirectory(m_Path);
+                    LoadDirectory(m_path);
                 }
             }
         }
@@ -170,12 +173,12 @@ namespace SuperPutty
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            LoadDirectory(m_Path);
+            LoadDirectory(m_path);
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         #region ListView Modes
@@ -240,7 +243,7 @@ namespace SuperPutty
             Point targetPoint = listView.PointToClient(new Point(e.X, e.Y));
 
             ListViewItem dropTarget = listView.GetItemAt(targetPoint.X, targetPoint.Y);
-            string target = this.m_Path;
+            string target = m_path;
             if (dropTarget != null && dropTarget.ImageIndex == 0)
             {
                 target += "/" + dropTarget.Text;
@@ -271,7 +274,7 @@ namespace SuperPutty
             frmTransferStatus frmStatus = new frmTransferStatus {Text = "Uploading files to " + m_Session.SessionName};
             frmStatus.Show(m_DockPanel, DockState.DockBottom);
 
-            TransferUpdateCallback callback = delegate(bool fileComplete, bool cancelTransfer, FileTransferStatus status)
+            void TransferUpdateCallback(bool fileComplete, bool cancelTransfer, FileTransferStatus status)
             {
                 if (cancelTransfer)
                 {
@@ -287,14 +290,15 @@ namespace SuperPutty
                     transferredBytes += status.BytesTransferred;
                     //Logger.Log("Transfered: {0}/{1} kB {2} of {3} files", transferredBytes, totalBytes / 1024, currentFileNum, fileCount);
                 }
-                frmStatus.UpdateProgress(status, (int)transferredBytes, (int)totalBytes / 1024, currentFileNum, fileCount);
+                frmStatus.UpdateProgress(status, (int) transferredBytes, (int) totalBytes / 1024, currentFileNum, fileCount);
                 if (currentFileNum >= fileCount)
                 {
                     LoadDirectory(target);
                 }
-            };
-            frmStatus.m_callback = callback;
-            m_Transfer.BeginCopyFiles(files, target, callback);
+            }
+
+            frmStatus.m_callback = TransferUpdateCallback;
+            m_Transfer.BeginCopyFiles(files, target, TransferUpdateCallback);
         }
 
         public static void RecurseDir(string sourceDir, ref long bytes, ref int count)

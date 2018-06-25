@@ -81,8 +81,8 @@ namespace SuperPutty.Scp
 
         public PscpClient(PscpOptions options, SessionData session) 
         {
-            this.Options = options;
-            this.Session = session;
+            Options = options;
+            Session = session;
         }
 
         #region ListDirectory (and helpers)
@@ -93,7 +93,7 @@ namespace SuperPutty.Scp
             {
                 //return this.DoListDirectory(path);
                 ListDirectoryResult result = new ListDirectoryResult(path);
-                String ArgsPscp = ToArgs(this.Session, this.Session.Password, path.Path);
+                String ArgsPscp = ToArgs(Session, Session.Password, path.Path);
                 RunPscp(
                     result,
                     ArgsPscp,
@@ -107,8 +107,7 @@ namespace SuperPutty.Scp
                         foreach (string rawLine in lines)
                         {
                             string line = rawLine.TrimEnd();
-                            BrowserFileInfo fileInfo;
-                            if (parser.TryParseFileLine(line, out fileInfo))
+                            if (parser.TryParseFileLine(line, out var fileInfo))
                             {
                                 if (fileInfo.Name != ".")
                                 {
@@ -201,8 +200,8 @@ namespace SuperPutty.Scp
                 
                 FileTransferResult result = new FileTransferResult();
 
-                string args = ToArgs(this.Session, this.Session.Password, sourceFiles, target);
-                string argsToLog = ToArgs(this.Session, "XXXXX", sourceFiles, target);
+                string args = ToArgs(Session, Session.Password, sourceFiles, target);
+                string argsToLog = ToArgs(Session, "XXXXX", sourceFiles, target);
                 ScpLineParser parser = new ScpLineParser();
                 RunPscp(
                     result, args, argsToLog, 
@@ -211,8 +210,7 @@ namespace SuperPutty.Scp
                         bool completed = false;
                         if (callback != null)
                         {
-                            FileTransferStatus status;
-                            if (parser.TryParseTransferStatus(line, out status))
+                            if (parser.TryParseTransferStatus(line, out var status))
                             {
                                 completed = status.PercentComplete == 100;
                                 callback(completed, false, status);
@@ -283,33 +281,33 @@ namespace SuperPutty.Scp
             Func<string, bool> inlineErrHandler, 
             Action<string[]> successOutHandler)
         {
-            if (!File.Exists(this.Options.PscpLocation))
+            if (!File.Exists(Options.PscpLocation))
             {
-                result.SetError(string.Format("Pscp missing, path={0}.", this.Options.PscpLocation), null);
+                result.SetError(string.Format("Pscp missing, path={0}.", Options.PscpLocation), null);
             }
-            else if (this.Session.Username == null)
+            else if (Session.Username == null)
             {
                 result.SetError("UserName is null", null);
             }
-            else if (this.Session.Host == null)
+            else if (Session.Host == null)
             {
                 result.SetError("Host is null", null);
             }
-            else if (this.Session.Port < 0)
+            else if (Session.Port < 0)
             {
-                result.SetError("Invalid port: " + this.Session.Port, null);
+                result.SetError("Invalid port: " + Session.Port, null);
             }
             else
             {
 
-                Process proc = NewProcess(this.Options.PscpLocation, args);
+                Process proc = NewProcess(Options.PscpLocation, args);
                 Timer timeoutTimer = null;
                 AsyncStreamReader outReader = null;
                 AsyncStreamReader errReader = null;
                 try
                 {
                     // Start pscp
-                    Log.InfoFormat("Starting process: file={0}, args={1}", this.Options.PscpLocation, argsToLog);
+                    Log.InfoFormat("Starting process: file={0}, args={1}", Options.PscpLocation, argsToLog);
                     proc.Start();
 
                     // Timeout when no output is received
@@ -320,7 +318,7 @@ namespace SuperPutty.Scp
                             SafeKill(proc);
                             result.SetErrorFormat("Process timed out, args={0}", argsToLog);
                         }, 
-                        null, this.Options.TimeoutMs, Timeout.Infinite);
+                        null, Options.TimeoutMs, Timeout.Infinite);
 
                     // Async read output/err.  Inline actions to quick kill the process when pscp prompts user.
                     // NOTE: Using BeginReadOutput/ErrorReadLine doesn't work here.  Calls to read an empty stream
@@ -343,7 +341,7 @@ namespace SuperPutty.Scp
                             {
                                 completed = inlineOutHandler(strOut);
                             }
-                            timeoutTimer.Change(completed ? Timeout.Infinite : this.Options.TimeoutMs, Timeout.Infinite);
+                            timeoutTimer.Change(completed ? Timeout.Infinite : Options.TimeoutMs, Timeout.Infinite);
                             return keepReading;
                         });
                     errReader = new AsyncStreamReader(
@@ -363,7 +361,7 @@ namespace SuperPutty.Scp
                             {
                                 completed = inlineErrHandler(strErr);
                             }
-                            timeoutTimer.Change(completed ? Timeout.Infinite : this.Options.TimeoutMs, Timeout.Infinite);
+                            timeoutTimer.Change(completed ? Timeout.Infinite : Options.TimeoutMs, Timeout.Infinite);
                             return keepReading;
                         });
 
@@ -380,16 +378,13 @@ namespace SuperPutty.Scp
                     if (proc.ExitCode == 0 && outputStr.Contains(PUTTY_UNABLE_TO_OPEN))
                     {
                         // bad path
-                        int idx = outputStr.IndexOf(PUTTY_UNABLE_TO_OPEN);
+                        int idx = outputStr.IndexOf(PUTTY_UNABLE_TO_OPEN, StringComparison.Ordinal);
                         result.SetErrorFormat(outputStr.Substring(idx));
                     }
                     else if (proc.ExitCode == 0)
                     {
                         // successful operation
-                        if (successOutHandler != null)
-                        {
-                            successOutHandler(output);
-                        }
+                        successOutHandler?.Invoke(output);
                     }
                     else
                     {
@@ -404,7 +399,7 @@ namespace SuperPutty.Scp
                         }
                         else if (err.Contains(PUTTY_HOST_DOES_NOT_EXIST))
                         {
-                            result.SetErrorFormat("Host does not exist.  {0}:{1}", this.Session.Host, this.Session.Port);
+                            result.SetErrorFormat("Host does not exist.  {0}:{1}", Session.Host, Session.Port);
                         }
                         else
                         {
@@ -501,13 +496,13 @@ namespace SuperPutty.Scp
 
             public AsyncStreamReader(string name, StreamReader reader, Func<string, bool> dataUpdated)
             {
-                this.Name = name;
-                this.Reader = reader;
-                this.DataUpdatedHandler = dataUpdated;
-                this.Lines = new List<string>();
+                Name = name;
+                Reader = reader;
+                DataUpdatedHandler = dataUpdated;
+                Lines = new List<string>();
 
-                this.Thread = new Thread(this.ReadAll) {IsBackground = true};
-                this.Thread.Start();
+                Thread = new Thread(ReadAll) {IsBackground = true};
+                Thread.Start();
             }
 
             void ReadAll()
@@ -519,9 +514,9 @@ namespace SuperPutty.Scp
                     // read char-by-char at first 10 lines
                     int linesRead = 0;
                     StringBuilder sb = new StringBuilder();
-                    while (keepReading && this.Reader.Peek() != -1)
+                    while (keepReading && Reader.Peek() != -1)
                     {
-                        char c = (char)this.Reader.Read();
+                        char c = (char)Reader.Read();
                         sb.Append(c);
 
                         // add special case to fire readline if prompted with "user's password: "
@@ -543,7 +538,7 @@ namespace SuperPutty.Scp
 
                     // after reading 1st line, assume we have a normal read and go by line
                     string line;
-                    while (keepReading && (line = this.Reader.ReadLine()) != null)
+                    while (keepReading && (line = Reader.ReadLine()) != null)
                     {
                         keepReading = AppendLineAndNotify(line);
                     }
@@ -566,13 +561,13 @@ namespace SuperPutty.Scp
                     bool keepReading = true;
 
                     string cleanLine = line.Trim('\r', '\n');
-                    this.Lines.Add(cleanLine);
+                    Lines.Add(cleanLine);
 
                     if (Log.Logger.IsEnabledFor(Level.Trace)) { Log.DebugFormat("[{0}] - {1}", Name, cleanLine); }
 
-                    if (this.DataUpdatedHandler != null)
+                    if (DataUpdatedHandler != null)
                     {
-                        keepReading = this.DataUpdatedHandler(cleanLine);
+                        keepReading = DataUpdatedHandler(cleanLine);
                     }
 
                     return keepReading;
@@ -581,16 +576,16 @@ namespace SuperPutty.Scp
 
             public string[] StopAndGetData()
             {
-                if (this.Thread.IsAlive)
+                if (Thread.IsAlive)
                 {
                     // consider better way to know operation is done reading output...timed out join is ok but not great.
-                    this.Thread.Join(2000);
-                    this.Thread.Abort();
+                    Thread.Join(2000);
+                    Thread.Abort();
                 }
 
                 lock (this)
                 {
-                    return this.Lines.ToArray();
+                    return Lines.ToArray();
                 }
             }
 
@@ -602,9 +597,9 @@ namespace SuperPutty.Scp
 
             public void Dispose()
             {
-                if (this.Thread.IsAlive)
+                if (Thread.IsAlive)
                 {
-                    this.Thread.Abort();
+                    Thread.Abort();
                 }
             }
         }
@@ -647,13 +642,11 @@ namespace SuperPutty.Scp
                                 ? FileType.Directory : FileType.File;
 
 
-                        DateTime lastMod;
-                        if (TryParseTimestamp(match.Groups["Timestamp"].Value, out lastMod))
+                        if (TryParseTimestamp(match.Groups["Timestamp"].Value, out var lastMod))
                         {
                             fileInfo.LastModTime = lastMod;
                         }
-                        int blocks;
-                        if (int.TryParse(match.Groups["BlockCount"].Value, out blocks))
+                        if (int.TryParse(match.Groups["BlockCount"].Value, out var blocks))
                         {
                             fileInfo.Size = blocks;
                         }
@@ -697,7 +690,7 @@ namespace SuperPutty.Scp
                 if (!String.IsNullOrEmpty(rawLine))
                 {
                     string line = rawLine.TrimEnd();
-                    Match match = this.regExStatus.Match(line);
+                    Match match = regExStatus.Match(line);
                     if (match.Success)
                     {
                         string[] update = line.Split('|');
@@ -725,7 +718,7 @@ namespace SuperPutty.Scp
     {
         public PscpOptions()
         {
-            this.TimeoutMs = 10000;
+            TimeoutMs = 10000;
         }
 
         public string PscpLocation { get; set; }

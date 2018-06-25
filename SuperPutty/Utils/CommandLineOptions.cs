@@ -49,18 +49,18 @@ namespace SuperPutty.Utils
                 if (args.Length > 0)
                 {
                     Parse(args);
-                    this.IsValid = true;
+                    IsValid = true;
                 }
                 else
                 {
                     // no args to consider
-                    this.IsValid = false;
+                    IsValid = false;
                 }
             }
             catch (Exception ex)
             {
                 Log.Error(string.Format("Error parsing args [{0}]", String.Join(" ", args)), ex);
-                this.IsValid = false;
+                IsValid = false;
             }
         }
 
@@ -68,61 +68,60 @@ namespace SuperPutty.Utils
         {
             Log.InfoFormat("CommandLine: [{0}]", String.Join(" ", args));
             Queue<string> queue = new Queue<string>(args);
-            string arg = null;
             while(queue.Count > 0)
             {
-                arg = queue.Dequeue();
+                var arg = queue.Dequeue();
                 switch (arg)
                 {
                     case "-layout":
-                        this.Layout = queue.Dequeue();
+                        Layout = queue.Dequeue();
                         break;
                     case "-session":
-                        this.SessionId = queue.Dequeue();
+                        SessionId = queue.Dequeue();
                         break;
                     case "-ssh":
                     case "-ssh2":
-                        this.Protocol = ConnectionProtocol.SSH;
+                        Protocol = ConnectionProtocol.SSH;
                         break;
                     case "-telnet":
-                        this.Protocol = ConnectionProtocol.Telnet;
+                        Protocol = ConnectionProtocol.Telnet;
                         break;
                     case "-rlogin":
-                        this.Protocol = ConnectionProtocol.Rlogin;
+                        Protocol = ConnectionProtocol.Rlogin;
                         break;
                     case "-raw":
-                        this.Protocol = ConnectionProtocol.Raw;
+                        Protocol = ConnectionProtocol.Raw;
                         break;
                     case "-serial":
-                        this.Protocol = ConnectionProtocol.Serial;
+                        Protocol = ConnectionProtocol.Serial;
                         break;
                     case "-cygterm":
-                        this.Protocol = ConnectionProtocol.Cygterm;
+                        Protocol = ConnectionProtocol.Cygterm;
                         break;
                     case "-vnc":
-                        this.Protocol = ConnectionProtocol.VNC;
+                        Protocol = ConnectionProtocol.VNC;
                         break;
                     case "-scp":
-                        this.UseScp = true;
+                        UseScp = true;
                         break;
                     case "-P":
-                        this.Port = int.Parse(queue.Dequeue());
+                        Port = int.Parse(queue.Dequeue());
                         break;
                     case "-l":
-                        this.UserName = queue.Dequeue();
+                        UserName = queue.Dequeue();
                         break;
                     case "-pw":
-                        this.Password = queue.Dequeue();
+                        Password = queue.Dequeue();
                         break;
                     case "-load":
-                        this.PuttySession = queue.Dequeue();
+                        PuttySession = queue.Dequeue();
                         break;
                     case "--help":
-                        this.Help = true;
+                        Help = true;
                         return;
                     default:
                         // unflagged arg must be the host...
-                        this.Host = arg;
+                        Host = arg;
                         break;
                 }
             }
@@ -184,56 +183,56 @@ namespace SuperPutty.Utils
         public SessionDataStartInfo ToSessionStartInfo()
         {
             SessionDataStartInfo ssi = null;
-            if (this.SessionId != null)
+            if (SessionId != null)
             {
                 // first try to resolve by sessionId
-                SessionData session = SuperPuTTY.GetSessionById(this.SessionId);
+                SessionData session = SuperPuTTY.GetSessionById(SessionId);
                 if (session == null)
                 {
-                    Log.WarnFormat("Session from command line not found, id={0}", this.SessionId);
+                    Log.WarnFormat("Session from command line not found, id={0}", SessionId);
                 }
                 else
                 {
                     ssi = new SessionDataStartInfo 
                     { 
                         Session = session, 
-                        UseScp = this.UseScp 
+                        UseScp = UseScp 
                     };
                 }
             }
-            else if (this.Host != null ||  this.PuttySession != null)
+            else if (Host != null ||  PuttySession != null)
             {
                 // Host or puttySession provided
                 string sessionName;
-                if (this.Host != null)
+                if (Host != null)
                 {
                     // Decode URL type host spec, if provided (e.g. ssh://localhost:2020)
-                    HostConnectionString connStr = new HostConnectionString(this.Host);
-                    this.Host = connStr.Host;
-                    this.Protocol = connStr.Protocol.GetValueOrDefault(this.Protocol.GetValueOrDefault(ConnectionProtocol.SSH));
-                    this.Port = connStr.Port.GetValueOrDefault(this.Port.GetValueOrDefault(dlgEditSession.GetDefaultPort(this.Protocol.GetValueOrDefault())));
-                    sessionName = this.Host;
+                    HostConnectionString connStr = new HostConnectionString(Host);
+                    Host = connStr.Host;
+                    Protocol = connStr.Protocol.GetValueOrDefault(Protocol.GetValueOrDefault(ConnectionProtocol.SSH));
+                    Port = connStr.Port.GetValueOrDefault(Port.GetValueOrDefault(dlgEditSession.GetDefaultPort(Protocol.GetValueOrDefault())));
+                    sessionName = Host;
                 }
                 else
                 {
                     // no host provided so assume sss
-                    sessionName = this.PuttySession;
+                    sessionName = PuttySession;
                 }
 
                 ssi = new SessionDataStartInfo
                 {
                     Session = new SessionData
                     {
-                        Host = this.Host,
+                        Host = Host,
                         SessionName = sessionName,
-                        SessionId = SuperPuTTY.MakeUniqueSessionId(SessionData.CombineSessionIds("CLI", this.Host)),
-                        Port = this.Port.GetValueOrDefault(22),
-                        Proto = this.Protocol.GetValueOrDefault(ConnectionProtocol.SSH),
-                        Username = this.UserName,
-                        Password = this.Password,
-                        PuttySession = this.PuttySession
+                        SessionId = SuperPuTTY.MakeUniqueSessionId(SessionData.CombineSessionIds("CLI", Host)),
+                        Port = Port.GetValueOrDefault(22),
+                        Proto = Protocol.GetValueOrDefault(ConnectionProtocol.SSH),
+                        Username = UserName,
+                        Password = Password,
+                        PuttySession = PuttySession
                     },
-                    UseScp = this.UseScp
+                    UseScp = UseScp
                 };
             }
 

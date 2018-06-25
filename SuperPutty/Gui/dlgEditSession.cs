@@ -37,9 +37,9 @@ namespace SuperPutty
 
         public delegate bool SessionNameValidationHandler(string name, out string error);
 
-        private SessionData Session;
+        private readonly SessionData Session;
         private String OldHostname;
-        private bool isInitialized = false;
+        private readonly bool isInitialized = false;
         private ImageListPopup imgPopup = null;
 
         public dlgEditSession(SessionData session, ImageList iconList)
@@ -53,15 +53,15 @@ namespace SuperPutty
 
             if (!String.IsNullOrEmpty(Session.SessionName))
             {
-                this.Text = "Edit session: " + session.SessionName;
-                this.textBoxSessionName.Text = Session.SessionName;
-                this.textBoxHostname.Text = Session.Host;
-                this.textBoxPort.Text = Session.Port.ToString();
-                this.textBoxExtraArgs.Text = Session.ExtraArgs;
-                this.textBoxUsername.Text = Session.Username;
-                this.textBoxSPSLScriptFile.Text = Session.SPSLFileName;
-                this.textBoxRemotePathSesion.Text = Session.RemotePath;
-                this.textBoxLocalPathSesion.Text = Session.LocalPath;
+                Text = "Edit session: " + session.SessionName;
+                textBoxSessionName.Text = Session.SessionName;
+                textBoxHostname.Text = Session.Host;
+                textBoxPort.Text = Session.Port.ToString();
+                textBoxExtraArgs.Text = Session.ExtraArgs;
+                textBoxUsername.Text = Session.Username;
+                textBoxSPSLScriptFile.Text = Session.SPSLFileName;
+                textBoxRemotePathSesion.Text = Session.RemotePath;
+                textBoxLocalPathSesion.Text = Session.LocalPath;
 
                 switch (Session.Proto)
                 {
@@ -89,7 +89,7 @@ namespace SuperPutty
                     case ConnectionProtocol.VNC:
                         radioButtonVNC.Checked = true;
                         if (Session.Port == 0)
-                            this.textBoxPort.Text = "";
+                            textBoxPort.Text = "";
                         break;
                     default:
                         radioButtonSSH.Checked = true;
@@ -97,39 +97,39 @@ namespace SuperPutty
                 }
 
                 comboBoxPuttyProfile.DropDownStyle = ComboBoxStyle.DropDownList;
-                foreach(String settings in this.comboBoxPuttyProfile.Items){
+                foreach(String settings in comboBoxPuttyProfile.Items){
                     if (settings == session.PuttySession)
                     {
-                        this.comboBoxPuttyProfile.SelectedItem = settings;
+                        comboBoxPuttyProfile.SelectedItem = settings;
                         break;
                     }
                 }
 
-                this.buttonSave.Enabled = true;
+                buttonSave.Enabled = true;
             }
             else
             {
-                this.Text = "Create new session";
+                Text = "Create new session";
                 radioButtonSSH.Checked = true;
-                this.buttonSave.Enabled = false;
+                buttonSave.Enabled = false;
             }
 
 
             // Setup icon chooser
-            this.buttonImageSelect.ImageList = iconList;
-            this.buttonImageSelect.ImageKey = string.IsNullOrEmpty(Session.ImageKey)
+            buttonImageSelect.ImageList = iconList;
+            buttonImageSelect.ImageKey = string.IsNullOrEmpty(Session.ImageKey)
                 ? SessionTreeview.ImageKeySession
                 : Session.ImageKey;
-            this.toolTip.SetToolTip(this.buttonImageSelect, buttonImageSelect.ImageKey);
+            toolTip.SetToolTip(buttonImageSelect, buttonImageSelect.ImageKey);
 
-            this.isInitialized = true;
+            isInitialized = true;
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            this.BeginInvoke(new MethodInvoker(delegate { this.textBoxSessionName.Focus(); }));
+            BeginInvoke(new MethodInvoker(delegate { textBoxSessionName.Focus(); }));
         }
 
         private void PopulatePuttySettings()
@@ -163,10 +163,7 @@ namespace SuperPutty
             Session.PuttySession = comboBoxPuttyProfile.Text.Trim();
             Session.Host         = textBoxHostname.Text.Trim();
             Session.ExtraArgs    = textBoxExtraArgs.Text.Trim();
-            if (!Int32.TryParse(this.textBoxPort.Text, out val))
-                Session.Port     = 0;
-            else
-                Session.Port     = int.Parse(textBoxPort.Text.Trim());
+            Session.Port = !Int32.TryParse(textBoxPort.Text, out val) ? 0 : int.Parse(textBoxPort.Text.Trim());
             Session.Username     = textBoxUsername.Text.Trim();
             Session.SessionId    = SessionData.CombineSessionIds(SessionData.GetSessionParentId(Session.SessionId), Session.SessionName);
             Session.ImageKey     = buttonImageSelect.ImageKey;
@@ -193,18 +190,18 @@ namespace SuperPutty
         /// <param name="e"></param>
         private void radioButtonCygterm_CheckedChanged(object sender, EventArgs e)
         {
-            string host = this.textBoxHostname.Text;
-            bool isLocalShell = this.radioButtonCygterm.Checked || this.radioButtonMintty.Checked;
-            this.textBoxPort.Enabled = !isLocalShell;
-            this.textBoxExtraArgs.Enabled = !isLocalShell;
-            this.textBoxUsername.Enabled = !isLocalShell;
+            string host = textBoxHostname.Text;
+            bool isLocalShell = radioButtonCygterm.Checked || radioButtonMintty.Checked;
+            textBoxPort.Enabled = !isLocalShell;
+            textBoxExtraArgs.Enabled = !isLocalShell;
+            textBoxUsername.Enabled = !isLocalShell;
 
             if (isLocalShell)
             {
                 if (String.IsNullOrEmpty(host) || !host.StartsWith(CygtermStartInfo.LocalHost))
                 {
-                    OldHostname = this.textBoxHostname.Text;
-                    this.textBoxHostname.Text = CygtermStartInfo.LocalHost;
+                    OldHostname = textBoxHostname.Text;
+                    textBoxHostname.Text = CygtermStartInfo.LocalHost;
                 }
             }
 
@@ -212,11 +209,11 @@ namespace SuperPutty
 
         private void radioButtonRaw_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.radioButtonRaw.Checked && this.isInitialized)
+            if (radioButtonRaw.Checked && isInitialized)
             {
                 if (!string.IsNullOrEmpty(OldHostname))
                 {
-                    this.textBoxHostname.Text = OldHostname;
+                    textBoxHostname.Text = OldHostname;
                     OldHostname = null;
                 }
             }
@@ -224,55 +221,55 @@ namespace SuperPutty
 
         private void radioButtonTelnet_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.radioButtonTelnet.Checked && this.isInitialized)
+            if (radioButtonTelnet.Checked && isInitialized)
             {
                 if (!string.IsNullOrEmpty(OldHostname))
                 {
-                    this.textBoxHostname.Text = OldHostname;
+                    textBoxHostname.Text = OldHostname;
                     OldHostname = null;
                 }
-                this.textBoxPort.Text = "23";
+                textBoxPort.Text = "23";
             }
         }
 
         private void radioButtonRlogin_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.radioButtonRlogin.Checked && this.isInitialized)
+            if (radioButtonRlogin.Checked && isInitialized)
             {
                 if (!string.IsNullOrEmpty(OldHostname))
                 {
-                    this.textBoxHostname.Text = OldHostname;
+                    textBoxHostname.Text = OldHostname;
                     OldHostname = null;
                 }
-                this.textBoxPort.Text = "513";
+                textBoxPort.Text = "513";
             }
         }
 
         private void radioButtonSSH_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.radioButtonSSH.Checked && this.isInitialized)
+            if (radioButtonSSH.Checked && isInitialized)
             {
                 if (!string.IsNullOrEmpty(OldHostname))
                 {
-                    this.textBoxHostname.Text = OldHostname;
+                    textBoxHostname.Text = OldHostname;
                     OldHostname = null;
                 }
-                this.textBoxPort.Text = "22";
+                textBoxPort.Text = "22";
             }
         }
 
         private void radioButtonVNC_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.radioButtonVNC.Checked && this.isInitialized)
+            if (radioButtonVNC.Checked && isInitialized)
             {
                 if (!string.IsNullOrEmpty(OldHostname))
                 {
-                    this.textBoxHostname.Text = OldHostname;
+                    textBoxHostname.Text = OldHostname;
                     OldHostname = null;
                 }
-                this.textBoxPort.Text = "";
+                textBoxPort.Text = "";
             }
-            this.comboBoxPuttyProfile.Enabled = !this.radioButtonVNC.Checked;
+            comboBoxPuttyProfile.Enabled = !radioButtonVNC.Checked;
         }
 
         public static int GetDefaultPort(ConnectionProtocol protocol)
@@ -300,7 +297,7 @@ namespace SuperPutty
         #region Icon
         private void buttonImageSelect_Click(object sender, EventArgs e)
         {
-            if (this.imgPopup == null)
+            if (imgPopup == null)
             {
                 // TODO: ImageList is null on initial installation and will throw a nullreference exception when creating a new session and trying to select an image.
 
@@ -314,8 +311,8 @@ namespace SuperPutty
                     BackgroundColor = Color.FromArgb(241, 241, 241),
                     BackgroundOverColor = Color.FromArgb(102, 154, 204)
                 };
-                imgPopup.Init(this.buttonImageSelect.ImageList, 8, 8, cols, rows);
-                imgPopup.ItemClick += new ImageListPopupEventHandler(this.OnItemClicked);
+                imgPopup.Init(buttonImageSelect.ImageList, 8, 8, cols, rows);
+                imgPopup.ItemClick += new ImageListPopupEventHandler(OnItemClicked);
             }
 
             Point pt = PointToScreen(new Point(buttonImageSelect.Left, buttonImageSelect.Bottom));
@@ -328,7 +325,7 @@ namespace SuperPutty
             if (imgPopup == sender)
             {
                 buttonImageSelect.ImageKey = e.SelectedItem;
-                this.toolTip.SetToolTip(this.buttonImageSelect, buttonImageSelect.ImageKey);
+                toolTip.SetToolTip(buttonImageSelect, buttonImageSelect.ImageKey);
             }
         } 
         #endregion
@@ -339,84 +336,83 @@ namespace SuperPutty
 
         private void textBoxSessionName_Validating(object sender, CancelEventArgs e)
         {
-            if (this.SessionNameValidator != null)
+            if (SessionNameValidator != null)
             {
-                string error;
-                if (!this.SessionNameValidator(this.textBoxSessionName.Text, out error))
+                if (!SessionNameValidator(textBoxSessionName.Text, out var error))
                 {
                     e.Cancel = true;
-                    this.SetError(this.textBoxSessionName, error ?? "Invalid Session Name");
+                    SetError(textBoxSessionName, error ?? "Invalid Session Name");
                 }
             }
         }
 
         private void textBoxSessionName_Validated(object sender, EventArgs e)
         {
-            this.SetError(this.textBoxSessionName, String.Empty);
+            SetError(textBoxSessionName, String.Empty);
         }
 
         private void textBoxPort_Validating(object sender, CancelEventArgs e)
         {
             int val;
-            if (!Int32.TryParse(this.textBoxPort.Text, out val))
+            if (!Int32.TryParse(textBoxPort.Text, out val))
             {
-                if (this.textBoxPort.Text == "")
-                    if (this.radioButtonVNC.Checked || this.radioButtonMintty.Checked || this.radioButtonCygterm.Checked)
+                if (textBoxPort.Text == "")
+                    if (radioButtonVNC.Checked || radioButtonMintty.Checked || radioButtonCygterm.Checked)
                         return;
 
                 e.Cancel = true;
-                this.SetError(this.textBoxPort, "Invalid Port");
+                SetError(textBoxPort, "Invalid Port");
             }
         }
 
         private void textBoxPort_Validated(object sender, EventArgs e)
         {
-            this.SetError(this.textBoxPort, String.Empty);
+            SetError(textBoxPort, String.Empty);
         }
 
         private void textBoxHostname_Validating(object sender, CancelEventArgs e)
         {
-            if (string.IsNullOrEmpty((string)this.comboBoxPuttyProfile.SelectedItem) &&
-                string.IsNullOrEmpty(this.textBoxHostname.Text.Trim()))
+            if (string.IsNullOrEmpty((string)comboBoxPuttyProfile.SelectedItem) &&
+                string.IsNullOrEmpty(textBoxHostname.Text.Trim()))
             {
-                if (sender == this.textBoxHostname)
+                if (sender == textBoxHostname)
                 {
-                    this.SetError(this.textBoxHostname, "A host name must be specified if a Putty Session Profile is not selected");
+                    SetError(textBoxHostname, "A host name must be specified if a Putty Session Profile is not selected");
                 }
-                else if (sender == this.comboBoxPuttyProfile)
+                else if (sender == comboBoxPuttyProfile)
                 {
-                    this.SetError(this.comboBoxPuttyProfile, "A Putty Session Profile must be selected if a Host Name is not provided");
+                    SetError(comboBoxPuttyProfile, "A Putty Session Profile must be selected if a Host Name is not provided");
                 }
             }
             else
             {
-                this.SetError(this.textBoxHostname, String.Empty);
-                this.SetError(this.comboBoxPuttyProfile, String.Empty);
+                SetError(textBoxHostname, String.Empty);
+                SetError(comboBoxPuttyProfile, String.Empty);
             }
         }
 
         private void comboBoxPuttyProfile_Validating(object sender, CancelEventArgs e)
         {
-            this.textBoxHostname_Validating(sender, e);
+            textBoxHostname_Validating(sender, e);
         }
 
         private void comboBoxPuttyProfile_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.ValidateChildren(ValidationConstraints.ImmediateChildren);    
+            ValidateChildren(ValidationConstraints.ImmediateChildren);    
         }
 
         void SetError(Control control, string error)
         {
-            this.errorProvider.SetError(control, error);
-            this.EnableDisableSaveButton();
+            errorProvider.SetError(control, error);
+            EnableDisableSaveButton();
         }
 
         void EnableDisableSaveButton()
         {
-            this.buttonSave.Enabled = this.errorProvider.GetError(this.textBoxSessionName) == String.Empty &&
-                                      this.errorProvider.GetError(this.textBoxHostname) == String.Empty &&
-                                      this.errorProvider.GetError(this.textBoxPort) == String.Empty &&
-                                      this.errorProvider.GetError(this.comboBoxPuttyProfile) == String.Empty;
+            buttonSave.Enabled = errorProvider.GetError(textBoxSessionName) == String.Empty &&
+                                      errorProvider.GetError(textBoxHostname) == String.Empty &&
+                                      errorProvider.GetError(textBoxPort) == String.Empty &&
+                                      errorProvider.GetError(comboBoxPuttyProfile) == String.Empty;
         }
 
         #endregion
@@ -424,10 +420,10 @@ namespace SuperPutty
         private void buttonBrowse_Click(object sender, EventArgs e)
         {
 
-            DialogResult dlgResult = this.openFileDialog1.ShowDialog();
+            DialogResult dlgResult = openFileDialog1.ShowDialog();
             if (dlgResult == DialogResult.OK)
             {
-                textBoxSPSLScriptFile.Text = this.openFileDialog1.FileName;
+                textBoxSPSLScriptFile.Text = openFileDialog1.FileName;
             }
         }
 

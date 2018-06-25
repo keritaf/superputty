@@ -33,8 +33,8 @@ namespace SuperPutty
 
         void Logger_OnLog(string logLine)
         {
-            if (this.InvokeRequired)
-                this.BeginInvoke((MethodInvoker)delegate { Logger_OnLog(logLine); });
+            if (InvokeRequired)
+                BeginInvoke((MethodInvoker)delegate { Logger_OnLog(logLine); });
             else
                 richTextBox1.AppendText(logLine + System.Environment.NewLine);
         }

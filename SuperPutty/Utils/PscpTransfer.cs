@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Text.RegularExpressions;
 using SuperPutty.Data;
+using SuperPutty.Gui;
 
 
 namespace SuperPutty
@@ -79,7 +80,7 @@ namespace SuperPutty
         public override string ToString()
         {
             return String.Format("Links: {0}, Owner: {1}, Group: {2}, Blocks: {3}, Time: {4}, Name: {5}, IsFile: {6}, IsLink: {7}, Perms: {8}",
-                this.LinkCount, this.OwnerName, this.GroupName, this.BlockCount, this.TimeStamp, this.Name, this.IsFile, this.IsSymLink, this.PermissionString);
+                LinkCount, OwnerName, GroupName, BlockCount, TimeStamp, Name, IsFile, IsSymLink, PermissionString);
         }
 
         public void SetPropertiesFromPermissionString(string perms)
@@ -89,13 +90,13 @@ namespace SuperPutty
             switch (p)
             {
                 case '-':
-                    this.IsFile = true;
+                    IsFile = true;
                     break;
                 case 'l':
-                    this.IsSymLink = true;
+                    IsSymLink = true;
                     break;
                 case 'd':
-                    this.IsFolder = true;
+                    IsFolder = true;
                     break;
             }
         }
@@ -150,8 +151,8 @@ namespace SuperPutty
         private Thread m_PscpThread;
         public PuttyClosedCallback PuttyClosed
         {
-            get { return m_PuttyClosed; }
-            set { m_PuttyClosed = value; }
+            get => m_PuttyClosed;
+            set => m_PuttyClosed = value;
         }
 
         public PscpTransfer(SessionData session)
@@ -232,7 +233,6 @@ namespace SuperPutty
                         {                            
                             m_processDir.CancelOutputRead();
                             m_processDir.Kill();
-                            return;
                         }
                         else if (e.Data.StartsWith("Listing directory "))
                         {
@@ -253,8 +253,7 @@ namespace SuperPutty
                             timeoutWatch.Reset();
                             lock (files)
                             {
-                                FileEntry file;
-                                if (TryParseFileLine(e.Data, out file))
+                                if (TryParseFileLine(e.Data, out var file))
                                 {
                                     files.Add(file);
                                 }
@@ -276,8 +275,10 @@ namespace SuperPutty
                         {
                             m_processDir.CancelErrorRead();
                             m_processDir.Kill();
-                            System.Windows.Forms.MessageBox.Show("The key of the host you are attempting to connect to has changed or is not cached \n" +
-                                "You must connect to this host with with a PuTTY ssh terminal to accept the key and store it in the cache", "Host Key not found or changed", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Stop);
+                            System.Windows.Forms.MessageBox.Show(
+                                LocalizedText.PscpTransfer_BeginGetDirectoryListing_KeyChanged,
+                                LocalizedText.PscpTransfer_BeginGetDirectoryListing_Host_Key_not_found_or_changed,
+                                System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Stop);
                         }
                         else
                         {
@@ -293,14 +294,12 @@ namespace SuperPutty
                     {
                         Logger.Log("Process Exited (Failure): {0}", m_processDir.ExitCode);
                         callback(RequestResult.UnknownError, null);
-                        if (m_PuttyClosed != null)
-                            m_PuttyClosed(true);
+                        m_PuttyClosed?.Invoke(true);
                     }
                     else
                     {
                         Logger.Log("Process Exited: {0}", m_processDir.ExitCode);
-                        if (m_PuttyClosed != null)
-                            m_PuttyClosed(false);
+                        m_PuttyClosed?.Invoke(false);
                     }
                     m_DirIsBusy = false;
                 };

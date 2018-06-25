@@ -25,17 +25,17 @@ namespace SuperPutty.Utils
             uint eventMin = (uint)NativeMethods.WinEvents.EVENT_SYSTEM_SWITCHSTART;
             uint eventMax = (uint)NativeMethods.WinEvents.EVENT_SYSTEM_SWITCHEND;
             lpfnWinEventProc = new NativeMethods.WinEventDelegate(WinEventProc);
-            this.m_hWinEventHook = NativeMethods.SetWinEventHook(eventMin, eventMax, IntPtr.Zero, lpfnWinEventProc, 0, 0, NativeMethods.WINEVENT_OUTOFCONTEXT);
+            m_hWinEventHook = NativeMethods.SetWinEventHook(eventMin, eventMax, IntPtr.Zero, lpfnWinEventProc, 0, 0, NativeMethods.WINEVENT_OUTOFCONTEXT);
         }
 
         void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
-            this.SystemSwitch?.Invoke(this, new GlobalWindowEventArgs(hwnd, eventType));
+            SystemSwitch?.Invoke(this, new GlobalWindowEventArgs(hwnd, eventType));
         }
 
         ~GlobalWindowEvents()
         {
-            NativeMethods.UnhookWinEvent(this.m_hWinEventHook);
+            NativeMethods.UnhookWinEvent(m_hWinEventHook);
         }
     }
 }

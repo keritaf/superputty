@@ -26,8 +26,8 @@ namespace SuperPutty.Scp
 
         public FileTransferPresenter(PscpOptions options)
         {
-            this.Options = options;
-            this.ViewModel = new FileTransferViewModel();
+            Options = options;
+            ViewModel = new FileTransferViewModel();
         }
 
         public bool CanTransferFile(BrowserFileInfo source, BrowserFileInfo target)
@@ -79,13 +79,13 @@ namespace SuperPutty.Scp
                         Session = request.Session
                     };
                     req.SourceFiles.Add(source);
-                    transfers.Add(new FileTransfer(this.Options, req));
+                    transfers.Add(new FileTransfer(Options, req));
                 }
             }
             else
             {
                 // local-to-remote: Create 1 transfer for all
-                transfers.Add(new FileTransfer(this.Options, request));
+                transfers.Add(new FileTransfer(Options, request));
             }
 
             // Add and start each transfer
@@ -99,10 +99,10 @@ namespace SuperPutty.Scp
         void AddTransfer(FileTransfer transfer)
         {
             // store
-            this.fileTranfers.Add(transfer.Id, transfer);
+            fileTranfers.Add(transfer.Id, transfer);
 
             // notify
-            this.ViewModel.FileTransfers.Add(new FileTransferViewItem(transfer));
+            ViewModel.FileTransfers.Add(new FileTransferViewItem(transfer));
 
             // hook for updates
             transfer.Update += transfer_Update;
@@ -111,9 +111,9 @@ namespace SuperPutty.Scp
         void transfer_Update(object sender, EventArgs e)
         {
             FileTransfer transfer = (FileTransfer)sender;
-            if (this.ViewModel.Context != null)
+            if (ViewModel.Context != null)
             {
-                this.ViewModel.Context.Post((x) => ProcessTransferUpdate(transfer), e);
+                ViewModel.Context.Post((x) => ProcessTransferUpdate(transfer), e);
             }
             else
             {
@@ -124,7 +124,7 @@ namespace SuperPutty.Scp
         void ProcessTransferUpdate(FileTransfer transfer)
         {
 
-            int idx = this.ViewModel.FindIndexById(transfer.Id);
+            int idx = ViewModel.FindIndexById(transfer.Id);
             if (idx == -1)
             {
                 Log.WarnFormat("Could not notify ViewModel, id={0}", transfer.Id);
@@ -132,7 +132,7 @@ namespace SuperPutty.Scp
             else
             {
                 // update items
-                FileTransferViewItem viewItem = this.ViewModel.FileTransfers[idx];
+                FileTransferViewItem viewItem = ViewModel.FileTransfers[idx];
                 viewItem.Progress = transfer.PercentComplete;
                 viewItem.Status = transfer.TransferStatus;
                 viewItem.Message = transfer.TransferStatusMsg;
@@ -143,7 +143,7 @@ namespace SuperPutty.Scp
                 viewItem.CanDelete = FileTransfer.CanRestart(viewItem.Status);
 
                 // notify on update
-                this.ViewModel.FileTransfers.ResetItem(idx);
+                ViewModel.FileTransfers.ResetItem(idx);
             }
         }
 
@@ -155,12 +155,12 @@ namespace SuperPutty.Scp
             {
                 if (FileTransfer.CanRestart(transfer.TransferStatus))
                 {
-                    this.fileTranfers.Remove(id);
+                    fileTranfers.Remove(id);
                     transfer.Update -= transfer_Update;
-                    int idx = this.ViewModel.FindIndexById(id);
+                    int idx = ViewModel.FindIndexById(id);
                     if (idx != -1)
                     {
-                        this.ViewModel.FileTransfers.RemoveAt(idx);
+                        ViewModel.FileTransfers.RemoveAt(idx);
                     }
                 }
                 else
@@ -204,8 +204,7 @@ namespace SuperPutty.Scp
 
         FileTransfer GetById(int id)
         {
-            FileTransfer transfer;
-            if (!this.fileTranfers.TryGetValue(id, out transfer))
+            if (!fileTranfers.TryGetValue(id, out var transfer))
             {
                 Log.WarnFormat("Could not get FileTransfer: id={0}", id);
             }

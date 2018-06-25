@@ -38,10 +38,10 @@ namespace SuperPutty
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(dlgFindPutty));
 
-        private string OrigSettingsFolder { get; set; }
+        private string OrigSettingsFolder { get; }
         private string OrigDefaultLayoutName { get; set; }
 
-        private BindingList<KeyboardShortcut> Shortcuts { get; set; }
+        private BindingList<KeyboardShortcut> Shortcuts { get; }
 
         public dlgFindPutty()
         {

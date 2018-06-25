@@ -174,7 +174,6 @@ namespace SuperPuTTY.Scripting
                         // 
                         if (Char.IsWhiteSpace(keys[j]))
                         {
-                            int digit;
                             while (j < keysLen && Char.IsWhiteSpace(keys[j]))
                             {
                                 j++;
@@ -187,7 +186,7 @@ namespace SuperPuTTY.Scripting
 
                             if (Char.IsDigit(keys[j]))
                             {
-                                digit = j;
+                                var digit = j;
                                 while (j < keysLen && Char.IsDigit(keys[j]))
                                 {
                                     j++;
@@ -222,7 +221,7 @@ namespace SuperPuTTY.Scripting
                         continue;
                                              
                     default:                                                                        
-                        vk = (int)Char.ToUpperInvariant(keys[i]);
+                        vk = Char.ToUpperInvariant(keys[i]);
                         break;
                 }
 

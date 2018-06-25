@@ -110,12 +110,8 @@ namespace SuperPuTTY.Scripting
                 {
                     foreach (string line in scriptlines)
                     {
-                        CommandData command;
-                        TryParseScriptLine(line, out command);
-                        if (command != null)
-                        {
-                            command.SendToTerminal(scriptArgs.Handle.ToInt32());                        
-                        }
+                        TryParseScriptLine(line, out var command);
+                        command?.SendToTerminal(scriptArgs.Handle.ToInt32());
                     }
                 }).Start();
             }
