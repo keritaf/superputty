@@ -32,9 +32,9 @@ namespace SuperPutty.Utils
         private static readonly ILog Log = LogManager.GetLogger(typeof(CommandData));
 
         /// <summary>Get the command to send</summary>
-        public string Command { get; private set; }
+        public string Command { get; }
         /// <summary>Get the keystrokes to send</summary>
-        public KeyEventArgs KeyData { get; private set; }
+        public KeyEventArgs KeyData { get; }
 
         /// <summary>Construct a new <seealso cref="CommandData"/> object, specifying a command to send</summary>
         /// <param name="command">A string containing the command to send</param>

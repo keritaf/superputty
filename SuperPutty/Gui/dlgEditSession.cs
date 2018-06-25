@@ -31,7 +31,7 @@ using System.IO;
 
 namespace SuperPutty
 {
-    public partial class dlgEditSession : Form
+    public sealed partial class dlgEditSession : Form
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(dlgEditSession));
 
@@ -39,8 +39,8 @@ namespace SuperPutty
 
         private readonly SessionData Session;
         private String OldHostname;
-        private readonly bool isInitialized = false;
-        private ImageListPopup imgPopup = null;
+        private readonly bool isInitialized;
+        private ImageListPopup imgPopup;
 
         public dlgEditSession(SessionData session, ImageList iconList)
         {
@@ -53,7 +53,7 @@ namespace SuperPutty
 
             if (!String.IsNullOrEmpty(Session.SessionName))
             {
-                Text = "Edit session: " + session.SessionName;
+                Text = string.Format("Edit session: {0}", session.SessionName);
                 textBoxSessionName.Text = Session.SessionName;
                 textBoxHostname.Text = Session.Host;
                 textBoxPort.Text = Session.Port.ToString();
@@ -148,8 +148,6 @@ namespace SuperPutty
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-
-            int val = 0;
             if (!String.IsNullOrEmpty(CommandLineOptions.getcommand(textBoxExtraArgs.Text, "-pw")))
             {
                 if (MessageBox.Show("SuperPutty save the password in Sessions.xml file in plain text.\nUse a password in 'Extra PuTTY Arguments' is very insecure.\nFor a secure connection use SSH authentication with Pageant. \nSelect yes, if you want save the password", "Are you sure that you want to save the password?",
@@ -163,7 +161,7 @@ namespace SuperPutty
             Session.PuttySession = comboBoxPuttyProfile.Text.Trim();
             Session.Host         = textBoxHostname.Text.Trim();
             Session.ExtraArgs    = textBoxExtraArgs.Text.Trim();
-            Session.Port = !Int32.TryParse(textBoxPort.Text, out val) ? 0 : int.Parse(textBoxPort.Text.Trim());
+            Session.Port = !Int32.TryParse(textBoxPort.Text, out _) ? 0 : int.Parse(textBoxPort.Text.Trim());
             Session.Username     = textBoxUsername.Text.Trim();
             Session.SessionId    = SessionData.CombineSessionIds(SessionData.GetSessionParentId(Session.SessionId), Session.SessionName);
             Session.ImageKey     = buttonImageSelect.ImageKey;
@@ -312,7 +310,7 @@ namespace SuperPutty
                     BackgroundOverColor = Color.FromArgb(102, 154, 204)
                 };
                 imgPopup.Init(buttonImageSelect.ImageList, 8, 8, cols, rows);
-                imgPopup.ItemClick += new ImageListPopupEventHandler(OnItemClicked);
+                imgPopup.ItemClick += OnItemClicked;
             }
 
             Point pt = PointToScreen(new Point(buttonImageSelect.Left, buttonImageSelect.Bottom));
@@ -353,8 +351,7 @@ namespace SuperPutty
 
         private void textBoxPort_Validating(object sender, CancelEventArgs e)
         {
-            int val;
-            if (!Int32.TryParse(textBoxPort.Text, out val))
+            if (!Int32.TryParse(textBoxPort.Text, out _))
             {
                 if (textBoxPort.Text == "")
                     if (radioButtonVNC.Checked || radioButtonMintty.Checked || radioButtonCygterm.Checked)

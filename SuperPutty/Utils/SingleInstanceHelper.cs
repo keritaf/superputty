@@ -36,15 +36,14 @@ namespace SuperPutty.Utils
         {
             IpcChannel channel = new IpcChannel();
             ChannelServices.RegisterChannel(channel, false);
-            string url = String.Format("ipc://{0}/{1}", ChannelName, SingleInstanceServiceName);
+            string url = $"ipc://{ChannelName}/{SingleInstanceServiceName}";
 
             // Register as client for remote object.
             WellKnownClientTypeEntry remoteType = new WellKnownClientTypeEntry(typeof(SingleInstanceHelper), url);
             RemotingConfiguration.RegisterWellKnownClientType(remoteType);
 
             // Create a message sink.
-            string objectUri;
-            IMessageSink messageSink = channel.CreateMessageSink(url, null, out objectUri);
+            IMessageSink _ = channel.CreateMessageSink(url, null, out var _);
 
             /*
             Console.WriteLine("The URI of the message sink is {0}.", objectUri);

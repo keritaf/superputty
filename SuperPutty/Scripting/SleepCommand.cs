@@ -21,6 +21,7 @@
 
 using System;
 using System.Threading;
+using SuperPutty.Gui;
 using SuperPutty.Utils;
 
 namespace SuperPuTTY.Scripting
@@ -38,7 +39,7 @@ namespace SuperPuTTY.Scripting
             }
             else
             {
-                throw new ArgumentOutOfRangeException("The argument passed to SLEEP is not valid. Must be a positive whole number.");
+                throw new ArgumentOutOfRangeException(nameof(arg), LocalizedText.Commands_SleepHandler_The_argument_passed_to_SLEEP_is_not_valid__Must_be_a_positive_whole_number_);
             }
             return null;
         }

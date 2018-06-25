@@ -54,7 +54,7 @@ namespace SuperPutty.Utils
                     }
                     catch (ArgumentException ex)
                     {
-                        Log.WarnFormat("Process not found, ignoring. pid={0}, ex={0}", pid, ex.Message);
+                        Log.WarnFormat("Process not found, ignoring. pid={0}, ex={1}", pid, ex.Message);
                     }
                 }
                 return true;

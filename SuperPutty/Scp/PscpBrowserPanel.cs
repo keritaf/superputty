@@ -6,10 +6,6 @@ namespace SuperPutty.Scp
 {
     public partial class PscpBrowserPanel : ToolWindowDocument
     {
-        FileTransferPresenter fileTransferPresenter;
-        IBrowserPresenter localBrowserPresenter;
-        IBrowserPresenter remoteBrowserPresenter;
-
         public PscpBrowserPanel()
         {
             InitializeComponent();
@@ -26,7 +22,7 @@ namespace SuperPutty.Scp
             TabText = session.SessionName;
 
              //set the remote path
-            String remotePath = "";            
+            String remotePath;            
             if (String.IsNullOrEmpty(session.RemotePath)){                
                 remotePath = options.PscpHomePrefix + session.Username;
             }else{                
@@ -34,7 +30,7 @@ namespace SuperPutty.Scp
             }
 
             //set the local path
-            String localPath = "";
+            String localPath;
             if (String.IsNullOrEmpty(localStartingDir)){
                 localPath = String.IsNullOrEmpty(session.LocalPath) ? Environment.GetFolderPath(Environment.SpecialFolder.Desktop) : session.LocalPath;
             }else{
@@ -42,10 +38,10 @@ namespace SuperPutty.Scp
             }
  		 
 
-            fileTransferPresenter = new FileTransferPresenter(options);
-            localBrowserPresenter = new BrowserPresenter(
+            var fileTransferPresenter = new FileTransferPresenter(options);
+            IBrowserPresenter localBrowserPresenter = new BrowserPresenter(
                 "Local", new LocalBrowserModel(), session, fileTransferPresenter);
-            remoteBrowserPresenter = new BrowserPresenter(
+            IBrowserPresenter remoteBrowserPresenter = new BrowserPresenter(
                 "Remote", new RemoteBrowserModel(options), session, fileTransferPresenter);
 
             browserViewLocal.Initialize(localBrowserPresenter, new BrowserFileInfo(new DirectoryInfo(localPath)));

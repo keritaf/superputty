@@ -17,19 +17,19 @@ namespace SuperPutty.Gui
     public class ImageListPopup : Form
     {
         #region Protected Member Variables
-        protected Bitmap _Bitmap = null;
-        protected ImageList _imageList = null;
-        protected int _nBitmapWidth = 0;
-        protected int _nBitmapHeight = 0;
-        protected int _nItemWidth = 0;
-        protected int _nItemHeight = 0;
-        protected int _nRows = 0;
-        protected int _nColumns = 0;
-        protected int _nHSpace = 0;
-        protected int _nVSpace = 0;
+        protected Bitmap _Bitmap;
+        protected ImageList _imageList;
+        protected int _nBitmapWidth;
+        protected int _nBitmapHeight;
+        protected int _nItemWidth;
+        protected int _nItemHeight;
+        protected int _nRows;
+        protected int _nColumns;
+        protected int _nHSpace;
+        protected int _nVSpace;
         protected int _nCoordX = -1;
         protected int _nCoordY = -1;
-        protected bool _bIsMouseDown = false;
+        protected bool _bIsMouseDown;
         #endregion
 
         #region Public Properties
@@ -42,7 +42,7 @@ namespace SuperPutty.Gui
         #endregion
 
         #region Events
-        public event ImageListPopupEventHandler ItemClick = null;
+        public event ImageListPopupEventHandler ItemClick;
         #endregion
 
         #region Constructor

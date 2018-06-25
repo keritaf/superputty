@@ -31,7 +31,7 @@ namespace SuperPutty.Utils
     /// http://www.pcreview.co.uk/forums/sort-bindinglist-t3370884.html
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class SortableBindingList<T> : BindingList<T>, IList<T>
+    public class SortableBindingList<T> : BindingList<T>
     {
         protected override bool SupportsSortingCore => true;
 

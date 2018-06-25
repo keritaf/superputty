@@ -48,11 +48,11 @@ namespace SuperPutty
         private static string ActivatorTypeName => ConfigurationManager.AppSettings["SuperPuTTY.ActivatorTypeName"] ?? typeof(KeyEventWindowActivator).FullName;
 
         private Process m_Process;
-        private bool m_Created = false;
+        private bool m_Created;
         private IntPtr m_AppWin;
         private readonly List<IntPtr> m_hWinEventHooks = new List<IntPtr>();
         private readonly List<NativeMethods.WinEventDelegate> lpfnWinEventProcs = new List<NativeMethods.WinEventDelegate>();
-        private readonly WindowActivator m_windowActivator = null;
+        private readonly WindowActivator m_windowActivator;
 
         internal PuttyClosedCallback m_CloseCallback;
 
@@ -78,8 +78,8 @@ namespace SuperPutty
             ApplicationParameters = "";
             ApplicationWorkingDirectory = "";
 
-            Disposed += new EventHandler(ApplicationPanel_Disposed);
-            SuperPuTTY.LayoutChanged += new EventHandler<Data.LayoutChangedEventArgs>(SuperPuTTY_LayoutChanged);
+            Disposed += ApplicationPanel_Disposed;
+            SuperPuTTY.LayoutChanged += SuperPuTTY_LayoutChanged;
 
             // setup up the hook to watch for all EVENT_SYSTEM_FOREGROUND events system wide
 
@@ -87,7 +87,7 @@ namespace SuperPutty
             m_windowActivator = (WindowActivator)Activator.CreateInstance(Type.GetType(typeName));
             //this.m_windowActivator = new SetFGCombinedWindowActivator();
             SuperPuTTY.Settings.SettingsSaving += Settings_SettingsSaving;
-            SuperPuTTY.WindowEvents.SystemSwitch += new EventHandler<GlobalWindowEventArgs>(OnSystemSwitch);
+            SuperPuTTY.WindowEvents.SystemSwitch += OnSystemSwitch;
         }
 
         void Settings_SettingsSaving(object sender, CancelEventArgs e)
@@ -97,10 +97,10 @@ namespace SuperPutty
 
         void ApplicationPanel_Disposed(object sender, EventArgs e)
         {
-            Disposed -= new EventHandler(ApplicationPanel_Disposed);
-            SuperPuTTY.LayoutChanged -= new EventHandler<Data.LayoutChangedEventArgs>(SuperPuTTY_LayoutChanged);
+            Disposed -= ApplicationPanel_Disposed;
+            SuperPuTTY.LayoutChanged -= SuperPuTTY_LayoutChanged;
             SuperPuTTY.Settings.SettingsSaving -= Settings_SettingsSaving;
-            SuperPuTTY.WindowEvents.SystemSwitch -= new EventHandler<GlobalWindowEventArgs>(OnSystemSwitch);
+            SuperPuTTY.WindowEvents.SystemSwitch -= OnSystemSwitch;
             m_hWinEventHooks.ForEach(delegate(IntPtr hook) {
                 NativeMethods.UnhookWinEvent(hook);
             });
@@ -129,7 +129,7 @@ namespace SuperPutty
                 Screen primary = Screen.PrimaryScreen;
                 int screenArea = screen.WorkingArea.Height * screen.WorkingArea.Width;
                 int primaryArea = primary.WorkingArea.Height * primary.WorkingArea.Width;
-                if (screen != primary && screenArea > primaryArea)
+                if (!Equals(screen, primary) && screenArea > primaryArea)
                 {
                     MoveWindow("2ndScreenFix", 0, 1);
                 }
@@ -179,8 +179,8 @@ namespace SuperPutty
          * http://stackoverflow.com/questions/46030/c-sharp-force-form-focus
         */
 
-        bool settingForeground = false;
-        bool isSwitchingViaAltTab = false;
+        bool settingForeground;
+        bool isSwitchingViaAltTab;
 
         void OnSystemSwitch(object sender, GlobalWindowEventArgs e)
         {
@@ -416,7 +416,7 @@ namespace SuperPutty
                     long lStyle = NativeMethods.GetWindowLong(m_AppWin, NativeMethods.GWL_STYLE);
                     lStyle &= ~(NativeMethods.WS_BORDER | NativeMethods.WS_THICKFRAME);
                     NativeMethods.SetWindowLong(m_AppWin, NativeMethods.GWL_STYLE, lStyle);
-                    NativeMethods.WinEventDelegate lpfnWinEventProc = new NativeMethods.WinEventDelegate(WinEventProc);
+                    NativeMethods.WinEventDelegate lpfnWinEventProc = WinEventProc;
                     lpfnWinEventProcs.Add(lpfnWinEventProc);
                     uint eventType = (uint)NativeMethods.WinEvents.EVENT_OBJECT_NAMECHANGE;
                     m_hWinEventHooks.Add(NativeMethods.SetWinEventHook(eventType, eventType, IntPtr.Zero, lpfnWinEventProc, (uint)m_Process.Id, 0, NativeMethods.WINEVENT_OUTOFCONTEXT));

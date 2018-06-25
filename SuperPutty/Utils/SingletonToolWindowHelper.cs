@@ -71,7 +71,7 @@ namespace SuperPutty.Utils
         {
             Instance = Initializer == null ? Activator.CreateInstance<T>() : Initializer(this);
 
-            Instance.FormClosed += new FormClosedEventHandler(Instance_FormClosed);
+            Instance.FormClosed += Instance_FormClosed;
             InstanceChanged?.Invoke(Instance);
             return Instance;
         }
@@ -95,10 +95,10 @@ namespace SuperPutty.Utils
         public bool IsVisible => Instance != null && Instance.Visible;
 
 
-        public string Name { get; private set; }
-        public DockPanel DockPanel { get; private set; }
-        public WindowInitializer Initializer { get; private set; }
-        public Object InitializerResource { get; private set; }
+        public string Name { get; }
+        public DockPanel DockPanel { get; }
+        public WindowInitializer Initializer { get; }
+        public Object InitializerResource { get; }
         public T Instance { get; private set; }
     }
 }

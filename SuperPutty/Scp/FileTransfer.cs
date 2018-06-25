@@ -10,11 +10,11 @@ namespace SuperPutty.Scp
     public class FileTransfer
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FileTransfer));
-        private static int idSeed = 0;
+        private static int idSeed;
 
         public event EventHandler Update;
 
-        private Thread thread = null;
+        private Thread thread;
         Status status = Status.Initializing;
 
         public FileTransfer(PscpOptions options, FileTransferRequest request)

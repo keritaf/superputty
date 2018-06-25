@@ -209,7 +209,7 @@ namespace SuperPutty.Data
             set => UpdateField(ref m_LastDockstate, value, "LastDockstate");
         }
 
-        private bool m_AutoStartSession = false;
+        private bool m_AutoStartSession;
         [XmlIgnore]
         [Browsable(false)]
         public bool AutoStartSession

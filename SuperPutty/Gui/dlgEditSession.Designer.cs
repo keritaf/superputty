@@ -1,6 +1,6 @@
 namespace SuperPutty
 {
-    partial class dlgEditSession
+    sealed partial class dlgEditSession
     {
         /// <summary>
         /// Required designer variable.

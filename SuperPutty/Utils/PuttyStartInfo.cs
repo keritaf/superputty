@@ -29,8 +29,9 @@ namespace SuperPutty.Utils
             }
         }
 
-        public PuttyStartInfo(SessionData session)
+        public PuttyStartInfo(SessionData session, SessionData session1)
         {
+            Session = session1;
             string argsToLog = null;
 
             Executable = GetExecutable(session);
@@ -125,11 +126,11 @@ namespace SuperPutty.Utils
             Process.Start(startInfo);
         }
 
-        public SessionData Session { get; private set; }
+        public SessionData Session { get; }
 
-        public string Args { get; private set; }
-        public string WorkingDir { get; private set; }
-        public string Executable { get; private set; }
+        public string Args { get; }
+        public string WorkingDir { get; }
+        public string Executable { get; }
 
     }
 }

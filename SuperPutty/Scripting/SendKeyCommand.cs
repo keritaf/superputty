@@ -124,7 +124,7 @@ namespace SuperPuTTY.Scripting
             {
                 int repeat = 1;
                 char ch = keys[i];
-                int vk = 0;
+                int vk;
 
                 switch (ch)
                 {

@@ -24,7 +24,7 @@ namespace SuperPutty.Scp
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(BrowserView));
 
-        bool initialized = false;
+        bool initialized;
         public BrowserView(IBrowserPresenter presenter, BrowserFileInfo startingDir) : this()
         {
             Initialize(presenter, startingDir);
@@ -229,7 +229,7 @@ namespace SuperPutty.Scp
 
         int dragDropLastX = -1;
         int dragDropLastY = -1;
-        bool dragDropIsValid = false;
+        bool dragDropIsValid;
         FileTransferRequest dragDropFileTransfer;
 
         private void listViewFiles_DragEnter(object sender, DragEventArgs e)

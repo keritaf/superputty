@@ -7,7 +7,7 @@ namespace SuperPutty.Scp
 {
     public partial class FileTransferView : UserControl
     {
-        private bool initialized = false;
+        private bool initialized;
 
         public FileTransferView()
         {

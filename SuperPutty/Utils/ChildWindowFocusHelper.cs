@@ -11,7 +11,7 @@ namespace SuperPutty.Utils
         private static readonly ILog Log = LogManager.GetLogger(typeof(ChildWindowFocusHelper));
 
         private int m_shellHookNotify;
-        private bool m_externalWindow = false;
+        private bool m_externalWindow;
 
         private IDictionary<IntPtr, CtlPuttyPanel> childWindows = new Dictionary<IntPtr, CtlPuttyPanel>();
 

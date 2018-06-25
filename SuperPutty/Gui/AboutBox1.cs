@@ -27,7 +27,7 @@ using SuperPutty.Gui;
 
 namespace SuperPutty
 {
-    partial class AboutBox1 : Form
+    sealed partial class AboutBox1 : Form
     {
         public AboutBox1()
         {

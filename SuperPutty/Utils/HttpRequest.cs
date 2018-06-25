@@ -89,7 +89,7 @@ namespace SuperPutty
 
                 //  Pass rs.BufferRead to BeginRead. Read data into rs.BufferRead
                 IAsyncResult iarRead = ResponseStream.BeginRead(rs.BufferRead, 0,
-                   BufferSize, new AsyncCallback(ReadCallBack), rs);
+                   BufferSize, ReadCallBack, rs);
             }
             catch (WebException ex)
             {
@@ -129,7 +129,7 @@ namespace SuperPutty
                 // responseStream.EndRead returns –1.
                 IAsyncResult ar = responseStream.BeginRead(
                    rs.BufferRead, 0, BufferSize,
-                   new AsyncCallback(ReadCallBack), rs);
+                   ReadCallBack, rs);
             }
             else
             {

@@ -63,7 +63,6 @@ namespace SuperPutty
         private readonly TextBoxFocusHelper tbFocusHelperPassword;
         private readonly frmDocumentSelector sendCommandsDocumentSelector;
 
-        private readonly NativeMethods.LowLevelKMProc llkp;
         //private NativeMethods.LowLevelKMProc llmp;
         private static IntPtr kbHookID = IntPtr.Zero;
         private static readonly IntPtr mHookID = IntPtr.Zero;
@@ -71,9 +70,9 @@ namespace SuperPutty
         private FormWindowState lastNonMinimizedWindowState = FormWindowState.Normal;
         private Rectangle lastNormalDesktopBounds;
         private readonly ChildWindowFocusHelper focusHelper;
-        bool isControlDown = false;
-        bool isShiftDown = false;
-        bool isAltDown = false;
+        bool isControlDown;
+        bool isShiftDown;
+        bool isAltDown;
         int commandMRUIndex = -1;
 
         private readonly TabSwitcher tabSwitcher;
@@ -138,7 +137,7 @@ namespace SuperPutty
             tsCommandHistory.ListChanged += TsCommandHistory_ListChanged;
            
             // Hook into status
-            SuperPuTTY.StatusEvent += new Action<string>(delegate(String msg) { toolStripStatusLabelMessage.Text = msg; });
+            SuperPuTTY.StatusEvent += delegate(String msg) { toolStripStatusLabelMessage.Text = msg; };
             SuperPuTTY.ReportStatus("Ready");
 
 
@@ -153,11 +152,10 @@ namespace SuperPutty
 #endif
             }
             // Hook into LayoutChanging/Changed
-            SuperPuTTY.LayoutChanging += new EventHandler<LayoutChangedEventArgs>(SuperPuTTY_LayoutChanging);
+            SuperPuTTY.LayoutChanging += SuperPuTTY_LayoutChanging;
 
             // Low-Level Mouse and Keyboard hooks
-            llkp = KBHookCallback;
-            kbHookID = SetKBHook(llkp);
+            kbHookID = SetKBHook(KBHookCallback);
             //llmp = MHookCallback;
             //mHookID = SetMHook(llmp);
 
@@ -170,7 +168,7 @@ namespace SuperPutty
                 FormUtils.RestoreFormPositionAndState(this, SuperPuTTY.Settings.WindowPosition, SuperPuTTY.Settings.WindowState);
             }
 
-            ResizeEnd += new EventHandler(frmSuperPutty_ResizeEnd);
+            ResizeEnd += frmSuperPutty_ResizeEnd;
 
             // tab switching
             tabSwitcher = new TabSwitcher(DockPanel);
@@ -1170,7 +1168,7 @@ namespace SuperPutty
                 if (sent > 0)
                 {
                     // success...clear text and save in mru                    
-                    if (!string.IsNullOrEmpty(command?.Command) && saveHistory)
+                    if (!string.IsNullOrEmpty(command.Command) && saveHistory)
                     {
                         if (InvokeRequired)
                         {
@@ -1344,7 +1342,7 @@ namespace SuperPutty
             GCHandle listHandle = GCHandle.Alloc(result);
             try
             {
-                NativeMethods.EnumWindowProc childProc = new NativeMethods.EnumWindowProc(EnumWindow);
+                NativeMethods.EnumWindowProc childProc = EnumWindow;
                 NativeMethods.EnumChildWindows(parent.Handle, childProc, GCHandle.ToIntPtr(listHandle));
             }
             finally
@@ -1690,11 +1688,11 @@ namespace SuperPutty
             }
             catch (System.Net.WebException ex)
             {
-                Log.Warn("An Exception occurred while trying to check for program updates: " + ex.ToString());
+                Log.Warn($"An Exception occurred while trying to check for program updates: {ex}");
             }
             catch (FormatException ex)
             {
-                Log.Warn("An Exception occurred while trying to check for program updates: " + ex.ToString());
+                Log.Warn($"An Exception occurred while trying to check for program updates: {ex}");
             }
         }
         #endregion

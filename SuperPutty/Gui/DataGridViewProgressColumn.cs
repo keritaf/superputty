@@ -16,7 +16,7 @@ namespace SuperPutty.Gui
     /// http://social.msdn.microsoft.com/forums/en-US/winformsdatacontrols/thread/769ca9d6-1e9d-4d76-8c23-db535b2f19c2/
     /// http://www.codeproject.com/Articles/117021/How-to-Create-ProgressBar-Column-in-DataGridView
     /// </summary>
-    public class DataGridViewProgressColumn : DataGridViewImageColumn
+    public sealed class DataGridViewProgressColumn : DataGridViewImageColumn
     {
         public static Color _ProgressBarColor;
 
@@ -83,7 +83,7 @@ namespace SuperPutty.Gui
         private DataGridViewProgressCell ProgressBarCellTemplate => (DataGridViewProgressCell)CellTemplate;
     }
 
-    class DataGridViewProgressCell : DataGridViewImageCell
+    sealed class DataGridViewProgressCell : DataGridViewImageCell
     {
         // Used to make custom cell consistent with a DataGridViewImageCell
         static readonly Image emptyImage;
@@ -134,7 +134,6 @@ namespace SuperPutty.Gui
 
             int progressVal = Convert.ToInt32(value);
 
-            // ReSharper disable once RedundantCast
             float percentage = (float)progressVal / 100.0f; // Need to convert to float before division; otherwise C# returns int which is 0 for anything but 100%.
             Brush backColorBrush = new SolidBrush(cellStyle.BackColor);
             Brush foreColorBrush = new SolidBrush(cellStyle.ForeColor);

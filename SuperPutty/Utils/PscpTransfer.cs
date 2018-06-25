@@ -161,7 +161,7 @@ namespace SuperPutty
             m_Login = new dlgLogin(m_Session);
         }
 
-        private bool m_DirIsBusy = false;
+        private bool m_DirIsBusy;
         private Process m_processDir;
         public void BeginGetDirectoryListing(string path, DirListingCallback callback)
         {

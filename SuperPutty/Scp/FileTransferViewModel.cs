@@ -69,10 +69,10 @@ namespace SuperPutty.Scp
             Start = DateTime.Now;
         }
 
-        public int Id { get; private set; }
-        public string Session { get; private set; }
-        public string Source { get; private set; }
-        public string Target { get; private set; }
+        public int Id { get; }
+        public string Session { get; }
+        public string Source { get; }
+        public string Target { get; }
 
         private FileTransfer Transfer { get; set; }
 

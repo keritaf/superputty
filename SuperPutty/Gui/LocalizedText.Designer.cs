@@ -89,6 +89,16 @@ namespace SuperPutty.Gui {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The argument passed to SLEEP is not valid. Must be a positive whole number..
+        /// </summary>
+        internal static string Commands_SleepHandler_The_argument_passed_to_SLEEP_is_not_valid__Must_be_a_positive_whole_number_ {
+            get {
+                return ResourceManager.GetString("Commands_SleepHandler_The_argument_passed_to_SLEEP_is_not_valid__Must_be_a_positi" +
+                        "ve_whole_number_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close {0} Tabs?.
         /// </summary>
         internal static string CtlPuttyPanel_CloseDocs_Close__0__Tabs_ {

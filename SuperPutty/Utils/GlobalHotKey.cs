@@ -7,10 +7,11 @@ namespace SuperPutty.Utils
 {
     public class GlobalHotkey : IDisposable
     {
-        public GlobalHotkey(Form form, KeyboardShortcut shortcut)
+        public GlobalHotkey(Form form, KeyboardShortcut shortcut, Keys key)
         {
             Form = form;
             Shortcut = shortcut;
+            Key = key;
 
             // convert the Keys to modifiers
             Modifiers = NativeMethods.HotKeysConstants.NOMOD;
@@ -52,12 +53,12 @@ namespace SuperPutty.Utils
         public bool IsAltSet => IsSet(Shortcut.Modifiers, Keys.Alt);
         public bool IsShiftSet => IsSet(Shortcut.Modifiers, Keys.Shift);
 
-        public KeyboardShortcut Shortcut { get; private set; }
-        public Form Form { get; private set; }
-        public int Id { get; private set; }
+        public KeyboardShortcut Shortcut { get; }
+        public Form Form { get; }
+        public int Id { get; }
 
-        public int Modifiers { get; private set; }
-        public Keys Key { get; private set; }
+        public int Modifiers { get; }
+        public Keys Key { get; }
     }
 
 }

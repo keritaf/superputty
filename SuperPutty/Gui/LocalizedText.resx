@@ -213,4 +213,7 @@ You must connect to this host with with a PuTTY ssh terminal to accept the key a
   <data name="frmTransferStatus_labelOverall" xml:space="preserve">
     <value>Transfered {0}/{1} kB (file {2} of {3})</value>
   </data>
+  <data name="Commands_SleepHandler_The_argument_passed_to_SLEEP_is_not_valid__Must_be_a_positive_whole_number_" xml:space="preserve">
+    <value>The argument passed to SLEEP is not valid. Must be a positive whole number.</value>
+  </data>
 </root>

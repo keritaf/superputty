@@ -70,7 +70,7 @@ namespace SuperPuTTY.Scripting
             }
 
 
-            string command = string.Empty;
+            string command;
             string args = string.Empty;
 
             int index = line.IndexOf(' ');

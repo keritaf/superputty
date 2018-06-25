@@ -79,8 +79,8 @@ namespace SuperPutty
             // populate sessions in the treeview from the registry
             LoadSessions();
             ExpandInitialTree();
-            SuperPuTTY.Sessions.ListChanged += new ListChangedEventHandler(Sessions_ListChanged);
-            SuperPuTTY.Settings.SettingsSaving += new SettingsSavingEventHandler(Settings_SettingsSaving);
+            SuperPuTTY.Sessions.ListChanged += Sessions_ListChanged;
+            SuperPuTTY.Settings.SettingsSaving += Settings_SettingsSaving;
         }
 
         void ExpandInitialTree()
@@ -104,11 +104,6 @@ namespace SuperPutty
             }
         }
 
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-        }
-
         void Settings_SettingsSaving(object sender, CancelEventArgs e)
         {
             ApplySettings();
@@ -124,8 +119,8 @@ namespace SuperPutty
 
         protected override void OnClosed(EventArgs e)
         {
-            SuperPuTTY.Sessions.ListChanged -= new ListChangedEventHandler(Sessions_ListChanged);
-            SuperPuTTY.Settings.SettingsSaving -= new SettingsSavingEventHandler(Settings_SettingsSaving);
+            SuperPuTTY.Sessions.ListChanged -= Sessions_ListChanged;
+            SuperPuTTY.Settings.SettingsSaving -= Settings_SettingsSaving;
             base.OnClosed(e);
         }
 
@@ -298,9 +293,8 @@ namespace SuperPutty
             TreeNode node = null;
             TreeNode nodeRef = nodeRoot;
             string title = null;
-            if (sender is ToolStripMenuItem)
+            if (sender is ToolStripMenuItem menuItem)
             {
-                ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
                 bool isFolderNode = IsFolderNode(treeView1.SelectedNode);
                 if (menuItem.Text.ToLower().Equals("new") || isFolderNode)
                 {

@@ -48,7 +48,7 @@ namespace SuperPutty.Scp
             set { SetField(ref browserState, value, () => BrowserState); }
         }
 
-        public BindingList<BrowserFileInfo> Files { get; private set; }
+        public BindingList<BrowserFileInfo> Files { get; }
     }
 
 }
