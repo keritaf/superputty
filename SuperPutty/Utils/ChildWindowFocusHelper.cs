@@ -13,7 +13,7 @@ namespace SuperPutty.Utils
         private int m_shellHookNotify;
         private bool m_externalWindow = false;
 
-        private IDictionary<IntPtr, ctlPuttyPanel> childWindows = new Dictionary<IntPtr, ctlPuttyPanel>();
+        private IDictionary<IntPtr, CtlPuttyPanel> childWindows = new Dictionary<IntPtr, CtlPuttyPanel>();
 
         public ChildWindowFocusHelper(frmSuperPutty form)
         {
@@ -22,7 +22,7 @@ namespace SuperPutty.Utils
 
             foreach (IDockContent doc in this.MainForm.DockPanel.Contents)
             {
-                ctlPuttyPanel pp = doc as ctlPuttyPanel;
+                CtlPuttyPanel pp = doc as CtlPuttyPanel;
                 if (pp != null)
                 {
                     this.childWindows.Add(pp.AppPanel.AppWindowHandle, pp);
@@ -34,7 +34,7 @@ namespace SuperPutty.Utils
 
         void DockPanel_ContentAdded(object sender, DockContentEventArgs e)
         {
-            ctlPuttyPanel pp = e.Content as ctlPuttyPanel;
+            CtlPuttyPanel pp = e.Content as CtlPuttyPanel;
             if (pp != null)
             {
                 this.childWindows.Add(pp.AppPanel.AppWindowHandle, pp);
@@ -43,7 +43,7 @@ namespace SuperPutty.Utils
 
         void DockPanel_ContentRemoved(object sender, DockContentEventArgs e)
         {
-            ctlPuttyPanel pp = e.Content as ctlPuttyPanel;
+            CtlPuttyPanel pp = e.Content as CtlPuttyPanel;
             if (pp != null)
             {
                 this.childWindows.Remove(pp.AppPanel.AppWindowHandle);

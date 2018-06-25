@@ -17,15 +17,15 @@ namespace SuperPutty
             if (SuperPuTTY.MainForm.CurrentPanel == null)
             {
                 // First panel to be created
-                SuperPuTTY.MainForm.CurrentPanel = this.PreviousPanel = this.NextPanel = this;
+                SuperPuTTY.MainForm.CurrentPanel = PreviousPanel = NextPanel = this;
             }
             else
             {
                 // Other panels exist. Tie ourselves into list ahead of current panel.
-                this.PreviousPanel = SuperPuTTY.MainForm.CurrentPanel;
-                this.NextPanel = SuperPuTTY.MainForm.CurrentPanel.NextPanel;
+                PreviousPanel = SuperPuTTY.MainForm.CurrentPanel;
+                NextPanel = SuperPuTTY.MainForm.CurrentPanel.NextPanel;
                 SuperPuTTY.MainForm.CurrentPanel.NextPanel = this;
-                this.NextPanel.PreviousPanel = this;
+                NextPanel.PreviousPanel = this;
 
                 // We are now the current panel
                 SuperPuTTY.MainForm.CurrentPanel = this;
@@ -40,13 +40,13 @@ namespace SuperPutty
                 return;
 
             // Remove ourselves from our position in chain
-            this.PreviousPanel.NextPanel = this.NextPanel;
-            this.NextPanel.PreviousPanel = this.PreviousPanel;
+            PreviousPanel.NextPanel = NextPanel;
+            NextPanel.PreviousPanel = PreviousPanel;
 
-            this.PreviousPanel = SuperPuTTY.MainForm.CurrentPanel;
-            this.NextPanel = SuperPuTTY.MainForm.CurrentPanel.NextPanel;
+            PreviousPanel = SuperPuTTY.MainForm.CurrentPanel;
+            NextPanel = SuperPuTTY.MainForm.CurrentPanel.NextPanel;
             SuperPuTTY.MainForm.CurrentPanel.NextPanel = this;
-            this.NextPanel.PreviousPanel = this;
+            NextPanel.PreviousPanel = this;
 
             SuperPuTTY.MainForm.CurrentPanel = this;
         }
@@ -58,30 +58,30 @@ namespace SuperPutty
             if (SuperPuTTY.MainForm == null) return;
 
             // only 1 panel
-            if (SuperPuTTY.MainForm.CurrentPanel == this && this.NextPanel == this && this.PreviousPanel == this)
+            if (SuperPuTTY.MainForm.CurrentPanel == this && NextPanel == this && PreviousPanel == this)
             {
                 SuperPuTTY.MainForm.CurrentPanel = null;
                 return;
             }
 
             // Remove ourselves from our position in chain and set last active tab as current
-            if (this.PreviousPanel != null)
+            if (PreviousPanel != null)
             {
-                this.PreviousPanel.NextPanel = this.NextPanel;
+                PreviousPanel.NextPanel = NextPanel;
             }
-            if (this.NextPanel != null)
+            if (NextPanel != null)
             {
-                this.NextPanel.PreviousPanel = this.PreviousPanel;
+                NextPanel.PreviousPanel = PreviousPanel;
             }
-            SuperPuTTY.MainForm.CurrentPanel = this.PreviousPanel;
+            SuperPuTTY.MainForm.CurrentPanel = PreviousPanel;
 
             // manipulate tabs
-            if (this.DockHandler.Pane != null)
+            if (DockHandler.Pane != null)
             {
-                int idx = this.DockHandler.Pane.Contents.IndexOf(this);
+                int idx = DockHandler.Pane.Contents.IndexOf(this);
                 if (idx > 0)
                 {
-                    IDockContent contentToActivate = this.DockHandler.Pane.Contents[idx - 1];
+                    IDockContent contentToActivate = DockHandler.Pane.Contents[idx - 1];
                     contentToActivate.DockHandler.Activate();
                 }
             }

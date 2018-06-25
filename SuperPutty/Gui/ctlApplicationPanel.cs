@@ -236,7 +236,7 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
                 this.m_windowActivator.ActivateForm(form, window, m_AppWin);
 
                 // focus back to putty via setting active dock panel
-                ctlPuttyPanel parent = (ctlPuttyPanel)this.Parent;
+                CtlPuttyPanel parent = (CtlPuttyPanel)this.Parent;
                 if (parent != null && parent.DockPanel != null)
                 {
                     if (parent.DockPanel.ActiveDocument != parent && parent.DockState == DockState.Document)
@@ -261,7 +261,7 @@ DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
             StringBuilder sb = new StringBuilder(length + 1);
             NativeMethods.SendMessage(m_AppWin, NativeMethods.WM_GETTEXT, sb.Capacity, sb);
             string controlText = sb.ToString();
-            string parentText = ((ctlPuttyPanel)this.Parent).TextOverride;
+            string parentText = ((CtlPuttyPanel)this.Parent).TextOverride;
 
             switch ((SuperPutty.frmSuperPutty.TabTextBehavior)Enum.Parse(typeof(frmSuperPutty.TabTextBehavior), SuperPuTTY.Settings.TabTextBehavior))
             {

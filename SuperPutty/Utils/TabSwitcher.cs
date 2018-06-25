@@ -264,7 +264,7 @@ namespace SuperPutty.Utils
 
         /// <summary>Get a List containing session panels from a <seealso cref="DockPanel"/></summary>
         /// <param name="dockPanel">The DockPanel parent containing the children panels</param>
-        /// <returns>A <seealso cref="IList{T}"/> containing open session panels of type <seealso cref="ctlPuttyPanel"/></returns>
+        /// <returns>A <seealso cref="IList{T}"/> containing open session panels of type <seealso cref="CtlPuttyPanel"/></returns>
         public static IList<IDockContent> GetDocuments(DockPanel dockPanel)
         {
             List<IDockContent> docs = new List<IDockContent>();
@@ -278,7 +278,7 @@ namespace SuperPutty.Utils
                 });
                 foreach (DockPane pane in panes)
                 {
-                    docs.AddRange(pane.Contents.OfType<ctlPuttyPanel>().Cast<IDockContent>());
+                    docs.AddRange(pane.Contents.OfType<CtlPuttyPanel>().Cast<IDockContent>());
                 }
             }
             return docs;

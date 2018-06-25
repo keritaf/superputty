@@ -40,45 +40,43 @@ using log4net.Core;
 
 namespace SuperPutty
 {
+    /// <inheritdoc />
     /// <summary>A control that hosts a putty window</summary>
-    public partial class ctlPuttyPanel : ToolWindowDocument
+    public partial class CtlPuttyPanel : ToolWindowDocument
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ctlPuttyPanel));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(CtlPuttyPanel));
 
-        private static int RefocusAttempts = Convert.ToInt32(ConfigurationManager.AppSettings["SuperPuTTY.RefocusAttempts"] ?? "5");
-        private static int RefocusIntervalMs = Convert.ToInt32(ConfigurationManager.AppSettings["SuperPuTTY.RefocusIntervalMs"] ?? "80");
+        private static readonly int RefocusAttempts = Convert.ToInt32(ConfigurationManager.AppSettings["SuperPuTTY.RefocusAttempts"] ?? "5");
+        private static readonly int RefocusIntervalMs = Convert.ToInt32(ConfigurationManager.AppSettings["SuperPuTTY.RefocusIntervalMs"] ?? "80");
 
-        private PuttyStartInfo m_puttyStartInfo;
-        private ApplicationPanel m_AppPanel;
-        private SessionData m_Session;
-        private PuttyClosedCallback m_ApplicationExit;
+        private readonly PuttyStartInfo _mPuttyStartInfo;
+        private ApplicationPanel _mAppPanel;
+        private readonly SessionData _mSession;
+        private readonly PuttyClosedCallback _mApplicationExit;
 
-        public ctlPuttyPanel(SessionData session, PuttyClosedCallback callback)
+        public CtlPuttyPanel(SessionData session, PuttyClosedCallback callback)
         {
-            m_Session = session;
-            m_ApplicationExit = callback;
-            m_puttyStartInfo = new PuttyStartInfo(session);
+            _mSession = session;
+            _mApplicationExit = callback;
+            _mPuttyStartInfo = new PuttyStartInfo(session);
 
             InitializeComponent();
 
-            this.Text = session.SessionName;
-            this.TabText = session.SessionName;
-            this.TextOverride = session.SessionName;
+            Text = session.SessionName;
+            TabText = session.SessionName;
+            TextOverride = session.SessionName;
 
             CreatePanel();
             AdjustMenu();
         }
 
         /// <summary>Gets or sets the text displayed on a tab.</summary>
-        public override string Text
+        public sealed override string Text
         {
-            get
-            {
-                return base.Text;
-            }
+            get => base.Text;
             set
             {
-                this.TabText = value != null ? value.Replace("&", "&&") : null;
+                TabText = value?.Replace(@"&", @"&&");
                 base.Text = value;
 
                 if (Log.Logger.IsEnabledFor(Level.Trace))
@@ -91,49 +89,49 @@ namespace SuperPutty
         protected override void OnTextChanged(EventArgs e)
         {
             base.OnTextChanged(e);
-            this.ToolTipText = this.Text;
+            ToolTipText = Text;
         }
 
         private void CreatePanel()
         {
-            this.m_AppPanel = new ApplicationPanel();
-            this.SuspendLayout();            
-            this.m_AppPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.m_AppPanel.ApplicationName = this.m_puttyStartInfo.Executable;
-            this.m_AppPanel.ApplicationParameters = this.m_puttyStartInfo.Args;
-            this.m_AppPanel.ApplicationWorkingDirectory = this.m_puttyStartInfo.WorkingDir;
-            this.m_AppPanel.Location = new System.Drawing.Point(0, 0);
-            this.m_AppPanel.Name = this.m_Session.SessionId; // "applicationControl1";
-            this.m_AppPanel.Size = new System.Drawing.Size(this.Width, this.Height);
-            this.m_AppPanel.TabIndex = 0;            
-            this.m_AppPanel.m_CloseCallback = this.m_ApplicationExit;
-            this.Controls.Add(this.m_AppPanel);
+            _mAppPanel = new ApplicationPanel();
+            SuspendLayout();            
+            _mAppPanel.Dock = DockStyle.Fill;
+            _mAppPanel.ApplicationName = _mPuttyStartInfo.Executable;
+            _mAppPanel.ApplicationParameters = _mPuttyStartInfo.Args;
+            _mAppPanel.ApplicationWorkingDirectory = _mPuttyStartInfo.WorkingDir;
+            _mAppPanel.Location = new System.Drawing.Point(0, 0);
+            _mAppPanel.Name = _mSession.SessionId; // "applicationControl1";
+            _mAppPanel.Size = new System.Drawing.Size(Width, Height);
+            _mAppPanel.TabIndex = 0;            
+            _mAppPanel.m_CloseCallback = _mApplicationExit;
+            Controls.Add(_mAppPanel);
 
-            this.ResumeLayout();
+            ResumeLayout();
         }
 
         void AdjustMenu()
         {
             // for mintty, disable the putty menu items
-            if (this.Session.Proto == ConnectionProtocol.Mintty)
+            if (Session.Proto == ConnectionProtocol.Mintty)
             {
-                this.toolStripPuttySep1.Visible = false;
-                this.eventLogToolStripMenuItem.Visible = false;
-                this.toolStripPuttySep2.Visible = false;
-                this.changeSettingsToolStripMenuItem.Visible = false;
-                this.copyAllToClipboardToolStripMenuItem.Visible = false;
-                this.restartSessionToolStripMenuItem.Visible = false;
-                this.clearScrollbackToolStripMenuItem.Visible = false;
-                this.resetTerminalToolStripMenuItem.Visible = false;
+                toolStripPuttySep1.Visible = false;
+                eventLogToolStripMenuItem.Visible = false;
+                toolStripPuttySep2.Visible = false;
+                changeSettingsToolStripMenuItem.Visible = false;
+                copyAllToClipboardToolStripMenuItem.Visible = false;
+                restartSessionToolStripMenuItem.Visible = false;
+                clearScrollbackToolStripMenuItem.Visible = false;
+                resetTerminalToolStripMenuItem.Visible = false;
             }
         }
 
         void CreateMenu()
         {
-            this.newSessionToolStripMenuItem.Enabled = SuperPuTTY.Settings.PuttyPanelShowNewSessionMenu;
+            newSessionToolStripMenuItem.Enabled = SuperPuTTY.Settings.PuttyPanelShowNewSessionMenu;
             if (SuperPuTTY.Settings.PuttyPanelShowNewSessionMenu)
             {
-                this.contextMenuStrip1.SuspendLayout();
+                contextMenuStrip1.SuspendLayout();
 
                 // BBB: do i need to dispose each one?
                 newSessionToolStripMenuItem.DropDownItems.Clear();
@@ -144,14 +142,14 @@ namespace SuperPutty
                     {
                         if (part == session.SessionName)
                         {
-                            ToolStripMenuItem newSessionTSMI = new ToolStripMenuItem
+                            var newSessionTsmi = new ToolStripMenuItem
                             {
                                 Tag = session,
                                 Text = session.SessionName
                             };
-                            newSessionTSMI.Click += new System.EventHandler(newSessionTSMI_Click);
-                            newSessionTSMI.ToolTipText = session.ToString();
-                            tsmiParent.DropDownItems.Add(newSessionTSMI);
+                            newSessionTsmi.Click += newSessionTSMI_Click;
+                            newSessionTsmi.ToolTipText = session.ToString();
+                            tsmiParent.DropDownItems.Add(newSessionTsmi);
                         }
                         else
                         {
@@ -168,27 +166,27 @@ namespace SuperPutty
                         }
                     }
                 }
-                this.contextMenuStrip1.ResumeLayout();
+                contextMenuStrip1.ResumeLayout();
             }
 
             DockPane pane = GetDockPane();
             if (pane != null)
             {
-                this.closeOthersToTheRightToolStripMenuItem.Enabled =
+                closeOthersToTheRightToolStripMenuItem.Enabled =
                     pane.Contents.IndexOf(this) != pane.Contents.Count - 1;
             }
-            this.closeOthersToolStripMenuItem.Enabled = this.DockPanel.DocumentsCount > 1;
-            this.closeAllToolStripMenuItem.Enabled = this.DockPanel.DocumentsCount > 1;
+            closeOthersToolStripMenuItem.Enabled = DockPanel.DocumentsCount > 1;
+            closeAllToolStripMenuItem.Enabled = DockPanel.DocumentsCount > 1;
         }
 
         private void closeSessionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void closeOthersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var docs = from doc in this.DockPanel.DocumentsToArray()
+            var docs = from doc in DockPanel.DocumentsToArray()
                        where doc is ToolWindowDocument && doc != this
                        select doc as ToolWindowDocument;
             CloseDocs("Close Others", docs);
@@ -196,7 +194,7 @@ namespace SuperPutty
 
         private void closeAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var docs = from doc in this.DockPanel.DocumentsToArray()
+            var docs = from doc in DockPanel.DocumentsToArray()
                        where doc is ToolWindowDocument
                        select doc as ToolWindowDocument;
             CloseDocs("Close All", docs);
@@ -220,8 +218,7 @@ namespace SuperPutty
                     }
                     if (close)
                     {
-                        ToolWindowDocument win = content as ToolWindowDocument;
-                        if (win != null)
+                        if (content is ToolWindowDocument win)
                         {
                             docsToClose.Add(win);
                         }
@@ -236,18 +233,19 @@ namespace SuperPutty
 
         void CloseDocs(string source, IEnumerable<ToolWindowDocument> docsToClose)
         {
-            int n = docsToClose.Count();
+            var docsToCloseList = docsToClose as IList<ToolWindowDocument> ?? docsToClose.ToList();
+            int n = docsToCloseList.Count;
             Log.InfoFormat("Closing mulitple docs: source={0}, count={1}, conf={2}", source, n, SuperPuTTY.Settings.MultipleTabCloseConfirmation);
 
             bool okToClose = true;
             if (SuperPuTTY.Settings.MultipleTabCloseConfirmation && n > 1)
             {
-                okToClose = DialogResult.Yes == MessageBox.Show(this, string.Format("Close {0} Tabs?", n), source, MessageBoxButtons.YesNo);
+                okToClose = DialogResult.Yes == MessageBox.Show(this, string.Format(LocalizedText.CtlPuttyPanel_CloseDocs_Close__0__Tabs_, n), source, MessageBoxButtons.YesNo);
             }
 
             if (okToClose)
             {
-                foreach (ToolWindowDocument doc in docsToClose)
+                foreach (ToolWindowDocument doc in docsToCloseList)
                 {
                     doc.Close();
                 }
@@ -256,7 +254,7 @@ namespace SuperPutty
 
         DockPane GetDockPane()
         {
-            return this.DockPanel.Panes.FirstOrDefault(pane => pane.Contents.Contains(this));
+            return DockPanel.Panes.FirstOrDefault(pane => pane.Contents.Contains(this));
         }
 
         /// <summary>
@@ -264,13 +262,13 @@ namespace SuperPutty
         /// </summary>
         internal void SetFocusToChildApplication(string caller)
         {
-            if (!this.m_AppPanel.ExternalProcessCaptured) { return; }
+            if (!_mAppPanel.ExternalProcessCaptured) { return; }
 
             bool success = false;
             for (int i = 0; i < RefocusAttempts; i++)
             {
                 Thread.Sleep(RefocusIntervalMs);
-                if (this.m_AppPanel.ReFocusPuTTY(caller))
+                if (_mAppPanel.ReFocusPuTTY(caller))
                 {
                     if (i > 0)
                     {
@@ -283,28 +281,29 @@ namespace SuperPutty
 
             if (!success)
             {
-                Log.WarnFormat("Unable to SetFocusToChildApplication, {0}", this.Text);
+                Log.WarnFormat("Unable to SetFocusToChildApplication, {0}", Text);
             }
         }
 
         protected override string GetPersistString()
         {
-            string str = String.Format("{0}?SessionId={1}&TabName={2}", 
-                this.GetType().FullName, 
-                HttpUtility.UrlEncodeUnicode(this.m_Session.SessionId), 
-                HttpUtility.UrlEncodeUnicode(this.TextOverride));
+            string str = string.Format(@"{0}?SessionId={1}&TabName={2}", 
+                GetType().FullName, 
+                HttpUtility.UrlEncode(_mSession.SessionId), 
+                HttpUtility.UrlEncode(TextOverride));
             return str;
         }
 
         /// <summary>Restore sessions from a string containing previous sessions</summary>
         /// <param name="persistString">A string containing the sessions to restore</param>
-        /// <returns>The <seealso cref="ctlPuttyPanel"/> object which is the parent of the hosted putty application, null if unable to start session</returns>
-        public static ctlPuttyPanel FromPersistString(String persistString)
+        /// <returns>The <seealso cref="CtlPuttyPanel"/> object which is the parent of the hosted putty application, null if unable to start session</returns>
+        public static CtlPuttyPanel FromPersistString(String persistString)
         {
-            ctlPuttyPanel panel = null;
-            if (persistString.StartsWith(typeof(ctlPuttyPanel).FullName))
+            if (persistString == null) throw new ArgumentNullException(nameof(persistString));
+            CtlPuttyPanel panel = null;
+            if (persistString.StartsWith(typeof(CtlPuttyPanel).FullName ?? throw new InvalidOperationException()))
             {
-                int idx = persistString.IndexOf("?");
+                int idx = persistString.IndexOf("?", StringComparison.Ordinal);
                 if (idx != -1)
                 {
                     NameValueCollection data = HttpUtility.ParseQueryString(persistString.Substring(idx + 1));
@@ -335,7 +334,7 @@ namespace SuperPutty
                 }
                 else
                 {
-                    idx = persistString.IndexOf(":");
+                    idx = persistString.IndexOf(":", StringComparison.Ordinal);
                     if (idx != -1)
                     {
                         string sessionId = persistString.Substring(idx + 1);
@@ -363,36 +362,31 @@ namespace SuperPutty
  
         private void duplicateSessionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SuperPuTTY.OpenPuttySession(this.m_Session);
+            SuperPuTTY.OpenPuttySession(_mSession);
         }
 
         private void renameTabToolStripMenuItem_Click(object sender, EventArgs e)
         {
             dlgRenameItem dialog = new dlgRenameItem
             {
-                ItemName = this.Text,
-                DetailName = this.m_Session.SessionId
+                ItemName = Text,
+                DetailName = _mSession.SessionId
             };
 
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
-                this.Text = dialog.ItemName;
-                this.TextOverride = dialog.ItemName;
+                Text = dialog.ItemName;
+                TextOverride = dialog.ItemName;
             }
         }
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (this.m_AppPanel != null)
-            {
-                this.m_AppPanel.RefreshAppWindow();
-            }
+            _mAppPanel?.RefreshAppWindow();
         }
 
-        public SessionData Session { get { return this.m_Session; } }
-        public ApplicationPanel AppPanel { get { return this.m_AppPanel; } }
-        public ctlPuttyPanel previousPanel { get; set; }
-        public ctlPuttyPanel nextPanel { get; set; }
+        public SessionData Session => _mSession;
+        public ApplicationPanel AppPanel => _mAppPanel;
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
@@ -401,9 +395,7 @@ namespace SuperPutty
 
         private void newSessionTSMI_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem menuItem = (ToolStripMenuItem) sender;
-            SessionData session = menuItem.Tag as SessionData;
-            if (session != null)
+            if (sender is ToolStripMenuItem menuItem && menuItem.Tag is SessionData session)
             {
                 SuperPuTTY.OpenPuttySession(session);
             }
@@ -424,10 +416,10 @@ namespace SuperPutty
             {
                 try
                 {
-                    this.SetFocusToChildApplication("MenuHandler");
-                    for (int i = 0; i < commands.Length; ++i)
+                    SetFocusToChildApplication("MenuHandler");
+                    foreach (uint t in commands)
                     {
-                        NativeMethods.SendMessage(m_AppPanel.AppWindowHandle, (uint)NativeMethods.WM.SYSCOMMAND, commands[i], 0);
+                        NativeMethods.SendMessage(_mAppPanel.AppWindowHandle, (uint)NativeMethods.WM.SYSCOMMAND, t, 0);
                     }
                 }
                 catch (Exception ex)
@@ -439,8 +431,8 @@ namespace SuperPutty
 
         public bool AcceptCommands
         {
-            get { return this.acceptCommandsToolStripMenuItem.Checked;  }
-            set { this.acceptCommandsToolStripMenuItem.Checked = value; }
+            get => acceptCommandsToolStripMenuItem.Checked;
+            set => acceptCommandsToolStripMenuItem.Checked = value;
         }
 
         public string TextOverride { get; set; }

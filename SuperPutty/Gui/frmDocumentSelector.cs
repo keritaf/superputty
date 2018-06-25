@@ -53,7 +53,7 @@ namespace SuperPutty
                 foreach (IDockContent doc in VisualOrderTabSwitchStrategy.GetDocuments(this.dockPanel))
                 {
                     i++;
-                    ctlPuttyPanel pp = doc as ctlPuttyPanel;
+                    CtlPuttyPanel pp = doc as CtlPuttyPanel;
                     if (pp != null)
                     {
                         string tabNum = pp == this.dockPanel.ActiveDocument ? i + "*" : i.ToString();
@@ -82,7 +82,7 @@ namespace SuperPutty
             Log.Debug("OK");
             foreach (ListViewItem item in this.listViewDocs.Items)
             {
-                ((ctlPuttyPanel)item.Tag).AcceptCommands = item.Selected;
+                ((CtlPuttyPanel)item.Tag).AcceptCommands = item.Selected;
             }
             this.DialogResult = DialogResult.OK;
             this.Hide();
@@ -97,7 +97,7 @@ namespace SuperPutty
             this.Hide();
         }
 
-        public bool IsDocumentSelected(ctlPuttyPanel document)
+        public bool IsDocumentSelected(CtlPuttyPanel document)
         {
             bool selected = false;
             if (document != null && document.Session != null)

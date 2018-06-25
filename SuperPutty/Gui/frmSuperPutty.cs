@@ -215,7 +215,7 @@ namespace SuperPutty
 
         void DockPanel_ContentAdded(object sender, DockContentEventArgs e)
         {
-            ctlPuttyPanel p = e.Content as ctlPuttyPanel;
+            CtlPuttyPanel p = e.Content as CtlPuttyPanel;
             if (p != null)
             {
                 p.TextChanged += puttyPanel_TextChanged;
@@ -224,7 +224,7 @@ namespace SuperPutty
 
         void DockPanel_ContentRemoved(object sender, DockContentEventArgs e)
         {
-            ctlPuttyPanel p = e.Content as ctlPuttyPanel;
+            CtlPuttyPanel p = e.Content as CtlPuttyPanel;
             if (p != null)
             {
                 p.TextChanged -= puttyPanel_TextChanged;
@@ -233,7 +233,7 @@ namespace SuperPutty
 
         void puttyPanel_TextChanged(object sender, EventArgs e)
         {
-            ctlPuttyPanel p = (ctlPuttyPanel)sender;
+            CtlPuttyPanel p = (CtlPuttyPanel)sender;
             if (p == this.DockPanel.ActiveDocument)
             {
                 UpdateWindowText(p.Text);
@@ -326,7 +326,7 @@ namespace SuperPutty
                         this.tabSwitcher.CurrentDocument = window;
                     }
 
-                    ctlPuttyPanel p = window as ctlPuttyPanel;
+                    CtlPuttyPanel p = window as CtlPuttyPanel;
                     if (p != null)
                     {
                         p.SetFocusToChildApplication(caller);
@@ -450,7 +450,7 @@ namespace SuperPutty
 
             foreach (ToolWindow content in this.tabSwitcher.Documents)
             {
-                ctlPuttyPanel panel = content as ctlPuttyPanel;
+                CtlPuttyPanel panel = content as CtlPuttyPanel;
                 if (panel != null)
                 {
                     SessionData sd = panel.Session;
@@ -472,7 +472,7 @@ namespace SuperPutty
             QuickSelector d = new QuickSelector();
             if (d.ShowDialog(this, data, opt) == DialogResult.OK)
             {
-                ctlPuttyPanel panel = (ctlPuttyPanel)d.SelectedItem.Tag;
+                CtlPuttyPanel panel = (CtlPuttyPanel)d.SelectedItem.Tag;
                 panel.Activate();
             }
         }
@@ -880,7 +880,7 @@ namespace SuperPutty
             else
             {
                 // putty session
-                ctlPuttyPanel puttyPanel = ctlPuttyPanel.FromPersistString(persistString);
+                CtlPuttyPanel puttyPanel = CtlPuttyPanel.FromPersistString(persistString);
                 if (puttyPanel != null)
                 {
                     return puttyPanel;
@@ -1163,9 +1163,9 @@ namespace SuperPutty
             {
                 foreach (IDockContent doc in VisualOrderTabSwitchStrategy.GetDocuments(this.DockPanel))
                 {
-                    if (doc is ctlPuttyPanel)
+                    if (doc is CtlPuttyPanel)
                     {
-                        ctlPuttyPanel panel = doc as ctlPuttyPanel;
+                        CtlPuttyPanel panel = doc as CtlPuttyPanel;
                         if (this.sendCommandsDocumentSelector.IsDocumentSelected(panel))
                         {
                             System.IntPtr hPtr = panel.AppPanel.AppWindowHandle;
@@ -1423,7 +1423,7 @@ namespace SuperPutty
 
         bool ExecuteSuperPuttyAction(SuperPuttyAction action)
         {
-            ctlPuttyPanel activePanel = this.DockPanel.ActiveDocument as ctlPuttyPanel;
+            CtlPuttyPanel activePanel = this.DockPanel.ActiveDocument as CtlPuttyPanel;
             bool success = true;
 
             Log.InfoFormat("Executing action, name={0}", action);
@@ -1579,7 +1579,7 @@ namespace SuperPutty
         {
             foreach (IDockContent c in this.DockPanel.Documents)
             {
-                ctlPuttyPanel panel = c as ctlPuttyPanel;
+                CtlPuttyPanel panel = c as CtlPuttyPanel;
                 if (panel != null)
                 {
                     NativeMethods.RECT rect = new NativeMethods.RECT();

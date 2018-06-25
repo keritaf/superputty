@@ -1,6 +1,6 @@
 ﻿namespace SuperPutty
 {
-    partial class ctlPuttyPanel
+    partial class CtlPuttyPanel
     {
         /// <summary>
         /// Required designer variable.
@@ -242,7 +242,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1339, 203);
-            this.Name = "ctlPuttyPanel";
+            this.Name = "CtlPuttyPanel";
             this.TabPageContextMenuStrip = this.contextMenuStrip1;
             this.Text = "PuTTY Session";
             this.contextMenuStrip1.ResumeLayout(false);

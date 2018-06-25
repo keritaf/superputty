@@ -423,10 +423,10 @@ namespace SuperPutty
 
         /// <summary>Open a new putty window with its settings being passed in a <seealso cref="SessionData"/> object</summary>
         /// <param name="session">The <seealso cref="SessionData"/> object containing the settings</param>
-        public static ctlPuttyPanel OpenPuttySession(SessionData session)
+        public static CtlPuttyPanel OpenPuttySession(SessionData session)
         {
             Log.InfoFormat("Opening putty session, id={0}", session == null ? "" : session.SessionId);
-            ctlPuttyPanel panel = null;
+            CtlPuttyPanel panel = null;
             if (session != null)
             {
                 String Executable = PuttyStartInfo.GetExecutable(session);
@@ -477,7 +477,7 @@ namespace SuperPutty
                 };
 
                 try {
-                    panel = new ctlPuttyPanel(session, callback);
+                    panel = new CtlPuttyPanel(session, callback);
 
                     ApplyDockRestrictions(panel);
                     ApplyIconForWindow(panel, session);

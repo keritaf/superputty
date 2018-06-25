@@ -101,6 +101,11 @@
     <Compile Include="Gui\dlgScriptEditor.Designer.cs">
       <DependentUpon>dlgScriptEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Gui\LocalizedText.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LocalizedText.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utils\GitRelease.cs" />
     <Compile Include="Gui\BaseViewModel.cs" />
     <Compile Include="Gui\DataGridViewProgressColumn.cs" />
@@ -323,6 +328,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Gui\KeyboardShortcutEditor.resx">
       <DependentUpon>KeyboardShortcutEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Gui\LocalizedText.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LocalizedText.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Gui\QuickSelector.resx">
       <DependentUpon>QuickSelector.cs</DependentUpon>
