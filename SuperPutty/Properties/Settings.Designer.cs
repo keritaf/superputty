@@ -720,7 +720,19 @@ namespace SuperPutty.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PersistCommandBarHistory {
+            get {
+                return ((bool)(this["PersistCommandBarHistory"]));
+            }
+            set {
+                this["PersistCommandBarHistory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool AllowPlainTextPuttyPasswordArg {
             get {
                 return ((bool)(this["AllowPlainTextPuttyPasswordArg"]));
@@ -744,13 +756,13 @@ namespace SuperPutty.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool PersistCommandBarHistory {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SaveCommandHistoryDays {
             get {
-                return ((bool)(this["PersistCommandBarHistory"]));
+                return ((int)(this["SaveCommandHistoryDays"]));
             }
             set {
-                this["PersistCommandBarHistory"] = value;
+                this["SaveCommandHistoryDays"] = value;
             }
         }
         
@@ -767,18 +779,7 @@ namespace SuperPutty.Properties {
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int SaveCommandHistoryDays {
-            get {
-                return ((int)(this["SaveCommandHistoryDays"]));
-            }
-            set {
-                this["SaveCommandHistoryDays"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(SuperPutty.Utils.PortableSettingsProvider))]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("None")]
         public global::System.Windows.Forms.Keys Action_RenameTab_Shortcut {

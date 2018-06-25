@@ -164,22 +164,22 @@
     <Setting Name="WinSCPExe" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="AllowPlainTextPuttyPasswordArg" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="PuttyDefaultParameters" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="PersistCommandBarHistory" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="CommandBarHistory" Type="System.String" Scope="User">
+    <Setting Name="AllowPlainTextPuttyPasswordArg" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PuttyDefaultParameters" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="SaveCommandHistoryDays" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="Action_RenameTab_Shortcut" Type="System.Windows.Forms.Keys" Scope="User">
+    <Setting Name="CommandBarHistory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Action_RenameTab_Shortcut" Provider="SuperPutty.Utils.PortableSettingsProvider" Type="System.Windows.Forms.Keys" Scope="User">
       <Value Profile="(Default)">None</Value>
     </Setting>
   </Settings>

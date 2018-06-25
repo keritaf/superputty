@@ -262,7 +262,10 @@
 </value>
   </data>
   <data name="richTextBox1.Text" xml:space="preserve">
-    <value>PuTTY is a SSH Terminal application written by Simon Tatham 
+    <value>Many contributors of code: 
+https://github.com/jimradford/superputty/graphs/contributors 
+
+PuTTY is a SSH Terminal application written by Simon Tatham 
 http://www.chiark.greenend.org.uk/~sgtatham/putty/
 
 Icons courtesy of FamFamFam  
@@ -275,7 +278,7 @@ Inspired by PuTTY Connection Manager
 http://puttycm.free.fr/</value>
   </data>
   <data name="textBox2.Text" xml:space="preserve">
-    <value>Copyright (c) 2009 - 2014 Jim Radford
+    <value>Copyright (c) 2009 - 2018 Jim Radford
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
