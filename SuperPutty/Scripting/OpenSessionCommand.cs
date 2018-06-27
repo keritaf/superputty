@@ -20,10 +20,11 @@
  */
 
 using log4net;
+using SuperPutty.App;
 using SuperPutty.Data;
 using SuperPutty.Utils;
 
-namespace SuperPuTTY.Scripting
+namespace SuperPutty.Scripting
 {
     public static partial class Commands
     {
@@ -35,10 +36,10 @@ namespace SuperPuTTY.Scripting
         internal static CommandData OpenSessionHandler(string arg)
         {            
             
-            SessionData session = SuperPutty.SuperPuTTY.GetSessionById(arg);
+            SessionData session = SuperPuTTY.GetSessionById(arg);
             if (session != null)
             {
-                SuperPutty.SuperPuTTY.OpenSession(new SessionDataStartInfo() { Session = session });
+                SuperPuTTY.OpenSession(new SessionDataStartInfo() { Session = session });
             }
             else
             {

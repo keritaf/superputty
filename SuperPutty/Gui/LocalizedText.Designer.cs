@@ -135,6 +135,110 @@ namespace SuperPutty.Gui {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error during update check.
+        /// </summary>
+        internal static string frmSuperPutty_checkForUpdatesToolStripMenuItem_Click_Error_during_update_check {
+            get {
+                return ResourceManager.GetString("frmSuperPutty_checkForUpdatesToolStripMenuItem_Click_Error_during_update_check", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SuperPuTTY Update Check.
+        /// </summary>
+        internal static string frmSuperPutty_checkForUpdatesToolStripMenuItem_Click_SuperPuTTY_Update_Check {
+            get {
+                return ResourceManager.GetString("frmSuperPutty_checkForUpdatesToolStripMenuItem_Click_SuperPuTTY_Update_Check", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SuperPutty Update Found.
+        /// </summary>
+        internal static string frmSuperPutty_checkForUpdatesToolStripMenuItem_Click_SuperPutty_Update_Found {
+            get {
+                return ResourceManager.GetString("frmSuperPutty_checkForUpdatesToolStripMenuItem_Click_SuperPutty_Update_Found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There was an error while checking for updates. Please try again later..
+        /// </summary>
+        internal static string frmSuperPutty_checkForUpdatesToolStripMenuItem_Click_There_was_an_error_while_checking_for_updates__Please_try_again_later_ {
+            get {
+                return ResourceManager.GetString("frmSuperPutty_checkForUpdatesToolStripMenuItem_Click_There_was_an_error_while_che" +
+                        "cking_for_updates__Please_try_again_later_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are running the latest version of SuperPutty.
+        /// </summary>
+        internal static string frmSuperPutty_checkForUpdatesToolStripMenuItem_Click_You_are_running_the_latest_version_of_SuperPutty {
+            get {
+                return ResourceManager.GetString("frmSuperPutty_checkForUpdatesToolStripMenuItem_Click_You_are_running_the_latest_v" +
+                        "ersion_of_SuperPutty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clean Up Complete.
+        /// </summary>
+        internal static string frmSuperPutty_cleanUpStrayProcessesToolStripMenuItem_Click_Clean_Up_Complete {
+            get {
+                return ResourceManager.GetString("frmSuperPutty_cleanUpStrayProcessesToolStripMenuItem_Click_Clean_Up_Complete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error Cleaning Processes.
+        /// </summary>
+        internal static string frmSuperPutty_cleanUpStrayProcessesToolStripMenuItem_Click_Error_Cleaning_Processes {
+            get {
+                return ResourceManager.GetString("frmSuperPutty_cleanUpStrayProcessesToolStripMenuItem_Click_Error_Cleaning_Process" +
+                        "es", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kill Processes?.
+        /// </summary>
+        internal static string frmSuperPutty_cleanUpStrayProcessesToolStripMenuItem_Click_Kill_Processes_ {
+            get {
+                return ResourceManager.GetString("frmSuperPutty_cleanUpStrayProcessesToolStripMenuItem_Click_Kill_Processes_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to copy all sessions from PuTTY/KiTTY?  Duplicates may be created..
+        /// </summary>
+        internal static string frmSuperPutty_fromPuTTYSettingsToolStripMenuItem_Click_Do_you_want_to_copy_all_sessions_from_PuTTY_KiTTY___Duplicates_may_be_created_ {
+            get {
+                return ResourceManager.GetString("frmSuperPutty_fromPuTTYSettingsToolStripMenuItem_Click_Do_you_want_to_copy_all_se" +
+                        "ssions_from_PuTTY_KiTTY___Duplicates_may_be_created_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local documentation could not be found. Would you like to view the documentation online instead?.
+        /// </summary>
+        internal static string frmSuperPutty_helpToolStripMenuItem1_Click_Local_documentation_could_not_be_found__Would_you_like_to_view_the_documentation_online_instead_ {
+            get {
+                return ResourceManager.GetString("frmSuperPutty_helpToolStripMenuItem1_Click_Local_documentation_could_not_be_found" +
+                        "__Would_you_like_to_view_the_documentation_online_instead_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} {1} MRUOld:{2}.
+        /// </summary>
+        internal static string frmSuperPutty_MRUOld {
+            get {
+                return ResourceManager.GetString("frmSuperPutty_MRUOld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File {0}, {1} kB Transferred ({2} kB/s) Time left {3}.
         /// </summary>
         internal static string frmTransferStatus_labelCurrentFile {
@@ -216,6 +320,51 @@ namespace SuperPutty.Gui {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Host is null.
+        /// </summary>
+        internal static string PscpClient_RunPscp_Host_is_null {
+            get {
+                return ResourceManager.GetString("PscpClient_RunPscp_Host_is_null", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid port: {0}.
+        /// </summary>
+        internal static string PscpClient_RunPscp_Invalid_port {
+            get {
+                return ResourceManager.GetString("PscpClient_RunPscp_Invalid_port", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Process timed out, args={0}.
+        /// </summary>
+        internal static string PscpClient_RunPscp_Process_timed_out {
+            get {
+                return ResourceManager.GetString("PscpClient_RunPscp_Process_timed_out", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pscp missing, path={0}..
+        /// </summary>
+        internal static string PscpClient_RunPscp_Pscp_missing {
+            get {
+                return ResourceManager.GetString("PscpClient_RunPscp_Pscp_missing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserName is null.
+        /// </summary>
+        internal static string PscpClient_RunPscp_UserName_is_null {
+            get {
+                return ResourceManager.GetString("PscpClient_RunPscp_UserName_is_null", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Host Key not found or changed.
         /// </summary>
         internal static string PscpTransfer_BeginGetDirectoryListing_Host_Key_not_found_or_changed {
@@ -282,6 +431,15 @@ namespace SuperPutty.Gui {
             get {
                 return ResourceManager.GetString("SessionDetail_sessionDetailPropertyGrid_PropertyValueChanged_Are_you_sure_that_yo" +
                         "u_want_to_save_the_password_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SuperPuTTY.
+        /// </summary>
+        internal static string SuperPuTTY {
+            get {
+                return ResourceManager.GetString("SuperPuTTY", resourceCulture);
             }
         }
         

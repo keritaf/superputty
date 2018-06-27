@@ -54,13 +54,13 @@ namespace SuperPutty.Scp
         void Presenter_AuthRequest(object sender, AuthEventArgs e)
         {
             // present login
-            using (dlgLogin login = new dlgLogin(e.UserName))
+            using (LoginDialog loginDialog = new LoginDialog(e.UserName))
             {
-                login.StartPosition = FormStartPosition.CenterParent;
-                if (login.ShowDialog(this) == DialogResult.OK)
+                loginDialog.StartPosition = FormStartPosition.CenterParent;
+                if (loginDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    e.UserName = login.Username;
-                    e.Password = login.Password;
+                    e.UserName = loginDialog.Username;
+                    e.Password = loginDialog.Password;
                     e.Handled = true;
                 }
                 else
@@ -402,7 +402,7 @@ namespace SuperPutty.Scp
         }
 
         IBrowserPresenter Presenter { get; set; }
-        BrowserFileInfoComparer Comparer { get; set; }
+        BrowserFileInfoComparer Comparer { get; }
         public bool ConfirmTransfer { get; set; }
 
 

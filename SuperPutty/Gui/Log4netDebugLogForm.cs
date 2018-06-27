@@ -1,13 +1,13 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
-using log4net.Appender;
 using log4net;
-using log4net.Repository.Hierarchy;
+using log4net.Appender;
 using log4net.Core;
 using log4net.Layout;
-using System.IO;
+using log4net.Repository.Hierarchy;
 
-namespace SuperPutty
+namespace SuperPutty.Gui
 {
     public partial class Log4netLogViewer : ToolWindow
     {

@@ -23,13 +23,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Threading;
 using System.Text.RegularExpressions;
+using System.Threading;
+using SuperPutty.App;
 using SuperPutty.Data;
 using SuperPutty.Gui;
 
-
-namespace SuperPutty
+namespace SuperPutty.Utils
 {
     public enum RequestResult
     {
@@ -143,8 +143,8 @@ namespace SuperPutty
              * 10.17 ‘Network error: Connection timed out’ error: Connection timed out
              */
 
-        private dlgLogin m_Login;
-        private SessionData m_Session;
+        private readonly LoginDialog _mLoginDialog;
+        private readonly SessionData m_Session;
 
         private PuttyClosedCallback m_PuttyClosed;
 
@@ -158,7 +158,7 @@ namespace SuperPutty
         public PscpTransfer(SessionData session)
         {
             m_Session = session;
-            m_Login = new dlgLogin(m_Session);
+            _mLoginDialog = new LoginDialog(m_Session);
         }
 
         private bool m_DirIsBusy;
@@ -182,12 +182,12 @@ namespace SuperPutty
              */
             if (String.IsNullOrEmpty(m_Session.Username))
             {
-                if (m_Login.ShowDialog(SuperPuTTY.MainForm) == System.Windows.Forms.DialogResult.OK)
+                if (_mLoginDialog.ShowDialog(SuperPuTTY.MainForm) == System.Windows.Forms.DialogResult.OK)
                 {
-                    m_Session.Username = m_Login.Username;
-                    m_Session.Password = m_Login.Password;
+                    m_Session.Username = _mLoginDialog.Username;
+                    m_Session.Password = _mLoginDialog.Password;
 
-                    if (m_Login.Remember)
+                    if (_mLoginDialog.Remember)
                     {
                         //Session.SaveToRegistry(); // passwords are *never* saved and stored permanently
                         SuperPuTTY.SaveSessions();
@@ -431,10 +431,10 @@ namespace SuperPutty
         {
             if (String.IsNullOrEmpty(m_Session.Username))
             {
-                if (m_Login.ShowDialog(SuperPuTTY.MainForm) == System.Windows.Forms.DialogResult.OK)
+                if (_mLoginDialog.ShowDialog(SuperPuTTY.MainForm) == System.Windows.Forms.DialogResult.OK)
                 {
-                    m_Session.Username = m_Login.Username;
-                    m_Session.Password = m_Login.Password;
+                    m_Session.Username = _mLoginDialog.Username;
+                    m_Session.Password = _mLoginDialog.Password;
                 }
             }
 

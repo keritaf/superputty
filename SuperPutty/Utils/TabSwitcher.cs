@@ -25,6 +25,7 @@ using System.Linq;
 using System.Text;
 using WeifenLuo.WinFormsUI.Docking;
 using log4net;
+using SuperPutty.Gui;
 
 namespace SuperPutty.Utils
 {
@@ -169,7 +170,7 @@ namespace SuperPutty.Utils
         public IList<IDockContent> Documents => tabSwitchStrategy.GetDocuments();
 
         public ToolWindow ActiveDocument => (ToolWindow)DockPanel.ActiveDocument;
-        public DockPanel DockPanel { get; private set; }
+        public DockPanel DockPanel { get; }
         public bool IsSwitchingTabs { get; set; }
 
         ITabSwitchStrategy tabSwitchStrategy;
@@ -380,7 +381,7 @@ namespace SuperPutty.Utils
 
         DockPanel DockPanel { get; set; }
 
-        private IList<IDockContent> docs = new List<IDockContent>();
+        private readonly IList<IDockContent> docs = new List<IDockContent>();
 
     }
     #endregion

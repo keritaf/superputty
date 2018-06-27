@@ -21,7 +21,7 @@
 
 using System;
 
-namespace SuperPutty
+namespace SuperPutty.App
 {
     public delegate void LogCallback(string logLine);
     public static class Logger

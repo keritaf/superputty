@@ -2,6 +2,7 @@
 using SuperPutty.Gui;
 using SuperPutty.Data;
 using System.Drawing;
+using SuperPutty;
 
 namespace SuperPuttyUnitTests
 {

@@ -82,6 +82,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LocalizedText.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LocalizedText.resx</DependentUpon>
+    </Compile>
     <Compile Include="QuickSelectorTests.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -137,6 +142,10 @@
     <Content Include="NUnit\nunit.uikit.dll" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="LocalizedText.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LocalizedText.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="TestAppRunner.resx">
       <DependentUpon>TestAppRunner.cs</DependentUpon>
     </EmbeddedResource>

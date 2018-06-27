@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using log4net;
 using System.Collections.Generic;
+using SuperPutty.Gui;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace SuperPutty.Utils
@@ -15,7 +16,7 @@ namespace SuperPutty.Utils
 
         private IDictionary<IntPtr, CtlPuttyPanel> childWindows = new Dictionary<IntPtr, CtlPuttyPanel>();
 
-        public ChildWindowFocusHelper(frmSuperPutty form)
+        public ChildWindowFocusHelper(SuperPuttyForm form)
         {
             MainForm = form;
             MainForm.ResizeEnd += HandleResizeEnd;
@@ -174,6 +175,6 @@ namespace SuperPutty.Utils
             MainForm.FocusActiveDocument("ResizeEnd");
         }
 
-        frmSuperPutty MainForm { get; set; }
+        SuperPuttyForm MainForm { get; }
     }
 }

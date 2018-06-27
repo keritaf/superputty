@@ -1,10 +1,10 @@
-﻿using SuperPutty.Data;
-using SuperPutty.Utils;
-using System;
+﻿using System;
 using System.Windows.Forms;
-using SuperPutty.Gui;
+using SuperPutty.App;
+using SuperPutty.Data;
+using SuperPutty.Utils;
 
-namespace SuperPutty
+namespace SuperPutty.Gui
 {
     public partial class SessionDetail : ToolWindow
     {

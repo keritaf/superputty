@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using SuperPutty.App;
 using SuperPutty.Gui;
 
 namespace SuperPutty.Data

@@ -216,4 +216,55 @@ You must connect to this host with with a PuTTY ssh terminal to accept the key a
   <data name="Commands_SleepHandler_The_argument_passed_to_SLEEP_is_not_valid__Must_be_a_positive_whole_number_" xml:space="preserve">
     <value>The argument passed to SLEEP is not valid. Must be a positive whole number.</value>
   </data>
+  <data name="frmSuperPutty_fromPuTTYSettingsToolStripMenuItem_Click_Do_you_want_to_copy_all_sessions_from_PuTTY_KiTTY___Duplicates_may_be_created_" xml:space="preserve">
+    <value>Do you want to copy all sessions from PuTTY/KiTTY?  Duplicates may be created.</value>
+  </data>
+  <data name="SuperPuTTY" xml:space="preserve">
+    <value>SuperPuTTY</value>
+  </data>
+  <data name="frmSuperPutty_helpToolStripMenuItem1_Click_Local_documentation_could_not_be_found__Would_you_like_to_view_the_documentation_online_instead_" xml:space="preserve">
+    <value>Local documentation could not be found. Would you like to view the documentation online instead?</value>
+  </data>
+  <data name="frmSuperPutty_MRUOld" xml:space="preserve">
+    <value>{0} {1} MRUOld:{2}</value>
+  </data>
+  <data name="frmSuperPutty_cleanUpStrayProcessesToolStripMenuItem_Click_Kill_Processes_" xml:space="preserve">
+    <value>Kill Processes?</value>
+  </data>
+  <data name="frmSuperPutty_cleanUpStrayProcessesToolStripMenuItem_Click_Clean_Up_Complete" xml:space="preserve">
+    <value>Clean Up Complete</value>
+  </data>
+  <data name="frmSuperPutty_cleanUpStrayProcessesToolStripMenuItem_Click_Error_Cleaning_Processes" xml:space="preserve">
+    <value>Error Cleaning Processes</value>
+  </data>
+  <data name="frmSuperPutty_checkForUpdatesToolStripMenuItem_Click_SuperPutty_Update_Found" xml:space="preserve">
+    <value>SuperPutty Update Found</value>
+  </data>
+  <data name="frmSuperPutty_checkForUpdatesToolStripMenuItem_Click_You_are_running_the_latest_version_of_SuperPutty" xml:space="preserve">
+    <value>You are running the latest version of SuperPutty</value>
+  </data>
+  <data name="frmSuperPutty_checkForUpdatesToolStripMenuItem_Click_SuperPuTTY_Update_Check" xml:space="preserve">
+    <value>SuperPuTTY Update Check</value>
+  </data>
+  <data name="frmSuperPutty_checkForUpdatesToolStripMenuItem_Click_Error_during_update_check" xml:space="preserve">
+    <value>Error during update check</value>
+  </data>
+  <data name="frmSuperPutty_checkForUpdatesToolStripMenuItem_Click_There_was_an_error_while_checking_for_updates__Please_try_again_later_" xml:space="preserve">
+    <value>There was an error while checking for updates. Please try again later.</value>
+  </data>
+  <data name="PscpClient_RunPscp_Pscp_missing" xml:space="preserve">
+    <value>Pscp missing, path={0}.</value>
+  </data>
+  <data name="PscpClient_RunPscp_Invalid_port" xml:space="preserve">
+    <value>Invalid port: {0}</value>
+  </data>
+  <data name="PscpClient_RunPscp_Host_is_null" xml:space="preserve">
+    <value>Host is null</value>
+  </data>
+  <data name="PscpClient_RunPscp_UserName_is_null" xml:space="preserve">
+    <value>UserName is null</value>
+  </data>
+  <data name="PscpClient_RunPscp_Process_timed_out" xml:space="preserve">
+    <value>Process timed out, args={0}</value>
+  </data>
 </root>

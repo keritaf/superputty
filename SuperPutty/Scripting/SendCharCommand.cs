@@ -21,7 +21,7 @@
 
 using SuperPutty.Utils;
 
-namespace SuperPuTTY.Scripting
+namespace SuperPutty.Scripting
 {
     public static partial class Commands
     {

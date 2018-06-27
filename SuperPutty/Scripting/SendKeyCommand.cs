@@ -24,20 +24,20 @@ using System.Globalization;
 using System.Windows.Forms;
 using SuperPutty.Utils;
 
-namespace SuperPuTTY.Scripting
+namespace SuperPutty.Scripting
 {
     public static partial class Commands
     {
         /// <summary>Holds the Key and associate Key entry</summary>
         private class KeywordVk
         {
-            internal string keyword;
-            internal int vk;
+            internal readonly string Keyword;
+            internal readonly int Vk;
 
             public KeywordVk(string key, int v)
             {
-                keyword = key;
-                vk = v;
+                Keyword = key;
+                Vk = v;
             }
         }
 
@@ -45,8 +45,7 @@ namespace SuperPuTTY.Scripting
         private const int HAVECTRL = 1;
         private const int HAVEALT = 2;
 
-        private static KeywordVk[] keywords = new KeywordVk[]
-        {
+        private static readonly KeywordVk[] Keywords = {
             new KeywordVk("ENTER", (int)Keys.Return),
             new KeywordVk("TAB",         (int)Keys.Tab),
             new KeywordVk("ESC",         (int)Keys.Escape),
@@ -235,11 +234,11 @@ namespace SuperPuTTY.Scripting
         /// <returns>An Integer corresponding to the matched keyword, or -1 if none exists</returns>
         private static int MatchKeyword(string keyword)
         {
-            foreach (KeywordVk t in keywords)
+            foreach (KeywordVk t in Keywords)
             {
-                if (String.Equals(t.keyword, keyword, StringComparison.OrdinalIgnoreCase))
+                if (String.Equals(t.Keyword, keyword, StringComparison.OrdinalIgnoreCase))
                 {
-                    return t.vk;
+                    return t.Vk;
                 }
             }
             return -1;

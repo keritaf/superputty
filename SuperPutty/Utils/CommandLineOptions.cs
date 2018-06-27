@@ -5,6 +5,8 @@ using SuperPutty.Data;
 using log4net;
 using System.Web;
 using System.Text.RegularExpressions;
+using SuperPutty.App;
+using SuperPutty.Gui;
 
 namespace SuperPutty.Utils
 {
@@ -210,7 +212,7 @@ namespace SuperPutty.Utils
                     HostConnectionString connStr = new HostConnectionString(Host);
                     Host = connStr.Host;
                     Protocol = connStr.Protocol.GetValueOrDefault(Protocol.GetValueOrDefault(ConnectionProtocol.SSH));
-                    Port = connStr.Port.GetValueOrDefault(Port.GetValueOrDefault(dlgEditSession.GetDefaultPort(Protocol.GetValueOrDefault())));
+                    Port = connStr.Port.GetValueOrDefault(Port.GetValueOrDefault(EditSessionDialog.GetDefaultPort(Protocol.GetValueOrDefault())));
                     sessionName = Host;
                 }
                 else
@@ -284,7 +286,7 @@ namespace SuperPutty.Utils
         public string ExePath { get; private set; }
         public string Layout { get; private set; }
         public string SessionId { get; private set; }
-        public bool IsValid { get; private set; }
+        public bool IsValid { get; }
 
         public bool UseScp { get; private set; }
         public ConnectionProtocol? Protocol { get; private set; }

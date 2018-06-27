@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using SuperPutty.Data;
+using SuperPutty.Gui;
 
 namespace SuperPutty.Scp
 {

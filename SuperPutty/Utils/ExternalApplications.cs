@@ -2,6 +2,7 @@
 using log4net;
 using SuperPutty.Data;
 using System.Diagnostics;
+using SuperPutty.App;
 
 namespace SuperPutty.Utils
 {

@@ -20,19 +20,19 @@
  */
 
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
-using System.IO;
-using log4net;
-using System.Configuration;
 using System.Collections.Generic;
-using SuperPutty.Utils;
+using System.ComponentModel;
+using System.Configuration;
+using System.Diagnostics;
+using System.IO;
 using System.Text;
-using SuperPutty.Gui;
+using System.Windows.Forms;
+using log4net;
+using SuperPutty.App;
+using SuperPutty.Utils;
+using WeifenLuo.WinFormsUI.Docking;
 
-namespace SuperPutty
+namespace SuperPutty.Gui
 {
     public delegate void PuttyClosedCallback(bool error);
 
@@ -264,15 +264,15 @@ namespace SuperPutty
             string controlText = sb.ToString();
             string parentText = ((CtlPuttyPanel)Parent).TextOverride;
 
-            switch ((frmSuperPutty.TabTextBehavior)Enum.Parse(typeof(frmSuperPutty.TabTextBehavior), SuperPuTTY.Settings.TabTextBehavior))
+            switch ((SuperPuttyForm.TabTextBehavior)Enum.Parse(typeof(SuperPuttyForm.TabTextBehavior), SuperPuTTY.Settings.TabTextBehavior))
             {
-                case frmSuperPutty.TabTextBehavior.Static:
+                case SuperPuttyForm.TabTextBehavior.Static:
                     Parent.Text = parentText;
                     break;
-                case frmSuperPutty.TabTextBehavior.Dynamic:
+                case SuperPuttyForm.TabTextBehavior.Dynamic:
                     Parent.Text = controlText;
                     break;
-                case frmSuperPutty.TabTextBehavior.Mixed:
+                case SuperPuttyForm.TabTextBehavior.Mixed:
                     Parent.Text = parentText + ": " + controlText;
                     break;
             }

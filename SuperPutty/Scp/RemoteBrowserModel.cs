@@ -66,7 +66,7 @@ namespace SuperPutty.Scp
         }
 
         public SessionData Session { get; private set; }
-        public PscpOptions Options { get; private set; }
+        public PscpOptions Options { get; }
     }
 
 }

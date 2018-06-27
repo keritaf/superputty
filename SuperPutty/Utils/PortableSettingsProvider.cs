@@ -40,7 +40,7 @@ namespace SuperPutty.Utils
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(PortableSettingsProvider));
 
-        private static bool ForceRoamingSettings = Convert.ToBoolean(ConfigurationManager.AppSettings["SuperPuTTY.ForceRoamingSettings"] ?? "True");
+        private static readonly bool ForceRoamingSettings = Convert.ToBoolean(ConfigurationManager.AppSettings["SuperPuTTY.ForceRoamingSettings"] ?? "True");
 
         public const string SettingsRoot = "Settings";
 

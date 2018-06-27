@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using log4net;
 using Microsoft.Win32;
+using SuperPutty.App;
 using SuperPutty.Data;
 using SuperPutty.Utils;
 

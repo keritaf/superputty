@@ -18,13 +18,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 using System;
+using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Text;
-using System.IO;
 
-namespace SuperPutty
+namespace SuperPutty.Utils
 {
     public class RequestState
     {

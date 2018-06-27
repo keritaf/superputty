@@ -26,16 +26,15 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using log4net;
+using SuperPutty.App;
 using SuperPutty.Data;
 using SuperPutty.Utils;
 using WeifenLuo.WinFormsUI.Docking;
-using SuperPutty.Gui;
-using System.Text.RegularExpressions;
 
-
-namespace SuperPutty
+namespace SuperPutty.Gui
 {
     public delegate void SelectionChangedHandler(SessionData Session);
 
@@ -44,7 +43,7 @@ namespace SuperPutty
         public event SelectionChangedHandler SelectionChanged;
         private static readonly ILog Log = LogManager.GetLogger(typeof(SessionTreeview));
 
-        private static int MaxSessionsToOpen = Convert.ToInt32(ConfigurationManager.AppSettings["SuperPuTTY.MaxSessionsToOpen"] ?? "10");
+        private static readonly int MaxSessionsToOpen = Convert.ToInt32(ConfigurationManager.AppSettings["SuperPuTTY.MaxSessionsToOpen"] ?? "10");
 
         public const string SessionIdDelim = "/";
         public const string ImageKeySession = "computer";
@@ -322,7 +321,7 @@ namespace SuperPutty
                 }
             }
 
-            dlgEditSession form = new dlgEditSession(session, treeView1.ImageList) {Text = title};
+            EditSessionDialog form = new EditSessionDialog(session, treeView1.ImageList) {Text = title};
             form.SessionNameValidator += delegate(string txt, out string error)
             {
                 bool IsValid = ValidateSessionNameChange(nodeRef, node, txt, out error);

@@ -20,8 +20,9 @@
  */
 
 using System.Windows.Forms;
+using SuperPutty.App;
 
-namespace SuperPutty
+namespace SuperPutty.Gui
 {
     public partial class DebugLogViewer : ToolWindow
     {

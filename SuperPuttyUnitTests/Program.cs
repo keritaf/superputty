@@ -10,16 +10,16 @@ namespace SuperPuttyUnitTests
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
 
-        static bool initialized = false;
+        private static bool _initialized;
 
         public static void InitLoggingForUnitTests()
         {
             lock (Log)
             {
-                if (!initialized)
+                if (!_initialized)
                 {
                     log4net.Config.BasicConfigurator.Configure();
-                    initialized = true;
+                    _initialized = true;
                 }
             }
         }
@@ -38,16 +38,16 @@ namespace SuperPuttyUnitTests
 
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            string msg = String.Format("Unhandled Domain Exception: isTerminating={0}, ex={1}", e.IsTerminating, e.ExceptionObject);
+            string msg = string.Format(LocalizedText.Program_CurrentDomain_UnhandledException_isTerminating, e.IsTerminating, e.ExceptionObject);
             Log.Error(msg);
-            MessageBox.Show(msg, "CurrentDomain_UnhandledException");
+            MessageBox.Show(msg, LocalizedText.Program_CurrentDomain_UnhandledException_CurrentDomain_UnhandledException);
         }
 
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
-            string msg = String.Format("ThreadException : ex={0}", e.Exception);
+            string msg = String.Format(LocalizedText.Program_Application_ThreadException_, e.Exception);
             Log.Error(msg);
-            MessageBox.Show(msg, "Application_ThreadException");
+            MessageBox.Show(msg, LocalizedText.Program_Application_ThreadException_Application_ThreadException);
         }
 
 
@@ -60,7 +60,7 @@ namespace SuperPuttyUnitTests
             if (returnCode != 0)
                 Console.Beep();
 
-            Console.WriteLine("Complete - Any key to kill");
+            Console.WriteLine(LocalizedText.Program_RunConsole_Complete___Any_key_to_kill);
             Console.ReadLine();
         }
 

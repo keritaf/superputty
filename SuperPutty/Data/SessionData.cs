@@ -31,6 +31,7 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Drawing.Design;
 using System.Drawing;
+using SuperPutty.App;
 using SuperPutty.Utils;
 
 namespace SuperPutty.Data

@@ -20,18 +20,18 @@
  */
 
 using System;
-using System.Windows.Forms;
-using System.Threading;
-using log4net;
 using System.Configuration;
-using SuperPutty.Utils;
-using System.Reflection;
-using System.IO;
 using System.Drawing;
+using System.IO;
+using System.Reflection;
 using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+using log4net;
 using SuperPutty.Gui;
+using SuperPutty.Utils;
 
-namespace SuperPutty
+namespace SuperPutty.App
 {
     static class Program
     {
@@ -87,7 +87,7 @@ namespace SuperPutty
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 
-                frmSuperPutty mainForm = new frmSuperPutty();
+                SuperPuttyForm mainForm = new SuperPuttyForm();
                 SetDefaultIcon(mainForm);
                 Application.Run(SuperPuTTY.MainForm = mainForm);
                 SuperPuTTY.Shutdown();

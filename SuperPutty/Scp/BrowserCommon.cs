@@ -107,7 +107,7 @@ namespace SuperPutty.Scp
             return sb.ToString();
         }
 
-        public BrowserFileInfo Path { get; private set; }
+        public BrowserFileInfo Path { get; }
         public List<BrowserFileInfo> Files { get; set; }
 
         public int FileCount { get; set; }

@@ -24,7 +24,7 @@ using System.Threading;
 using SuperPutty.Gui;
 using SuperPutty.Utils;
 
-namespace SuperPuTTY.Scripting
+namespace SuperPutty.Scripting
 {
     public static partial class Commands
     {

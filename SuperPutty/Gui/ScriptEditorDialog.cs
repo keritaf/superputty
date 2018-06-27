@@ -20,12 +20,12 @@
  */
 
 using System;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
 
-namespace SuperPutty
+namespace SuperPutty.Gui
 {
-    public partial class dlgScriptEditor : Form
+    public partial class ScriptEditorDialog : Form
     {
         /// <summary>Raised when a script is ready to execute.</summary>
         public event ExecuteScriptEventHandler ScriptReady;
@@ -38,7 +38,7 @@ namespace SuperPutty
         }
 
         /// <summary>A dialog that allows opening, saving, editing and executing multiline scripts</summary>
-        public dlgScriptEditor()
+        public ScriptEditorDialog()
         {
             InitializeComponent();
             ActiveControl = textBoxSript;         

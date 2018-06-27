@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
-namespace SuperPutty
+
+namespace SuperPutty.Utils
 {
     [DataContract]
     public class GitRelease

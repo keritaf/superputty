@@ -1,6 +1,6 @@
-﻿namespace SuperPutty
+﻿namespace SuperPutty.Gui
 {
-    partial class dlgScriptEditor
+    partial class ScriptEditorDialog
     {
         /// <summary>
         /// Required designer variable.
@@ -96,7 +96,7 @@
             this.saveFileDialog1.DefaultExt = "spsl";
             this.saveFileDialog1.Filter = "script files (*.spsl)|*.spsl|txt files (*.txt)|*.txt|All files (*.*)|*.*";
             // 
-            // dlgScriptEditor
+            // ScriptEditorDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -107,7 +107,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.buttonSendScript);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.Name = "dlgScriptEditor";
+            this.Name = "ScriptEditorDialog";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

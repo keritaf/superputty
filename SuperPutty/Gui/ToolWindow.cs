@@ -21,7 +21,7 @@
 
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace SuperPutty
+namespace SuperPutty.Gui
 {
     public partial class ToolWindow : DockContent
     {

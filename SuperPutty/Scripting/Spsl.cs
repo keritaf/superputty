@@ -22,10 +22,10 @@
 using System;
 using System.Linq;
 using log4net;
-using SuperPutty;
+using SuperPutty.Gui;
 using SuperPutty.Utils;
 
-namespace SuperPuTTY.Scripting
+namespace SuperPutty.Scripting
 {
     /// <summary>SuperPuTTY Scripting Language</summary>
     public class SPSL
@@ -35,19 +35,18 @@ namespace SuperPuTTY.Scripting
         /// <summary>Holds the Key and associate Key entry</summary>
         private class SPSLFunction
         {
-            internal string command;
-            internal Func<string, CommandData> function;
+            internal readonly string Command;
+            internal readonly Func<string, CommandData> Function;
 
             public SPSLFunction(string cmd, Func<string, CommandData> func)
             {
-                command = cmd;
-                function = func;
+                Command = cmd;
+                Function = func;
             }
         }
 
         /// <summary>Available SPSL Functions and their associated handlers</summary>
-        private static SPSLFunction[] keywords = new SPSLFunction[]
-        {
+        private static readonly SPSLFunction[] Keywords = {
             new SPSLFunction("SENDKEY", Commands.SendKeyHandler),
             new SPSLFunction("OPENSESSION", Commands.OpenSessionHandler),
             new SPSLFunction("CLOSESESSION", Commands.CloseSessionHandler),
@@ -123,9 +122,9 @@ namespace SuperPuTTY.Scripting
         private static Func<string, CommandData> MatchCommand(string command)
         {
             return (from t 
-                    in keywords
-                    where String.Equals(t.command, command, StringComparison.OrdinalIgnoreCase)
-                    select t.function).FirstOrDefault();
+                    in Keywords
+                    where String.Equals(t.Command, command, StringComparison.OrdinalIgnoreCase)
+                    select t.Function).FirstOrDefault();
         }
     }
 }

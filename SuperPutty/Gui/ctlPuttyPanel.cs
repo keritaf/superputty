@@ -22,23 +22,22 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Web;
 using System.Windows.Forms;
 using log4net;
-using System.Diagnostics;
-using System.Web;
-using System.Collections.Specialized;
-using SuperPutty.Data;
-using WeifenLuo.WinFormsUI.Docking;
-using SuperPutty.Utils;
-using System.Threading;
-using System.Configuration;
-using SuperPutty.Gui;
 using log4net.Core;
+using SuperPutty.App;
+using SuperPutty.Data;
+using SuperPutty.Utils;
+using WeifenLuo.WinFormsUI.Docking;
 
-
-namespace SuperPutty
+namespace SuperPutty.Gui
 {
     /// <inheritdoc />
     /// <summary>A control that hosts a putty window</summary>

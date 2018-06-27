@@ -22,7 +22,7 @@ namespace SuperPutty.Scp
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FileTransferPresenter));
 
-        private IDictionary<int, FileTransfer> fileTranfers = new Dictionary<int, FileTransfer>();
+        private readonly IDictionary<int, FileTransfer> fileTranfers = new Dictionary<int, FileTransfer>();
 
         public FileTransferPresenter(PscpOptions options)
         {
@@ -211,8 +211,8 @@ namespace SuperPutty.Scp
             return transfer;
         }
 
-        public FileTransferViewModel ViewModel { get; private set; }
-        public PscpOptions Options { get; private set; }
+        public FileTransferViewModel ViewModel { get; }
+        public PscpOptions Options { get; }
 
     } 
     #endregion

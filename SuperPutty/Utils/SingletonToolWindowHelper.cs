@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
+using SuperPutty.App;
+using SuperPutty.Gui;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace SuperPutty.Utils

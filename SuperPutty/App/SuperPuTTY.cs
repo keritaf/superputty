@@ -23,22 +23,22 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using log4net;
 using SuperPutty.Data;
+using SuperPutty.Gui;
 using SuperPutty.Properties;
+using SuperPutty.Scp;
+using SuperPutty.Scripting;
 using SuperPutty.Utils;
 using WeifenLuo.WinFormsUI.Docking;
-using System.Windows.Forms;
-using System.Text.RegularExpressions;
-using System.Drawing;
-using SuperPutty.Gui;
-using SuperPutty.Scp;
-using SuperPuTTY.Scripting;
 
-namespace SuperPutty
+namespace SuperPutty.App
 {
     /// <summary>
     /// Represents the SuperPuTTY application itself
@@ -776,7 +776,7 @@ namespace SuperPutty
         public static string Version => Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         internal static Settings Settings => Settings.Default;
-        public static frmSuperPutty MainForm { get; set; }        
+        public static SuperPuttyForm MainForm { get; set; }        
         public static string LayoutsDir => Path.Combine(Settings.SettingsFolder, "layouts");
         public static LayoutData CurrentLayout { get; private set; }
         public static LayoutData StartingLayout { get; private set; }

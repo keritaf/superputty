@@ -20,17 +20,17 @@
  */
 
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
-using SuperPutty.Data;
 using log4net;
-using SuperPutty.Gui;
+using SuperPutty.Data;
+using SuperPutty.Utils;
+using WeifenLuo.WinFormsUI.Docking;
 
-namespace SuperPutty
+namespace SuperPutty.Gui
 {
     public partial class RemoteFileListPanel : ToolWindowDocument
     {
@@ -66,11 +66,11 @@ namespace SuperPutty
                     case RequestResult.RetryAuthentication:
                         BeginInvoke(new Action(() =>
                         {
-                            dlgLogin m_Login = new dlgLogin(m_Session);
-                            if (m_Login.ShowDialog(this) == DialogResult.OK)
+                            LoginDialog mLoginDialog = new LoginDialog(m_Session);
+                            if (mLoginDialog.ShowDialog(this) == DialogResult.OK)
                             {
-                                m_Session.Username = m_Login.Username;
-                                m_Session.Password = m_Login.Password;
+                                m_Session.Username = mLoginDialog.Username;
+                                m_Session.Password = mLoginDialog.Password;
                                 LoadDirectory(path);
                             }
                             else
@@ -271,8 +271,8 @@ namespace SuperPutty
                     Log.WarnFormat("Dropped Unknown {0} on {1}", file, target);
             }
             //Logger.Log("Total Bytes: {0} Total Files: {1}", totalBytes, fileCount);
-            frmTransferStatus frmStatus = new frmTransferStatus {Text = "Uploading files to " + m_Session.SessionName};
-            frmStatus.Show(m_DockPanel, DockState.DockBottom);
+            FileTransferProgressForm fileProgressForm = new FileTransferProgressForm {Text = "Uploading files to " + m_Session.SessionName};
+            fileProgressForm.Show(m_DockPanel, DockState.DockBottom);
 
             void TransferUpdateCallback(bool fileComplete, bool cancelTransfer, FileTransferStatus status)
             {
@@ -280,7 +280,7 @@ namespace SuperPutty
                 {
                     Log.Info("User requested to Cancel Transfer");
                     m_Transfer.CancelTransfers();
-                    frmStatus.Close();
+                    fileProgressForm.Close();
                     LoadDirectory(target);
                     return;
                 }
@@ -290,14 +290,14 @@ namespace SuperPutty
                     transferredBytes += status.BytesTransferred;
                     //Logger.Log("Transfered: {0}/{1} kB {2} of {3} files", transferredBytes, totalBytes / 1024, currentFileNum, fileCount);
                 }
-                frmStatus.UpdateProgress(status, (int) transferredBytes, (int) totalBytes / 1024, currentFileNum, fileCount);
+                fileProgressForm.UpdateProgress(status, (int) transferredBytes, (int) totalBytes / 1024, currentFileNum, fileCount);
                 if (currentFileNum >= fileCount)
                 {
                     LoadDirectory(target);
                 }
             }
 
-            frmStatus.m_callback = TransferUpdateCallback;
+            fileProgressForm.m_callback = TransferUpdateCallback;
             m_Transfer.BeginCopyFiles(files, target, TransferUpdateCallback);
         }
 

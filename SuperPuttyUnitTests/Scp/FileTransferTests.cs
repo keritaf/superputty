@@ -20,7 +20,7 @@ namespace SuperPuttyUnitTests.Scp
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MockFileTransferPresenter));
 
-        FileTransferPresenter filePresenter = new FileTransferPresenter(ScpConfig.DefaultOptions);
+        private readonly FileTransferPresenter filePresenter = new FileTransferPresenter(ScpConfig.DefaultOptions);
 
         public MockFileTransferPresenter()
         {

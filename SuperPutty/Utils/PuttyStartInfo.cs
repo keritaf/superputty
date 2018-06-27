@@ -5,6 +5,7 @@ using log4net;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+using SuperPutty.App;
 
 namespace SuperPutty.Utils
 {
@@ -12,7 +13,7 @@ namespace SuperPutty.Utils
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(PuttyStartInfo));
 
-        private static readonly Regex regExEnvVars = new Regex(@"(%\w+%)");
+        private static readonly Regex RegExEnvVars = new Regex(@"(%\w+%)");
 
         public static String GetExecutable(SessionData session)
         {
@@ -29,9 +30,9 @@ namespace SuperPutty.Utils
             }
         }
 
-        public PuttyStartInfo(SessionData session, SessionData session1)
+        public PuttyStartInfo(SessionData session)
         {
-            Session = session1;
+            Session = session;
             string argsToLog = null;
 
             Executable = GetExecutable(session);
@@ -94,7 +95,7 @@ namespace SuperPutty.Utils
             string result = args;
             try
             {
-                result = regExEnvVars.Replace(
+                result = RegExEnvVars.Replace(
                     args,
                     m =>
                     {

@@ -2,10 +2,10 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using SuperPutty.App;
 using SuperPutty.Data;
-using SuperPutty.Gui;
 
-namespace SuperPutty
+namespace SuperPutty.Gui
 {
     public partial class LayoutsList : ToolWindow
     {

@@ -209,10 +209,10 @@ namespace SuperPutty.Scp
             AuthRequest?.Invoke(this, evt);
         }
 
-        IBrowserModel Model { get; set; }
-        IFileTransferPresenter FileTransferPresenter { get; set; }
+        IBrowserModel Model { get; }
+        IFileTransferPresenter FileTransferPresenter { get; }
         
-        BackgroundWorker BackgroundWorker { get; set; }
+        BackgroundWorker BackgroundWorker { get; }
 
         public IBrowserViewModel ViewModel { get; protected set; }
         public BrowserFileInfo CurrentPath { get; protected set; }

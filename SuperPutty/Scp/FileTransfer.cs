@@ -141,9 +141,9 @@ namespace SuperPutty.Scp
             return status == Status.Running;
         }
 
-        public PscpOptions Options { get; private set; }
-        public FileTransferRequest Request { get; private set; }
-        public int Id { get; private set; }
+        public PscpOptions Options { get; }
+        public FileTransferRequest Request { get; }
+        public int Id { get; }
 
         public Status TransferStatus
         {
